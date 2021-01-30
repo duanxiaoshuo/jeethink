@@ -79,12 +79,13 @@ public class DataScopeAspect
         SysUser currentUser = ShiroUtils.getSysUser();
         if (currentUser != null)
         {
+            //todo 恢复超管权限
             // 如果是超级管理员，则不过滤数据
-            if (!currentUser.isAdmin())
-            {
+//            if (!currentUser.isAdmin())
+//            {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
                         controllerDataScope.userAlias());
-            }
+//            }
         }
     }
 

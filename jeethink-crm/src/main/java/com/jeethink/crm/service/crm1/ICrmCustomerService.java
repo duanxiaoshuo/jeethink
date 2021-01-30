@@ -43,20 +43,20 @@ public interface ICrmCustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer);
-    
+    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer,Long userId);
+
     /**
      * 查询客户列表 公共
-     * 
+     *
      * @param crmCustomer 客户
      * @return 客户集合
      */
     public List<CrmCustomer> selectCrmCustomerListPublic(CrmCustomer crmCustomer);
-    
+
 
     /**
      * 新增客户
-     * 
+     *
      * @param crmCustomer 客户
      * @return 结果
      */
@@ -64,7 +64,7 @@ public interface ICrmCustomerService
 
     /**
      * 修改客户
-     * 
+     *
      * @param crmCustomer 客户
      * @return 结果
      */
@@ -72,7 +72,7 @@ public interface ICrmCustomerService
 
     /**
      * 批量删除客户
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */
@@ -80,21 +80,21 @@ public interface ICrmCustomerService
 
     /**
      * 删除客户信息
-     * 
+     *
      * @param customerId 客户ID
      * @return 结果
      */
     public int deleteCrmCustomerById(Long customerId);
-    
+
     /**
      * 批量分享客户
-     * 
-     * @param customerIds 需要分享的数据ID
+     *
+     * @param ids 需要分享的数据ID
      * @param isShare 是否分享
      * @param operName 操作人
      * @return 结果
      */
-    public int shareCrmCustomerByIds(String ids,String isShare, String operName);
+    public int shareCrmCustomerByIds(String ids,String isShare, String operName,Long share,Long shared,String updateBy);
     
     /**
      * 导入客户数据

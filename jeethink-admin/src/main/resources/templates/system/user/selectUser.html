@@ -157,6 +157,8 @@
 		function submitHandler() {
 			var loginName = $.table.selectColumns("loginName");
 			var userName = $.table.selectColumns("userName");
+			var userId = $.table.selectColumns("userId");
+
 			if (loginName.length == 0) {
        			$.modal.alertWarning("请选择一条记录");
        			return;
@@ -167,6 +169,7 @@
 			parent.$('#userName').val('');
 			parent.$('#loginName').val(loginName);
 			parent.$('#userName').val(userName);
+			parent.$('#userId').val(userId);
 			//合同签署人
 			parent.$('#signBy').val('');
 			parent.$('#signBy').val(loginName);			

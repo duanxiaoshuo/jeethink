@@ -3,6 +3,7 @@ package com.jeethink.web.controller.crm;
 
 import java.util.List;
 
+import com.jeethink.system.domain.SysUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ import com.jeethink.common.core.page.TableDataInfo;
 
 /**
  * 客户Controller
- * 
+ *
  * @author jeethink
  * @date 2020-03-01
  */
@@ -36,7 +37,7 @@ import com.jeethink.common.core.page.TableDataInfo;
 public class CrmCustomerController extends BaseController
 {
     private String prefix = "crm/customer";
-    
+
     @Autowired
     private ICrmCustomerService crmCustomerService;
 
@@ -46,9 +47,9 @@ public class CrmCustomerController extends BaseController
     {
         return prefix + "/customer";
     }
-  
+
     /**
-     * 查询客户列表 
+     * 查询客户列表
      */
     @RequiresPermissions("crm:customer:list")
     @PostMapping("/list")
@@ -59,7 +60,7 @@ public class CrmCustomerController extends BaseController
         List<CrmCustomer> list = crmCustomerService.selectCrmCustomerList(crmCustomer);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 我的
      */
@@ -69,7 +70,7 @@ public class CrmCustomerController extends BaseController
     {
         return prefix + "/customerMy";
     }
-  
+
     /**
      * 查询客户列表 我的
      */
@@ -82,7 +83,7 @@ public class CrmCustomerController extends BaseController
         List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListMy(crmCustomer);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 共享
      */
@@ -92,7 +93,7 @@ public class CrmCustomerController extends BaseController
     {
         return prefix + "/customerShare";
     }
-  
+
     /**
      * 查询客户列表 共享
      */
@@ -101,11 +102,12 @@ public class CrmCustomerController extends BaseController
     @ResponseBody
     public TableDataInfo listShare(CrmCustomer crmCustomer)
     {
+        Long userId = ShiroUtils.getUserId();
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListShare(crmCustomer);
+        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListShare(crmCustomer,userId);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 公共
      */
@@ -115,7 +117,7 @@ public class CrmCustomerController extends BaseController
     {
         return prefix + "/customerPublic";
     }
-  
+
     /**
      * 查询客户列表 公共
      */
@@ -127,8 +129,8 @@ public class CrmCustomerController extends BaseController
         startPage();
         List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListPublic(crmCustomer);
         return getDataTable(list);
-    }    
-    
+    }
+
     /**
      * 导出客户列表
      */
@@ -160,7 +162,7 @@ public class CrmCustomerController extends BaseController
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(CrmCustomer crmCustomer)
-    {    	
+    {
     	String loginName=ShiroUtils.getLoginName();
     	crmCustomer.setDelFlag("0");
     	crmCustomer.setCreateBy(loginName);
@@ -192,7 +194,7 @@ public class CrmCustomerController extends BaseController
     	crmCustomer.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(crmCustomerService.updateCrmCustomer(crmCustomer));
     }
-    
+
     /**
      * 查看客户
      */
@@ -203,7 +205,7 @@ public class CrmCustomerController extends BaseController
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/detail";
     }
-    
+
     /**
      * 删除客户
      */
@@ -215,7 +217,7 @@ public class CrmCustomerController extends BaseController
     {
         return toAjax(crmCustomerService.deleteCrmCustomerByIds(ids));
     }
-    
+
     /**
      * 查询选择客户
      */
@@ -224,7 +226,7 @@ public class CrmCustomerController extends BaseController
     {
         return prefix + "/selectCustomer";
     }
-    
+
     /**
      * 查询客户列表(all)
      */
@@ -244,9 +246,11 @@ public class CrmCustomerController extends BaseController
     @Log(title = "客户", businessType = BusinessType.UPDATE)
     @PostMapping( "/share")
     @ResponseBody
-    public AjaxResult share(String customerIds,String isShare)
+    public AjaxResult share(String customerIds,String isShare,Long shared)
     {
-        return toAjax(crmCustomerService.shareCrmCustomerByIds(customerIds,isShare,ShiroUtils.getLoginName()));
+        Long share = ShiroUtils.getUserId();
+        String loginName = ShiroUtils.getLoginName();
+        return toAjax(crmCustomerService.shareCrmCustomerByIds(customerIds,isShare,ShiroUtils.getLoginName(),share,shared, loginName));
     }
     
     /**
