@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('客户订单列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                	<input type="hidden" id="customerId" name="customerId" th:value="${customerId}">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>主题：</p>
+                                <input type="text" name="orderName"/>
+                            </li>
+                            <li>
+                                <p>订单状态：</p>
+                                <select name="orderStatus" th:with="type=${@dict.getType('order_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var orderStatusDatas = [[${@dict.getType('order_status')}]];
+        var prefix = ctx + "crm2/order";
+
+        $(function() {
+            var options = {
+                url: prefix + "/listSelectOrder",
+                queryParams: queryParams,
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+		        clickToSelect: true,
+                modalName: "成交订单",
+                columns: [{
+                	radio: true
+                },
+                {
+                    field : 'orderId', 
+                    title : '订单ID',
+                    visible: false
+                },
+                {
+                    field : 'orderCode', 
+                    title : '订单编码',
+                    visible:false
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+		            sortable: true,
+                    visible:false
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible:false,
+		            sortable: true
+                },
+                {
+                    field : 'orderName', 
+                    title : '主题',
+		            sortable: true
+                },
+                {
+                    field : 'orderDate', 
+                    title : '成交/签约时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '成交客户',
+		            sortable: true
+                },
+                {
+                    field : 'totalPrice', 
+                    title : '成交总额',
+		            sortable: true
+                },
+                {
+                    field : 'costPrice', 
+                    title : '总成本',
+		            sortable: true
+                },
+                {
+                    field : 'aaa', 
+                    title : '利润',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(row.totalPrice)&&$.common.isNotEmpty(row.costPrice)){
+                    		return row.totalPrice-row.costPrice;
+                    	}
+                     }
+                },
+                {
+                    field : 'orderStatus', 
+                    title : '订单状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderStatusDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'validStart', 
+                    title : '有效期开始时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                    field : 'validEnd', 
+                    title : '有效期结束时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                }]
+            };
+            $.table.init(options);
+        });
+		
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.customerId = $("#customerId").val();
+			return search;
+		}
+        
+        /* 添加回款-选择订单-提交 */
+		function submitHandler() {
+			var id = $.table.selectFirstColumns();
+			var name = $.table.selectColumns("orderName");
+			var totalPrice = $.table.selectColumns("totalPrice");
+			if (id.length == 0) {
+       			$.modal.alertWarning("请选择一条记录");
+       			return;
+       		}
+			$.modal.close();
+			parent.$('#orderId').val('');
+			parent.$('#orderName').val('');
+			parent.$('#orderId').val(id);
+			parent.$('#orderName').val(name);
+			parent.$('#totalMoney').val('');
+			parent.$('#totalMoney').val(totalPrice);
+		}
+    </script>
+</body>
+</html>

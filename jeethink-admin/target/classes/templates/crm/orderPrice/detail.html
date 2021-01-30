@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="include :: header('修改（报价单）')" />
+	<th:block th:include="include :: datetimepicker-css" />
+	<th:block th:include="include :: bootstrap-editable-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-order-edit" th:object="${crmOrderPrice}">
+			<h4 class="form-header h4">基本信息</h4>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label is-required">报价客户：</label>
+						<div class="col-sm-8">
+							<div class="input-group">
+	                    		<div class="form-control-static" th:text="${crmOrderPrice.customer.customerName}"></div>
+	                    	</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label is-required">主题：</label>
+						<div class="col-sm-8">
+							<div class="form-control-static" th:text="${crmOrderPrice.orderName}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label is-required">报价总额：</label>
+						<div class="col-sm-8">
+							<div class="form-control-static" th:text="${crmOrderPrice.totalPrice}"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label">报价人：</label>
+		                <div class="col-sm-8">
+		                    <div class="form-control-static" th:text="${crmOrderPrice.prcieBy}"></div>
+		                </div>
+		            </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label">报价时间：</label>
+		                <div class="col-sm-8">
+		                    <div class="form-control-static" th:text="${#dates.format(crmOrderPrice.prcieEndDate, 'yyyy-MM-dd')}" ></div>
+		                </div>
+		            </div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label is-required">报价有效截止时间：</label>
+		                <div class="col-sm-8">
+		                    <div class="form-control-static" th:text="${#dates.format(crmOrderPrice.prcieEndDate, 'yyyy-MM-dd')}" ></div>
+		                </div>
+            		</div>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label class="col-xs-2 control-label">备注：</label>
+						<div class="col-xs-10">
+							<div class="form-control-static" th:text="${crmOrderPrice.remark}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<h4 class="form-header h4">产品信息</h4>
+		<div class="container-div">
+			<div class="row">
+				<div class="col-sm-12 select-table table-striped">
+					<table id="bootstrap-table"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: datetimepicker-js" />
+	<th:block th:include="include :: bootstrap-table-editable-js" />
+	<script th:inline="javascript">
+		var productCategoryDatas = [[${@dict.getType('product_category')}]];
+		var orderProductStatusDatas = [[${@dict.getType('order_product_status')}]];
+		var prefix = ctx + "crm/orderPrice";
+		var prefixProduct = ctx + "crm/product";
+		var prefixOrderPriceProduct =  ctx + "crm/orderPriceProduct";
+		var orderId=[[${orderId}]];
+		
+		$("#form-order-edit").validate({
+			focusCleanup : true
+		});
+		
+		$(function() {
+            var options = {
+                url: prefixOrderPriceProduct + "/listAll",
+                removeUrl: prefixOrderPriceProduct + "/remove",
+                pagination: false,
+		        showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                modalName: "关联产品信息",
+                queryParams : {
+                    orderId:orderId
+				},
+                columns: [                
+                {
+                    field : 'orderProductId', 
+                    title : '订单产品ID',
+                    visible: false
+                },
+		        {
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                 	    return $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field : 'orderId', 
+                    title : '订单id',
+                    visible: false
+                },
+                {
+                    field : 'productId', 
+                    title : '产品id',
+                    visible: false
+                },
+                {
+                    field : 'product.productName', 
+                    title : '产品名称'
+                },
+                {
+                    field : 'sellPrice', 
+                    title : '销售单价'
+                },
+                {
+                    field : 'productCount', 
+                    title : '报价数量'
+                },
+                {
+                    field : 'product.salePrice', 
+                    title : '原价'
+                },
+                {
+                    field : 'discount', 
+                    title : '折扣'
+                },
+                {
+                    field : 'realPrice', 
+                    title : '实际价格'
+                },
+				{
+				    title: '图片',
+				    formatter: function(value, row, index) {
+				    	return $.table.imageView(row.product.productImage);
+				    }
+				},
+                {
+                    field : 'product.productCategory', 
+                    title : '产品类别',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(productCategoryDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'orderProductStatus', 
+                    title : '状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderProductStatusDatas, value);
+                    },
+                    visible: false
+                }]
+            };
+            $.table.init(options);
+        });
+
+		$("input[name='prcieDate']").datetimepicker({
+			format : "yyyy-mm-dd",
+			minView : "month",
+			autoclose : true
+		});
+		
+		$("input[name='prcieEndDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+		
+	</script>
+</body>
+</html>

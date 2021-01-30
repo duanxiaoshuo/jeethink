@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:include="include :: header('选择所属合同')" />
+</head>
+
+<body class="gray-bg">
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-10 search-collapse">
+				<form id="role-form">
+					
+					<div class="select-list">
+						<ul>
+							<li>合同名称：<input type="text" name="contractName" />
+							</li>
+							<li>合同编号：<input type="text" name="contractNo" />
+							</li>
+							<li><a class="btn btn-primary btn-rounded btn-sm"
+								onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm"
+								onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table"></table>
+			</div>
+		</div>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+	var contractTypeDatas = [[${@dict.getType('contract_type')}]];
+    var contractPayMethodDatas = [[${@dict.getType('contract_pay_method')}]];
+    var prefix = ctx + "crm/contract";
+		
+		$(function() {
+            var options = {
+                url: prefix + "/listAuditContract",
+                queryParams: queryParams,
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+		        clickToSelect: true,
+                modalName: "合同管理",
+                columns: [{
+                	radio: true
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+                    visible: false
+                },
+                {
+                    field : 'contractNo', 
+                    title : '合同编号'
+                },
+                {
+                    field : 'contractName', 
+                    title : '合同名称'
+                },
+                {
+                    field : 'totalMoney', 
+                    title : '合同金额'
+                },
+                {
+                    field : 'payedMoney', 
+                    title : '已收款'
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible: false
+                },
+                {
+                    field : 'customer.customerName', 
+                    title : '客户名称'
+                },
+                {
+                    field : 'contractType', 
+                    title : '合同类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractTypeDatas, value);
+                    }
+                },
+                {
+                    field : 'dateStart', 
+                    title : '合同日期',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10)+'--'+row.dateEnd.substring(0,10);
+                     }
+                },
+                {
+                    field : 'payMethod', 
+                    title : '付款方式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractPayMethodDatas, value);
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+        
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			return search;
+		}
+		
+		/* 添加用户-选择合同-提交 */
+		function submitHandler() {
+			var id = $.table.selectFirstColumns();
+			var name = $.table.selectColumns("contractName");
+			if (id.length == 0) {
+       			$.modal.alertWarning("请选择一条记录");
+       			return;
+       		}
+			var totalMoney = $.table.selectColumns("totalMoney");
+       		var payedMoney = $.table.selectColumns("payedMoney");
+			if(parseFloat(payedMoney)==parseFloat(totalMoney)){
+				$.modal.alertError("该合同已完成付款，请核查！");
+       			return;
+			}
+			$.modal.close();
+			// 父页面的方法
+			// parent.selectUsers();
+			// 父页面的变量
+			parent.$('#contractId').val();
+			parent.$('#contractName').val();
+			parent.$('#contractId').val(id);
+			parent.$('#contractName').val(name);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsProductMapper">
+    
+    <resultMap type="WmsProduct" id="WmsProductResult">
+        <result property="productId"    column="product_id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="productCatogoryId"    column="product_catogory_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="incomePrice"    column="income_price"    />
+        <result property="salePrice"    column="sale_price"    />
+        <result property="productCategory"    column="product_category"    />
+        <result property="productNo"    column="product_no"    />
+        <result property="productUnit"    column="product_unit"    />
+        <result property="productSpec"    column="product_spec"    />
+        <result property="prodcutStatus"    column="prodcut_status"    />
+        <result property="productImage"    column="product_image"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="supplier"    column="supplier_id" javaType="WmsSupplier" resultMap="supplierResult" />
+        <association property="wmsProductCatogory"    column="product_catogory_id" javaType="WmsProductCatogory" resultMap="WmsProductCatogoryResult" />
+    </resultMap>
+    
+    <resultMap id="supplierResult" type="WmsSupplier">
+		<id     property="supplierId"   column="supplier_id"     />
+		<result property="supplierName" column="supplier_name"   />
+	</resultMap>
+	
+	<resultMap type="WmsProductCatogory" id="WmsProductCatogoryResult">
+        <result property="productCatogoryId"    column="product_catogory_id"    />
+        <result property="catogoryName"    column="catogory_name"    />
+    </resultMap>
+	
+
+    <sql id="selectWmsProductVo">
+        select p.product_id, p.supplier_id,p.product_catogory_id, p.product_name, p.income_price, p.sale_price, p.product_category, p.product_no, p.product_unit, p.product_spec, p.prodcut_status, p.product_image, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,s.supplier_name,pc.catogory_name from wms_product p
+        left join wms_supplier s on p.supplier_id=s.supplier_id
+        left join wms_product_catogory pc on pc.product_catogory_id=p.product_catogory_id
+    </sql>
+
+    <select id="selectWmsProductList" parameterType="WmsProduct" resultMap="WmsProductResult">
+        <include refid="selectWmsProductVo"/>
+        <where>  
+        	p.del_flag='0'
+            <if test="supplierId != null "> and p.supplier_id = #{supplierId}</if>            
+            <if test="productCatogoryId != null and productCatogoryId != 0">
+				and (p.product_catogory_id = #{productCatogoryId} OR p.product_catogory_id IN ( SELECT pc.product_catogory_id FROM wms_product_catogory pc WHERE FIND_IN_SET (#{productCatogoryId},ancestors) ))
+			</if>
+            <if test="productName != null  and productName != ''"> and p.product_name like concat('%', #{productName}, '%')</if>
+            <if test="productCategory != null  and productCategory != ''"> and p.product_category = #{productCategory}</if>
+            <if test="productNo != null  and productNo != ''"> and p.product_no = #{productNo}</if>
+            <if test="productUnit != null  and productUnit != ''"> and p.product_unit = #{productUnit}</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''"> and p.prodcut_status = #{prodcutStatus}</if>
+            <if test="params.supplierName != null  and params.supplierName != ''"> and s.supplier_name like concat('%', #{params.supplierName}, '%')</if>
+        </where>
+    </select>
+    
+    <!--报价单选择产品  -->
+    <select id="selectOrderPriceWmsProductList" parameterType="WmsProduct" resultMap="WmsProductResult">
+        <include refid="selectWmsProductVo"/>
+        <where>  
+        	p.del_flag="0"
+            <if test="supplierId != null "> and p.supplier_id = #{supplierId}</if>
+            <if test="productName != null  and productName != ''"> and p.product_name like concat('%', #{productName}, '%')</if>
+            <if test="incomePrice != null "> and p.income_price = #{incomePrice}</if>
+            <if test="salePrice != null "> and p.sale_price = #{salePrice}</if>
+            <if test="productCategory != null  and productCategory != ''"> and p.product_category = #{productCategory}</if>
+            <if test="productNo != null  and productNo != ''"> and p.product_no = #{productNo}</if>
+            <if test="productUnit != null  and productUnit != ''"> and p.product_unit = #{productUnit}</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''"> and p.prodcut_status = #{prodcutStatus}</if>
+            <if test="params.supplierName != null  and params.supplierName != ''"> and s.supplier_name like concat('%', #{params.supplierName}, '%')</if>
+            <if test="params.orderId != null  and params.orderId != ''"> and p.product_id NOT in(select product_id from crm_order_price_product op where order_id=#{params.orderId}  and del_flag = "0")</if>
+        </where>
+        order by p.create_time desc
+    </select>
+    
+     <!--订单选择产品  -->
+    <select id="selectOrderWmsProductList" parameterType="WmsProduct" resultMap="WmsProductResult">
+        <include refid="selectWmsProductVo"/>
+        <where>  
+        	p.del_flag="0"
+            <if test="supplierId != null "> and p.supplier_id = #{supplierId}</if>
+            <if test="productName != null  and productName != ''"> and p.product_name like concat('%', #{productName}, '%')</if>
+            <if test="incomePrice != null "> and p.income_price = #{incomePrice}</if>
+            <if test="salePrice != null "> and p.sale_price = #{salePrice}</if>
+            <if test="productCategory != null  and productCategory != ''"> and p.product_category = #{productCategory}</if>
+            <if test="productNo != null  and productNo != ''"> and p.product_no = #{productNo}</if>
+            <if test="productUnit != null  and productUnit != ''"> and p.product_unit = #{productUnit}</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''"> and p.prodcut_status = #{prodcutStatus}</if>
+            <if test="params.supplierName != null  and params.supplierName != ''"> and s.supplier_name like concat('%', #{params.supplierName}, '%')</if>
+            <if test="params.orderId != null  and params.orderId != ''"> and p.product_id NOT in(select product_id from crm_order_product op where order_id=#{params.orderId}  and del_flag = "0")</if>
+        </where>
+        order by p.create_time desc
+    </select>
+    
+    <select id="selectWmsProductById" parameterType="Long" resultMap="WmsProductResult">
+        <include refid="selectWmsProductVo"/>
+        where p.product_id = #{productId}
+    </select>
+        
+    <insert id="insertWmsProduct" parameterType="WmsProduct" useGeneratedKeys="true" keyProperty="productId">
+        insert into wms_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">supplier_id,</if>
+            <if test="productCatogoryId != null ">product_catogory_id,</if>
+            <if test="productName != null  and productName != ''">product_name,</if>
+            <if test="incomePrice != null ">income_price,</if>
+            <if test="salePrice != null ">sale_price,</if>
+            <if test="productCategory != null  and productCategory != ''">product_category,</if>
+            <if test="productNo != null  and productNo != ''">product_no,</if>
+            <if test="productUnit != null  and productUnit != ''">product_unit,</if>
+            <if test="productSpec != null  and productSpec != ''">product_spec,</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''">prodcut_status,</if>
+            <if test="productImage != null  and productImage != ''">product_image,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">#{supplierId},</if>
+            <if test="productCatogoryId != null ">#{productCatogoryId},</if>
+            <if test="productName != null  and productName != ''">#{productName},</if>
+            <if test="incomePrice != null ">#{incomePrice},</if>
+            <if test="salePrice != null ">#{salePrice},</if>
+            <if test="productCategory != null  and productCategory != ''">#{productCategory},</if>
+            <if test="productNo != null  and productNo != ''">#{productNo},</if>
+            <if test="productUnit != null  and productUnit != ''">#{productUnit},</if>
+            <if test="productSpec != null  and productSpec != ''">#{productSpec},</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''">#{prodcutStatus},</if>
+            <if test="productImage != null  and productImage != ''">#{productImage},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsProduct" parameterType="WmsProduct">
+        update wms_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierId != null ">supplier_id = #{supplierId},</if>
+            <if test="productCatogoryId != null ">product_catogory_id = #{productCatogoryId},</if>
+            <if test="productName != null  and productName != ''">product_name = #{productName},</if>
+            <if test="incomePrice != null ">income_price = #{incomePrice},</if>
+            <if test="salePrice != null ">sale_price = #{salePrice},</if>
+            <if test="productCategory != null  and productCategory != ''">product_category = #{productCategory},</if>
+            <if test="productNo != null  and productNo != ''">product_no = #{productNo},</if>
+            <if test="productUnit != null  and productUnit != ''">product_unit = #{productUnit},</if>
+            <if test="productSpec != null  and productSpec != ''">product_spec = #{productSpec},</if>
+            <if test="prodcutStatus != null  and prodcutStatus != ''">prodcut_status = #{prodcutStatus},</if>
+            <if test="productImage != null  and productImage != ''">product_image = #{productImage},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteWmsProductById" parameterType="Long">
+        update wms_product set del_flag="1"  where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteWmsProductByIds" parameterType="String">
+        update wms_product set del_flag="1" where product_id in 
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+    
+</mapper>

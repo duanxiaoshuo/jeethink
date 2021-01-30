@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="include :: header('新增客户')" />
+	<th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-customer-add">
+		<h4 class="form-header h4">基本信息</h4>
+			<div class="row">
+				<div class="col-sm-6">
+					 <div class="form-group">    
+		                <label class="col-sm-4 control-label">获得客户时间：</label>
+		                <div class="col-sm-8">
+		                    <div class="input-group date">
+		                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		                        <input name="getDate" class="form-control" placeholder="yyyy-MM-dd" type="text">
+		                    </div>
+		                </div>
+		            </div>
+				</div>
+				<!-- <div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label">负责人：</label>
+		                <div class="col-sm-8">
+		                    <input name="belongTo" class="form-control" type="text">
+		                </div>
+		            </div>
+				</div> -->
+				<div class="col-sm-6">
+					 <div class="form-group">    
+		                <label class="col-sm-4 control-label is-required">客户类型：</label>
+		                <div class="col-sm-8">
+		                    <div class="radio-box" th:each="dict : ${@dict.getType('crm_customer_type')}">
+		                        <input type="radio" th:id="${'customerType_' + dict.dictCode}" name="customerType" th:value="${dict.dictValue}" th:checked="${dict.default}" required>
+		                        <label th:for="${'customerType_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+		                    </div>
+		                </div>
+		            </div>
+				</div>
+			</div>
+			<h4 class="form-header h4">公司信息</h4>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label is-required">客户名称：</label>
+						<div class="col-sm-8">
+							<input id="customerName"  name="customerName" class="form-control" type="text"
+								required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户简称：</label>
+						<div class="col-sm-8">
+							<input name="nameShort" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司座机：</label>
+						<div class="col-sm-8">
+							<input id="telephone" name="telephone" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司手机：</label>
+						<div class="col-sm-8">
+							<input id="mobile" name="mobile" placeholder="请输入手机号码" class="form-control" type="text" maxlength="11">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司邮箱：</label>
+						<div class="col-sm-8">
+							<input id="email" name="email" class="form-control email" type="text">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司传真：</label>
+						<div class="col-sm-8">
+							<input name="fax" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司网址：</label>
+						<div class="col-sm-8">
+							<input name="website" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">公司邮编：</label>
+						<div class="col-sm-8">
+							<input name="zip" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">所属行业：</label>
+						<div class="col-sm-8">
+							<select name="industry" class="form-control m-b"
+								th:with="type=${@dict.getType('industry')}" required>
+								
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户状态：</label>
+						<div class="col-sm-8">
+							<select name="customerStatus" class="form-control m-b"
+								th:with="type=${@dict.getType('crm_customer_status')}" required>
+								
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户来源：</label>
+						<div class="col-sm-8">
+							<select name="customerSource" class="form-control m-b"
+								th:with="type=${@dict.getType('crm_customer_source')}" required>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户等级：</label>
+						<div class="col-sm-8">
+							<select name="customerDegree" class="form-control m-b"
+								th:with="type=${@dict.getType('crm_customer_degree')}" required>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户优先级：</label>
+						<div class="col-sm-8">
+							<select name="customerPriority" class="form-control m-b"
+								th:with="type=${@dict.getType('crm_customer_priority')}"
+								required>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户信誉度：</label>
+						<div class="col-sm-8">
+							<select name="customerCredit" class="form-control m-b"
+								th:with="type=${@dict.getType('crm_customer_credit')}" required>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+									th:value="${dict.dictValue}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>		
+			
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">    
+                		<label class="col-sm-4 control-label">客户成熟度：</label>
+		                <div class="col-sm-8">
+		                    <select name="customerMaturity" class="form-control m-b" th:with="type=${@dict.getType('crm_customer_maturity')}">
+		                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+		                    </select>
+		                </div>
+		            </div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label">客户类别：</label>
+		                <div class="col-sm-8">
+		                    <select name="customerCategory" class="form-control m-b" th:with="type=${@dict.getType('crm_customer_category')}">
+		                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+		                    </select>
+		                </div>
+		            </div>
+				</div>
+			</div>	
+			
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">    
+		                <label class="col-sm-4 control-label">意向产品：</label>
+		                <div class="col-sm-8">
+		                    <input name="intrestedProdcut" class="form-control" type="text">
+		                </div>
+		            </div>
+				</div>
+			</div>
+				
+			<h4 class="form-header h4">其他信息</h4>
+			<div class="row">
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">客户地址：</label>
+						<div class="col-sm-8">
+							<input name="address" class="form-control" type="text">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label class="col-xs-2 control-label">备注：</label>
+						<div class="col-xs-10">
+							<textarea name="remark" maxlength="500" class="form-control" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	 <div class="row">
+        <div class="col-sm-offset-5 col-sm-10">
+            <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
+            <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+        </div>
+    </div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: datetimepicker-js" />
+	<script type="text/javascript">
+		var prefix = ctx + "crm/customer"
+		$("#form-customer-add").validate({
+            onkeyup: false,
+        	rules:{
+        		customerName:{
+        			remote: {
+                        url: prefix + "/checkCustomerNameUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                        	"customerName": function() {
+                                return $.common.trim($("#customerName").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                        	return $.validate.unique(data);
+                        }
+                    }
+        		},
+        		fax:{
+        			isTel:true
+        		},
+        		email:{
+                    email:true,
+                    remote: {
+                        url: prefix + "/checkEmailUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            "email": function () {
+                                return $.common.trim($("#email").val());
+                            }
+                        },
+                        dataFilter: function (data, type) {
+                        	return $.validate.unique(data);
+                        }
+                    }
+        		},
+        		telephone:{
+        			isTel:true,
+                    remote: {
+                        url: prefix + "/checkTelephoneUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            "telephone": function () {
+                                return $.common.trim($("#telephone").val());
+                            }
+                        },
+                        dataFilter: function (data, type) {
+                        	return $.validate.unique(data);
+                        }
+                    }
+        		},
+        		// mobile:{
+        		// 	isPhone:true,
+                //     remote: {
+                //         url: prefix + "/checkMobileUnique",
+                //         type: "post",
+                //         dataType: "json",
+                //         data: {
+                //             "mobile": function () {
+                //                 return $.common.trim($("#mobile").val());
+                //             }
+                //         },
+                //         dataFilter: function (data, type) {
+                //         	return $.validate.unique(data);
+                //         }
+                //     }
+        		// },
+        	},
+        	messages: {
+                "customerName": {
+                    remote: "客户名称已经存在"
+                },
+                "email": {
+                    remote: "邮箱已经存在"
+                },
+        		"telephone": {
+                    remote: "座机已经存在"
+                },
+        		"mobile":{
+                	remote: "手机号码已经存在"
+        		}
+            },
+            focusCleanup: true
+		});
+		
+		 $("input[name='getDate']").datetimepicker({
+	            format: "yyyy-mm-dd",
+	            minView: "month",
+	            autoclose: true
+	        });
+
+		function submitHandler() {
+			if ($.validate.form()) {
+				$.operate.saveTab(prefix + "/add", $('#form-customer-add')
+						.serialize());
+			}
+		}
+	</script>
+</body>
+</html>

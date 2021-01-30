@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('转交记录列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                	<input  name="belongTo" type="hidden">
+                	<input type="hidden" id="businessType" name="businessType" th:value="${businessType}">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>转交人：</label>
+                                <input type="text" name="transferTo"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "crm2/transfer";
+
+        $(function() {
+            var options = {
+                url: prefix + "/listPersonHistory",
+                exportUrl: prefix + "/export",
+		        sortName: "createTime",
+		        sortOrder: "desc",
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+		        clickToSelect: true,
+		        rememberSelected: true,
+	            queryParams:queryParams,
+		        sortName: "createTime",
+		        sortOrder: "desc",
+                modalName: "转交记录",
+                columns: [
+                {
+                    field : 'transferId', 
+                    title : '转交ID',
+                    visible: false
+                },
+                {
+                    field : 'createTime', 
+                    title : '转交时间'
+                },
+                {
+                    field : 'transferTo', 
+                    title : '转交人'
+                },
+                {
+                    field : 'reason', 
+                    title : '转交原因'
+                },
+                {
+                    field : 'belongTo', 
+                    title : '转给谁？',
+		            formatter: function(value, row, index) {
+		            	if(row.belongTo==""||row.belongTo==null){
+		            		if(row.businessType=="Customer"){
+			            		return '<div style="color:red;">[公客]</div>'; 
+		            		}
+		            		else if(row.businessType=="Clue"){
+			            		return '<div style="color:red;">[公共线索]</div>'; 
+		            		}
+		            	}else{
+		            		return value;
+		            	}
+	                } 
+                },
+                {
+                    field : 'publicId', 
+                    title : '分组',
+                    visible: false
+                }]
+            };
+            $.table.init(options);
+        });
+        
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.businessType = $("#businessType").val();
+			return search;
+		}
+    </script>
+</body>
+</html>

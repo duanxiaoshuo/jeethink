@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.Crm2OrderProductMapper">
+    
+    <resultMap type="CrmOrderProduct" id="CrmOrderProductResult">
+        <result property="orderProductId"    column="order_product_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productCount"    column="product_count"    />
+        <result property="sellPrice"    column="sell_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="realPrice"    column="real_price"    />
+        <result property="orderProductStatus"    column="order_product_status"    />
+        <result property="shipStatus"    column="ship_status"    />
+        <result property="shipNo"    column="ship_no"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="product"    column="product_id" javaType="WmsProduct" resultMap="WmsProductResult" />
+        <association property="order"    column="order_id" javaType="CrmOrder" resultMap="CrmOrderResult" />
+        <association property="stock"    column="stock_id" javaType="WmsStock" resultMap="WmsStockResult" />
+    </resultMap>
+    
+    <resultMap type="WmsProduct" id="WmsProductResult">
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="incomePrice"    column="income_price"    />
+        <result property="salePrice"    column="sale_price"    />
+        <result property="productCategory"    column="product_category"    />
+        <result property="productImage"    column="product_image"    />
+    </resultMap>
+    
+    <resultMap type="CrmOrder" id="CrmOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="orderName"    column="order_name"    />
+        <association property="customer"    column="customer_id" javaType="CrmCustomer" resultMap="customerResult" />
+    </resultMap>
+
+    <resultMap id="customerResult" type="CrmCustomer">
+		<id     property="customerId"   column="customer_id"     />
+		<result property="customerName" column="customer_name"   />
+		<result property="customerType" column="customer_type"   />
+	</resultMap>
+	
+	<resultMap type="WmsStock" id="WmsStockResult">
+        <result property="stockId"    column="stock_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="stockNum"    column="stock_num"    />
+    </resultMap>
+
+    <sql id="selectCrmOrderProductVo">
+        select p.order_product_id, p.order_id, p.product_id, p.product_count, p.sell_price, p.discount, p.real_price, p.order_product_status, p.ship_status, p.ship_no, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,t.product_id,t.product_name,t.income_price,t.sale_price,t.product_category,t.product_image,o.order_name,c.customer_name,s.stock_id,s.stock_num from crm_order_product p
+        left join wms_product t on p.product_id = t.product_id
+        left join crm_order o on o.order_id = p.order_id
+        left join crm_customer c on c.customer_id = o.customer_id
+        left join wms_stock s on s.product_id=p.product_id
+    </sql>
+
+    <select id="selectCrmOrderProductList" parameterType="CrmOrderProduct" resultMap="CrmOrderProductResult">
+        <include refid="selectCrmOrderProductVo"/>
+        <where>  
+        	p.del_flag='0'
+            <if test="orderId != null "> and p.order_id = #{orderId}</if>
+            <if test="productId != null "> and p.product_id = #{productId}</if>
+            <if test="productCount != null "> and p.product_count = #{productCount}</if>
+             <if test="orderProductStatus != null  and orderProductStatus != ''"> and p.order_product_status = #{orderProductStatus}</if>
+            <if test="shipStatus != null  and shipStatus != ''"> and p.ship_status = #{shipStatus}</if>
+            <if test="shipNo != null  and shipNo != ''"> and p.ship_no = #{shipNo}</if>
+            <if test="params.productName != null  and params.productName != ''"> and t.product_name like concat('%', #{params.productName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectCrmOrderProductById" parameterType="Long" resultMap="CrmOrderProductResult">
+        <include refid="selectCrmOrderProductVo"/>
+        where p.order_product_id = #{orderProductId}
+    </select>
+        
+    <insert id="insertCrmOrderProduct" parameterType="CrmOrderProduct" useGeneratedKeys="true" keyProperty="orderProductId">
+        insert into crm_order_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">order_id,</if>
+            <if test="productId != null ">product_id,</if>
+            <if test="productCount != null ">product_count,</if>
+            <if test="sellPrice != null ">sell_price,</if>
+            <if test="discount != null ">discount,</if>
+            <if test="realPrice != null ">real_price,</if>
+            <if test="orderProductStatus != null  and orderProductStatus != ''">order_product_status,</if>
+            <if test="shipStatus != null  and shipStatus != ''">ship_status,</if>
+            <if test="shipNo != null  and shipNo != ''">ship_no,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">#{orderId},</if>
+            <if test="productId != null ">#{productId},</if>
+            <if test="productCount != null ">#{productCount},</if>
+            <if test="sellPrice != null ">#{sellPrice},</if>
+            <if test="discount != null ">#{discount},</if>
+            <if test="realPrice != null ">#{realPrice},</if>
+            <if test="orderProductStatus != null  and orderProductStatus != ''">#{orderProductStatus},</if>
+            <if test="shipStatus != null  and shipStatus != ''">#{shipStatus},</if>
+            <if test="shipNo != null  and shipNo != ''">#{shipNo},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCrmOrderProduct" parameterType="CrmOrderProduct">
+        update crm_order_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null ">order_id = #{orderId},</if>
+            <if test="productId != null ">product_id = #{productId},</if>
+            <if test="productCount != null ">product_count = #{productCount},</if>
+            <if test="sellPrice != null ">sell_price = #{sellPrice},</if>
+            <if test="discount != null ">discount = #{discount},</if>
+            <if test="realPrice != null ">real_price = #{realPrice},</if>
+            <if test="orderProductStatus != null  and orderProductStatus != ''">order_product_status = #{orderProductStatus},</if>
+            <if test="shipStatus != null  and shipStatus != ''">ship_status = #{shipStatus},</if>
+            <if test="shipNo != null  and shipNo != ''">ship_no = #{shipNo},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where order_product_id = #{orderProductId}
+    </update>
+    
+    <!-- 更新订单产品状态为已保存 -->
+    <update id="updateOrderProductStatus" parameterType="Long">
+        update crm_order_product set order_product_status="1" where order_id = #{orderId}
+    </update>
+    
+    <!-- 批量插入 -->
+    <insert id="batchOrderProduct">
+		insert into crm_order_product(order_id, product_id,product_count,sell_price,discount,real_price,create_by,create_time,del_flag) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.orderId},#{item.productId},#{item.productCount},#{item.sellPrice},#{item.discount},#{item.realPrice},#{item.createBy},#{item.createTime},"0")
+		</foreach>
+	</insert>
+	
+	<!-- 批量删除订单关联产品 -->
+	<update id="deleteCrmOrderProductByOrderIds" parameterType="String">
+        update crm_order_product set del_flag="1" where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </update>
+    
+    <select id="selectOrderTotalPrice" parameterType="Long" resultType="Double">
+        select sum(real_price) from crm_order_product where del_flag="0" and order_id = #{orderId}
+    </select>
+    
+    <select id="selectOrderCostPrice" parameterType="Long" resultType="Double">
+        select sum(p.income_price) from crm_order_product op LEFT JOIN wms_product p on p.product_id=op.product_id where op.del_flag="0" and op.order_id = #{orderId}
+    </select>
+
+
+    <delete id="deleteCrmOrderProductById" parameterType="Long">
+        update crm_order_product set del_flag="1" where order_product_id = #{orderProductId}
+    </delete>
+
+    <delete id="deleteCrmOrderProductByIds" parameterType="String">
+        update crm_order_product set del_flag="1" where order_product_id in 
+        <foreach item="orderProductId" collection="array" open="(" separator="," close=")">
+            #{orderProductId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.FinanceFeeMapper">
+    
+    <resultMap type="FinanceFee" id="FinanceFeeResult">
+        <result property="feeId"    column="fee_id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="feeName"    column="fee_name"    />
+        <result property="feeMoney"    column="fee_money"    />
+        <result property="feeDate"    column="fee_date"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="feeStatus"    column="fee_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="extInput1"    column="ext_input1"    />
+        <result property="extInput2"    column="ext_input2"    />
+        <result property="extInput3"    column="ext_input3"    />
+        <result property="extInput4"    column="ext_input4"    />
+        <result property="extInput5"    column="ext_input5"    />
+        <result property="extFinanceFeeSelect1"    column="ext_finance_fee_select1"    />
+        <result property="extFinanceFeeSelect2"    column="ext_finance_fee_select2"    />
+        <result property="extFinanceFeeSelect3"    column="ext_finance_fee_select3"    />
+        <result property="extFinanceFeeSelect4"    column="ext_finance_fee_select4"    />
+        <result property="extFinanceFeeSelect5"    column="ext_finance_fee_select5"    />
+        <result property="extNumber1"    column="ext_number1"    />
+        <result property="extNumber2"    column="ext_number2"    />
+        <result property="extNumber3"    column="ext_number3"    />
+        <result property="extNumber4"    column="ext_number4"    />
+        <result property="extNumber5"    column="ext_number5"    />
+        <result property="extDate1"    column="ext_date1"    />
+        <result property="extDate2"    column="ext_date2"    />
+        <result property="extDate3"    column="ext_date3"    />
+        <result property="extDate4"    column="ext_date4"    />
+        <result property="extDate5"    column="ext_date5"    />
+        <result property="extMemo1"    column="ext_memo1"    />
+        <association property="customer"    column="customer_id" javaType="CrmCustomer" resultMap="customerResult" />
+        <association property="order"    column="order_id" javaType="CrmOrder" resultMap="CrmOrderResult" />
+    </resultMap>
+
+    <resultMap id="customerResult" type="CrmCustomer">
+		<id     property="customerId"   column="customer_id"     />
+		<result property="customerName" column="customer_name"   />
+		<result property="customerType" column="customer_type"   />
+	</resultMap>
+        
+    <resultMap type="CrmOrder" id="CrmOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="orderName"    column="order_name"    />
+    </resultMap>
+
+    <sql id="selectFinanceFeeVo">
+        select p.fee_id, p.customer_id, p.order_id, p.fee_name, p.fee_money, p.fee_date, p.fee_type, p.fee_status, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark, p.ext_input1, p.ext_input2, p.ext_input3, p.ext_input4, p.ext_input5, p.ext_finance_fee_select1, p.ext_finance_fee_select2, p.ext_finance_fee_select3, p.ext_finance_fee_select4, p.ext_finance_fee_select5, p.ext_number1, p.ext_number2, p.ext_number3, p.ext_number4, p.ext_number5, p.ext_date1, p.ext_date2, p.ext_date3, p.ext_date4, p.ext_date5, p.ext_memo1,o.order_name,c.customer_name from finance_fee p
+    	left join crm_customer c on c.customer_id = p.customer_id
+    	left join crm_order o on o.order_id = p.order_id
+    </sql>
+
+    <select id="selectFinanceFeeList" parameterType="FinanceFee" resultMap="FinanceFeeResult">
+        <include refid="selectFinanceFeeVo"/>
+        <where>  
+        	p.del_flag='0'
+            <if test="feeName != null  and feeName != ''"> and fee_name like concat('%', #{feeName}, '%')</if>
+            <if test="feeDate != null "> and fee_date = #{feeDate}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+            <if test="feeStatus != null  and feeStatus != ''"> and fee_status = #{feeStatus}</if>
+            <if test="params.customerName != null  and params.customerName != ''"> and c.customer_name like concat('%', #{params.customerName}, '%')</if>
+            <if test="params.orderName != null  and params.orderName != ''"> and o.order_name like concat('%', #{params.orderName }, '%')</if>
+            <if test="params.beginFeeDate != null and params.beginFeeDate != ''"><!-- 收支开始时间检索 -->
+				AND date_format(p.fee_date,'%y%m%d') &gt;= date_format(#{params.beginFeeDate},'%y%m%d')
+			</if>
+			<if test="params.endFeeDate != null and params.endFeeDate != ''"><!-- 收支结束时间检索 -->
+				AND date_format(p.fee_date,'%y%m%d') &lt;= date_format(#{params.endFeeDate},'%y%m%d')
+			</if>
+        </where>
+    </select>
+    
+    <select id="selectFinanceFeeById" parameterType="Long" resultMap="FinanceFeeResult">
+        <include refid="selectFinanceFeeVo"/>
+        where p.fee_id = #{feeId}
+    </select>
+        
+    <insert id="insertFinanceFee" parameterType="FinanceFee" useGeneratedKeys="true" keyProperty="feeId">
+        insert into finance_fee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null ">customer_id,</if>
+            <if test="orderId != null ">order_id,</if>
+            <if test="feeName != null  and feeName != ''">fee_name,</if>
+            <if test="feeMoney != null ">fee_money,</if>
+            <if test="feeDate != null ">fee_date,</if>
+            <if test="feeType != null  and feeType != ''">fee_type,</if>
+            <if test="feeStatus != null  and feeStatus != ''">fee_status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="extInput1 != null  and extInput1 != ''">ext_input1,</if>
+            <if test="extInput2 != null  and extInput2 != ''">ext_input2,</if>
+            <if test="extInput3 != null  and extInput3 != ''">ext_input3,</if>
+            <if test="extInput4 != null  and extInput4 != ''">ext_input4,</if>
+            <if test="extInput5 != null  and extInput5 != ''">ext_input5,</if>
+            <if test="extFinanceFeeSelect1 != null  and extFinanceFeeSelect1 != ''">ext_finance_fee_select1,</if>
+            <if test="extFinanceFeeSelect2 != null  and extFinanceFeeSelect2 != ''">ext_finance_fee_select2,</if>
+            <if test="extFinanceFeeSelect3 != null  and extFinanceFeeSelect3 != ''">ext_finance_fee_select3,</if>
+            <if test="extFinanceFeeSelect4 != null  and extFinanceFeeSelect4 != ''">ext_finance_fee_select4,</if>
+            <if test="extFinanceFeeSelect5 != null  and extFinanceFeeSelect5 != ''">ext_finance_fee_select5,</if>
+            <if test="extNumber1 != null ">ext_number1,</if>
+            <if test="extNumber2 != null ">ext_number2,</if>
+            <if test="extNumber3 != null ">ext_number3,</if>
+            <if test="extNumber4 != null ">ext_number4,</if>
+            <if test="extNumber5 != null ">ext_number5,</if>
+            <if test="extDate1 != null ">ext_date1,</if>
+            <if test="extDate2 != null ">ext_date2,</if>
+            <if test="extDate3 != null ">ext_date3,</if>
+            <if test="extDate4 != null ">ext_date4,</if>
+            <if test="extDate5 != null ">ext_date5,</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">ext_memo1,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null ">#{customerId},</if>
+            <if test="orderId != null ">#{orderId},</if>
+            <if test="feeName != null  and feeName != ''">#{feeName},</if>
+            <if test="feeMoney != null ">#{feeMoney},</if>
+            <if test="feeDate != null ">#{feeDate},</if>
+            <if test="feeType != null  and feeType != ''">#{feeType},</if>
+            <if test="feeStatus != null  and feeStatus != ''">#{feeStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="extInput1 != null  and extInput1 != ''">#{extInput1},</if>
+            <if test="extInput2 != null  and extInput2 != ''">#{extInput2},</if>
+            <if test="extInput3 != null  and extInput3 != ''">#{extInput3},</if>
+            <if test="extInput4 != null  and extInput4 != ''">#{extInput4},</if>
+            <if test="extInput5 != null  and extInput5 != ''">#{extInput5},</if>
+            <if test="extFinanceFeeSelect1 != null  and extFinanceFeeSelect1 != ''">#{extFinanceFeeSelect1},</if>
+            <if test="extFinanceFeeSelect2 != null  and extFinanceFeeSelect2 != ''">#{extFinanceFeeSelect2},</if>
+            <if test="extFinanceFeeSelect3 != null  and extFinanceFeeSelect3 != ''">#{extFinanceFeeSelect3},</if>
+            <if test="extFinanceFeeSelect4 != null  and extFinanceFeeSelect4 != ''">#{extFinanceFeeSelect4},</if>
+            <if test="extFinanceFeeSelect5 != null  and extFinanceFeeSelect5 != ''">#{extFinanceFeeSelect5},</if>
+            <if test="extNumber1 != null ">#{extNumber1},</if>
+            <if test="extNumber2 != null ">#{extNumber2},</if>
+            <if test="extNumber3 != null ">#{extNumber3},</if>
+            <if test="extNumber4 != null ">#{extNumber4},</if>
+            <if test="extNumber5 != null ">#{extNumber5},</if>
+            <if test="extDate1 != null ">#{extDate1},</if>
+            <if test="extDate2 != null ">#{extDate2},</if>
+            <if test="extDate3 != null ">#{extDate3},</if>
+            <if test="extDate4 != null ">#{extDate4},</if>
+            <if test="extDate5 != null ">#{extDate5},</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">#{extMemo1},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinanceFee" parameterType="FinanceFee">
+        update finance_fee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null ">customer_id = #{customerId},</if>
+            <if test="orderId != null ">order_id = #{orderId},</if>
+            <if test="feeName != null  and feeName != ''">fee_name = #{feeName},</if>
+            <if test="feeMoney != null ">fee_money = #{feeMoney},</if>
+            <if test="feeDate != null ">fee_date = #{feeDate},</if>
+            <if test="feeType != null  and feeType != ''">fee_type = #{feeType},</if>
+            <if test="feeStatus != null  and feeStatus != ''">fee_status = #{feeStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="extInput1 != null  and extInput1 != ''">ext_input1 = #{extInput1},</if>
+            <if test="extInput2 != null  and extInput2 != ''">ext_input2 = #{extInput2},</if>
+            <if test="extInput3 != null  and extInput3 != ''">ext_input3 = #{extInput3},</if>
+            <if test="extInput4 != null  and extInput4 != ''">ext_input4 = #{extInput4},</if>
+            <if test="extInput5 != null  and extInput5 != ''">ext_input5 = #{extInput5},</if>
+            <if test="extFinanceFeeSelect1 != null  and extFinanceFeeSelect1 != ''">ext_finance_fee_select1 = #{extFinanceFeeSelect1},</if>
+            <if test="extFinanceFeeSelect2 != null  and extFinanceFeeSelect2 != ''">ext_finance_fee_select2 = #{extFinanceFeeSelect2},</if>
+            <if test="extFinanceFeeSelect3 != null  and extFinanceFeeSelect3 != ''">ext_finance_fee_select3 = #{extFinanceFeeSelect3},</if>
+            <if test="extFinanceFeeSelect4 != null  and extFinanceFeeSelect4 != ''">ext_finance_fee_select4 = #{extFinanceFeeSelect4},</if>
+            <if test="extFinanceFeeSelect5 != null  and extFinanceFeeSelect5 != ''">ext_finance_fee_select5 = #{extFinanceFeeSelect5},</if>
+            <if test="extNumber1 != null ">ext_number1 = #{extNumber1},</if>
+            <if test="extNumber2 != null ">ext_number2 = #{extNumber2},</if>
+            <if test="extNumber3 != null ">ext_number3 = #{extNumber3},</if>
+            <if test="extNumber4 != null ">ext_number4 = #{extNumber4},</if>
+            <if test="extNumber5 != null ">ext_number5 = #{extNumber5},</if>
+            <if test="extDate1 != null ">ext_date1 = #{extDate1},</if>
+            <if test="extDate2 != null ">ext_date2 = #{extDate2},</if>
+            <if test="extDate3 != null ">ext_date3 = #{extDate3},</if>
+            <if test="extDate4 != null ">ext_date4 = #{extDate4},</if>
+            <if test="extDate5 != null ">ext_date5 = #{extDate5},</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">ext_memo1 = #{extMemo1},</if>
+        </trim>
+        where fee_id = #{feeId}
+    </update>
+
+    <delete id="deleteFinanceFeeById" parameterType="Long">
+        update finance_fee where del_flag="1" fee_id = #{feeId}
+    </delete>
+
+    <delete id="deleteFinanceFeeByIds" parameterType="String">
+        update finance_fee set del_flag="1" where fee_id in 
+        <foreach item="feeId" collection="array" open="(" separator="," close=")">
+            #{feeId}
+        </foreach>
+    </delete>
+    
+</mapper>

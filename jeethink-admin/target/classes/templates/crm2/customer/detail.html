@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:include="include :: header('查看客户')" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+		<div class="row">
+			<div class="tabs-container">
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#tab-customer" aria-expanded="true"> 客户信息</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-person" aria-expanded="false">联系人</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-orderPrice" aria-expanded="false">报价单</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-order" aria-expanded="false">订单</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-contract" aria-expanded="false">合同</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-complaint" aria-expanded="false">投诉</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-visit" aria-expanded="false">拜访</a></li>
+					<li class=""><a data-toggle="tab" href="#tab-follow" aria-expanded="false">跟进</a></li>
+				</ul>
+				<div class="tab-content">
+					<div id="tab-customer" class="tab-pane active">
+						<div class="panel-body">						
+							<div class="container-div">
+								<div class="row">
+									<!-- <div class="btn-group-sm" id="toolbarCustomer" role="group">
+										<a class="btn btn-primary" onclick="###" shiro:hasPermission="crm:customer:print">
+						                    <i class="fa fa-print"></i> 打印
+						                </a>
+									</div> -->
+									<div class="col-sm-12 select-table table-striped">
+										<form class="form-horizontal m" id="form-customer-detail" th:object="${crmCustomer}">
+											<input name="customerId" th:field="*{customerId}" type="hidden">
+											<h4 class="form-header h4">基本信息</h4>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label class="col-sm-4 control-label is-required">获得客户时间：</label>
+														<div class="col-sm-8">
+															<div class="form-control-static" th:text="${#dates.format(crmCustomer.getDate, 'yyyy-MM-dd')}" ></div>
+														</div>
+													</div>
+												</div>
+										<!-- <div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">负责人：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.belongTo}"></div>
+												</div>
+											</div>
+										</div> -->
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label is-required">客户类型：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${@dict.getLabel('crm_customer_type', crmCustomer.customerType)}"></div>
+												</div>
+											</div>
+										</div>
+									</div>								
+									<h4 class="form-header h4">公司信息</h4>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label is-required">客户名称：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.customerName}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户简称：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.nameShort}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司座机：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.telephone}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司手机：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.mobile}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司邮箱：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${crmCustomer.email}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司传真：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${crmCustomer.fax}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司网址：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${crmCustomer.website}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">公司邮编：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${crmCustomer.zip}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">所属行业：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${@dict.getLabel('industry', crmCustomer.industry)}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户状态：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_status', crmCustomer.customerStatus)}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户来源：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_source', crmCustomer.customerSource)}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户等级：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_degree', crmCustomer.customerDegree)}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户优先级：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_priority', crmCustomer.customerPriority)}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户信誉度：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_credit', crmCustomer.customerCredit)}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户成熟度：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${@dict.getLabel('crm_customer_maturity', crmCustomer.customerMaturity)}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户类别：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static" th:text="${@dict.getLabel('crm_customer_category', crmCustomer.customerCategory)}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<h4 class="form-header h4">其他信息</h4>
+									<div class="row">
+
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">客户地址：</label>
+												<div class="col-sm-8">
+													<div class="form-control-static"
+														th:text="${crmCustomer.address}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<label class="col-xs-2 control-label">备注：</label>
+												<div class="col-xs-10">
+													<div class="form-control-static"
+														th:text="${crmCustomer.remark}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+							</div>
+							
+						</div>
+					</div>
+					<div id="tab-person" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarPerson" role="group">
+										<a class="btn btn-success" onclick="addPerson();" shiro:hasPermission="crm:person:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:person:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tablePerson"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-orderPrice" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarOrderPrcie" role="group">
+										<a class="btn btn-success" onclick="addOrderPrcie();" shiro:hasPermission="crm:orderPrice:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:orderPrice:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableOrderPrice"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-order" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarOrder" role="group">
+										<a class="btn btn-success" onclick="addOrder();" shiro:hasPermission="crm:order:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:order:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableOrder"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-contract" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarContract" role="group">
+										<a class="btn btn-success" onclick="addContract();" shiro:hasPermission="crm:contract:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:contract:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableContract"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-complaint" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarComplaint" role="group">
+										<a class="btn btn-success" onclick="addComplaint();" shiro:hasPermission="crm:complaint:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:complaint:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableComplaint"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-visit" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarVisit" role="group">
+										<a class="btn btn-success" onclick="addVisit();" shiro:hasPermission="crm:visit:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:visit:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableVisit"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="tab-follow" class="tab-pane">
+						<div class="panel-body">
+							<div class="container-div">
+								<div class="row">
+									<div class="btn-group-sm" id="toolbarFollow" role="group">
+										<a class="btn btn-success" onclick="addFollow();"  shiro:hasPermission="crm:follow:add"> 
+											<i class="fa fa-plus"></i> 添加
+										</a>
+										<a class="btn btn-warning" onclick="exportExcel();" shiro:hasPermission="crm:follow:export">
+						                    <i class="fa fa-download"></i> 导出
+						                 </a>
+									</div>
+									<div class="col-sm-12 select-table table-striped">
+										<table id="bootstrap-tableFollow"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+		//联系人
+		var prefixPerson = ctx + "crm2/person";
+		var editFlagPerson = [[${@permission.hasPermi('crm:person:edit')}]];
+        var removeFlagPerson = [[${@permission.hasPermi('crm:person:remove')}]];
+		var sexDatas = [[${@dict.getType('sys_user_sex')}]];
+    	var marriageDatas = [[${@dict.getType('marriage')}]];
+    	var personDecisionLevelDatas = [[${@dict.getType('person_decision_level')}]];
+    	//报价单
+    	var prefixOrderPrice = ctx + "crm2/orderPrice";
+    	var priceFlagOrderPrice=[[${@permission.hasPermi('crm:orderPrice:price')}]];
+    	var cancelFlagOrderPrice=[[${@permission.hasPermi('crm:orderPrice:cancel')}]];
+    	var auditFlagOrderPrice=[[${@permission.hasPermi('crm:orderPrice:audit')}]];
+    	var convertFlagOrderPrice = [[${@permission.hasPermi('crm:orderPrice:convert')}]];
+        var editFlagOrderPrice = [[${@permission.hasPermi('crm:orderPrice:edit')}]];
+        var removeFlagOrderPrice = [[${@permission.hasPermi('crm:orderPrice:remove')}]];
+        var orderStatusDatasOrderPrice = [[${@dict.getType('price_order_status')}]];        
+        //订单
+        var prefixOrder = ctx + "crm2/order";
+        var editFlagOrder = [[${@permission.hasPermi('crm:order:edit')}]];
+        var removeFlagOrder = [[${@permission.hasPermi('crm:order:remove')}]];
+        var orderStatusDatasOrder = [[${@dict.getType('order_status')}]];    	
+        //合同
+        var prefixContract = ctx + "crm2/contract";
+        var auditFlagContract=[[${@permission.hasPermi('crm:contract:audit')}]];
+        var editFlagContract = [[${@permission.hasPermi('crm:contract:edit')}]];
+        var removeFlagContract = [[${@permission.hasPermi('crm:contract:remove')}]];
+        var contractTypeDatas = [[${@dict.getType('contract_type')}]];
+        var contractStatusDatas = [[${@dict.getType('contract_status')}]];
+    	//投诉
+    	var prefixComplaint = ctx + "crm2/complaint";
+    	var editFlagComplaint = [[${@permission.hasPermi('crm:complaint:edit')}]];
+        var removeFlagComplaint = [[${@permission.hasPermi('crm:complaint:remove')}]];
+		var complaintTypeDatas = [[${@dict.getType('complaint_type')}]];
+    	var complaintStatusDatas = [[${@dict.getType('complaint_status')}]];
+		//拜访
+		var prefixVisit = ctx + "crm2/visit";
+		var editFlagVisit = [[${@permission.hasPermi('crm:visit:edit')}]];
+        var removeFlagVisit = [[${@permission.hasPermi('crm:visit:remove')}]];
+    	var visitStatusDatas = [[${@dict.getType('visit_Status')}]];
+		//跟进
+		var prefixFollow = ctx + "crm2/follow";
+		var editFlagFollow = [[${@permission.hasPermi('crm:follow:edit')}]];
+        var removeFlagFollow = [[${@permission.hasPermi('crm:follow:remove')}]];
+		var followTypeDatas = [[${@dict.getType('follow_type')}]];
+        var followStatusDatas = [[${@dict.getType('follow_status')}]];
+        
+		var prefix = ctx + "crm2/customer";
+		var customerId= [[${customerId}]];
+		
+		$(function() {
+            var options = {
+            	id: "bootstrap-tablePerson",
+            	toolbar: "toolbarPerson",
+                url: prefixPerson + "/list",
+                detailUrl: prefixPerson + "/detail",
+                createUrl: prefixPerson + "/addPerson",
+                updateUrl: prefixPerson + "/edit/{id}",
+                removeUrl: prefixPerson + "/remove",
+                exportUrl: prefixPerson + "/export",
+                modalName: "联系人",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'personId', 
+                    title : '联系人ID',
+                    visible: false
+                },
+                {
+                    field : 'personName', 
+                    title : '联系人姓名',
+		            sortable: true
+                },
+                {
+                    field : 'englishName', 
+                    title : '联系人英文名',
+		            sortable: true
+                },
+                {
+                    field : 'duty', 
+                    title : '职务',
+		            sortable: true
+                },
+                {
+                    field : 'telephone', 
+                    title : '固定电话',
+		            sortable: true
+                },
+                {
+                    field : 'mobile', 
+                    title : '手机',
+		            sortable: true
+                },
+                {
+                    field : 'email', 
+                    title : '用户邮箱',
+		            sortable: true
+                },
+                {
+                    field : 'fax', 
+                    title : '传真',
+		            sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'qq', 
+                    title : 'qq',
+		            sortable: true
+                },
+                {
+                    field : 'wechat', 
+                    title : '微信',
+		            sortable: true
+                },
+                {
+                    field : 'wangwang', 
+                    title : '旺旺',
+		            sortable: true
+                },
+                {
+                    field : 'msn', 
+                    title : 'MSN',
+		            sortable: true,
+                    visible: false
+                },
+                {
+                    field : 'sex', 
+                    title : '性别',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(sexDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'personDecisionLevel', 
+                    title : '决策等级',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(personDecisionLevelDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' +editFlagPerson+ '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.personId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs '  +removeFlagPerson+ '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.personId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		
+		 $(function() {
+            var options = {
+            	id: "bootstrap-tableComplaint",
+                toolbar: "toolbarComplaint",
+                url: prefixComplaint + "/list",
+                createUrl: prefixComplaint + "/addComplaint",
+                updateUrl: prefixComplaint + "/edit/{id}",
+                removeUrl: prefixComplaint + "/remove",
+                exportUrl: prefixComplaint + "/export",
+                modalName: "客户投诉",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'complaintId', 
+                    title : '投诉ID',
+                    visible: false
+                },
+                {
+                    field : 'complaintDate', 
+                    title : '投诉时间',
+		            sortable: true
+                },
+                {
+                    field : 'complaintName', 
+                    title : '投诉人姓名',
+		            sortable: true
+                },
+                {
+                    field : 'complaintPhone', 
+                    title : '投诉人电话',
+		            sortable: true
+                },
+                {
+                    field : 'complaintType', 
+                    title : '投诉类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(complaintTypeDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'complaintStatus', 
+                    title : '投诉状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(complaintStatusDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs '  +editFlagComplaint+ '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.complaintId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs '  +removeFlagComplaint+ '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.complaintId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+		 $(function() {
+            var options = {
+            	id: "bootstrap-tableVisit",
+	            toolbar: "toolbarVisit",
+                url: prefixVisit + "/list",
+                createUrl: prefixVisit + "/add",
+                updateUrl: prefixVisit + "/edit/{id}",
+                removeUrl: prefixVisit + "/remove",
+                exportUrl: prefixVisit + "/export",
+                modalName: "客户拜访",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'visitId', 
+                    title : '拜访ID',
+                    visible: false
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '所属客户',
+		            sortable: true,
+		            visible:false
+                },
+                {
+                    field : 'visitName', 
+                    title : '拜访人姓名',
+		            sortable: true
+                },
+                {
+                    field : 'visitPhone', 
+                    title : '拜访人电话',
+		            sortable: true
+                },
+                {
+                    field : 'visitContent', 
+                    title : '拜访内容',
+		            sortable: true
+                },
+                {
+                    field : 'visitDate', 
+                    title : '拜访时间',
+		            sortable: true
+                },
+                {
+                    field : 'visitStatus', 
+                    title : '拜访状态',
+		            sortable: true,
+		            formatter: function(value, row, index) {
+	                       return $.table.selectDictLabel(visitStatusDatas, value);
+	                    },
+			            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs '  +editFlagVisit+ '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.visitId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs '  +removeFlagVisit+ '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.visitId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+		 $(function() {
+            var options = {
+            	id: "bootstrap-tableFollow",
+	            toolbar: "toolbarFollow",
+                url: prefixFollow + "/list",
+                createUrl: prefixFollow + "/add",
+                updateUrl: prefixFollow + "/edit/{id}",
+                removeUrl: prefixFollow + "/remove",
+                exportUrl: prefixFollow + "/export",
+                modalName: "客户跟进",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'followId', 
+                    title : '跟进ID',
+                    visible: false
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '所属客户',
+                    visible: false
+                },
+                {
+                    field : 'followDate', 
+                    title : '跟进时间',
+		            sortable: true
+                },
+                {
+                    field : 'followType', 
+                    title : '跟进方式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(followTypeDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'followContent', 
+                    title : '跟进结果',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' +editFlagFollow+ '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.followId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' +removeFlagFollow+ '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.followId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+		 $(function() {
+            var options = {
+            	id: "bootstrap-tableOrderPrice",
+		        toolbar: "toolbarOrderPrcie",
+            	url: prefixOrderPrice + "/list",
+            	detailUrl: prefixOrderPrice + "/detail/{id}",
+                createUrl: prefixOrderPrice + "/add",
+                updateUrl: prefixOrderPrice + "/edit/{id}",
+                removeUrl: prefixOrderPrice + "/remove",
+                exportUrl: prefixOrderPrice + "/export",
+                modalName: "报价单",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'orderId', 
+                    title : '订单ID',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'orderCode', 
+                    title : '订单编码',
+                    visible:false,
+		            sortable: true
+                },
+                {
+                    field : 'totalPrice', 
+                    title : '报价总额',
+		            sortable: true
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '报价客户',
+		            sortable: true,
+		            formatter: function(value, row, index) {
+		            	return '<a  href="javascript:void(0)" title="查看详情" onclick="$.operate.detail(\'' +row.orderId + '\')">'+value+'</a> ';
+	                }
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+                    visible:false,
+		            sortable: true
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible:false,
+		            sortable: true
+                },
+                {
+                    field : 'orderName', 
+                    title : '主题',
+		            sortable: true,
+                    visible:false
+                },
+                {
+                    field : 'prcieDate', 
+                    title : '报价时间',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10);
+                     },
+ 		            sortable: true
+                },
+                {
+                    field : 'prcieEndDate', 
+                    title : '报价截止时间',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10);
+                     },
+ 		            sortable: true
+                },
+                {
+                    field : 'orderStatus', 
+                    title : '报价单状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderStatusDatasOrderPrice, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'prcieBy', 
+                    title : '报价人',
+		            sortable: true
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.orderStatus=="0"){//已保存
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlagOrderPrice + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.orderId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        	actions.push('<a class="btn btn-warning btn-xs ' + cancelFlagOrderPrice + '" href="javascript:void(0)" onclick="cancelOkOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-reply"></i>作废</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlagOrderPrice + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.orderId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        else if(row.orderStatus=="1"){//已提交
+                        	actions.push('<a class="btn btn-primary btn-xs ' + auditFlagOrderPrice + '" href="javascript:void(0)" onclick="auditOkOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-check"></i>审核通过</a> ');
+                        	actions.push('<a class="btn btn-danger btn-xs ' + auditFlagOrderPrice + '" href="javascript:void(0)" onclick="auditNoOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-reply"></i>驳回</a> ');
+                        }
+                        else if(row.orderStatus=="2"){//已审核
+                        	actions.push('<a class="btn btn-primary btn-xs ' + priceFlagOrderPrice + '" href="javascript:void(0)" onclick="priceOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-check"></i>报价</a> ');
+                        	actions.push('<a class="btn btn-warning btn-xs ' + cancelFlagOrderPrice + '" href="javascript:void(0)" onclick="cancelOkOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-reply"></i>作废</a> ');
+                        }      
+                        else if(row.orderStatus=="3"){//已驳回
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlagOrderPrice + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.orderId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        	actions.push('<a class="btn btn-warning btn-xs ' + cancelFlagOrderPrice + '" href="javascript:void(0)" onclick="cancelOkOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-reply"></i>作废</a> ');
+                        }  
+                        else if(row.orderStatus=="4"){//已作废
+                        	actions.push('<a class="btn btn-primary btn-xs ' + cancelFlagOrderPrice + '" href="javascript:void(0)" onclick="cancelNoOrderPrice(\'' + row.orderId + '\')"><i class="fa fa-check"></i>取消作废</a> ');
+                        }
+                        else if(row.orderStatus=="5"){//已报价
+                        	actions.push('<a class="btn btn-primary btn-xs ' + convertFlagOrderPrice + '" href="javascript:void(0)" onclick="convertOrderPrice(\'' + row.orderId + '\')"><i class="fa fa fa-arrow-right"></i>转成订单</a> ');
+                        }
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+		 $(function() {
+            var options = {
+                id: "bootstrap-tableOrder",
+		        toolbar: "toolbarOrder",
+                url: prefixOrder + "/list",
+                detailUrl: prefixOrder + "/detail/{id}",
+                createUrl: prefixOrder + "/add",
+                updateUrl: prefixOrder + "/edit/{id}",
+                removeUrl: prefixOrder + "/remove",
+                exportUrl: prefixOrder + "/export",
+                modalName: "订单",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'orderId', 
+                    title : '订单ID',
+                    visible: false
+                },
+                {
+                    field : 'orderCode', 
+                    title : '订单编码',
+                    visible:false
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+		            sortable: true,
+                    visible:false
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible:false,
+		            sortable: true
+                },
+                {
+                    field : 'orderName', 
+                    title : '主题',
+		            sortable: true,
+                    visible:false
+                },
+                {
+                    field : 'orderDate', 
+                    title : '成交/签约时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '成交客户',
+		            sortable: true,
+		            formatter: function(value, row, index) {
+		            	return '<a  href="javascript:void(0)" title="查看详情" onclick="$.operate.detail(\'' +row.orderId + '\')">'+value+'</a> ';
+	                }
+                },
+                {
+                    field : 'totalPrice', 
+                    title : '成交总额',
+		            sortable: true
+                },
+                {
+                    field : 'costPrice', 
+                    title : '总成本',
+		            sortable: true
+                },
+                {
+                    field : 'aaa', 
+                    title : '利润',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(row.totalPrice)&&$.common.isNotEmpty(row.costPrice)){
+                    		return row.totalPrice-row.costPrice;
+                    	}
+                     }
+                },
+                {
+                    field : 'orderStatus', 
+                    title : '订单状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderStatusDatasOrder, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'validStart', 
+                    title : '有效期开始时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                    field : 'validEnd', 
+                    title : '有效期结束时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlagOrder + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.orderId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlagOrder + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.orderId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+	 	$(function() {
+            var options = {
+           		id: "bootstrap-tableContract",
+   		        toolbar: "toolbarContract",
+                url: prefixContract + "/list",
+                createUrl: prefixContract + "/add",
+                updateUrl: prefixContract + "/edit/{id}",
+                removeUrl: prefixContract + "/remove",
+                exportUrl: prefixContract + "/export",
+                modalName: "合同管理",
+                showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+                columns: [
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+                    visible: false
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible: false
+                },
+                {
+                    field : 'customer.customerName', 
+                    title : '客户名称'
+                },
+                {
+                    field : 'totalMoney', 
+                    title : '合同金额'
+                },
+                {
+                    field : 'contractNo', 
+                    title : '合同编号'
+                },
+                {
+                    field : 'contractName', 
+                    title : '合同名称'
+                },
+                {
+                    field : 'contractType', 
+                    title : '合同类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractTypeDatas, value);
+                    }
+                },
+                {
+                    field : 'contractStatus', 
+                    title : '合同状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractStatusDatas, value);
+                    }
+                },
+                {
+                    field : 'dateStart', 
+                    title : '合同日期',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10)+'--'+row.dateEnd.substring(0,10);
+                     }
+                },
+                {
+                    field : 'signDate', 
+                    title : '合同签署时间',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10);
+                     }
+                },
+                {
+                    field : 'signBy', 
+                    title : '合同签署人'
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人'
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.contractStatus=="1"){
+                        	actions.push('<a class="btn btn-primary btn-xs ' + auditFlagContract + '" href="javascript:void(0)" onclick="auditOkContract(\'' + row.contractId + '\')"><i class="fa fa-check"></i>审核通过</a> ');
+                        	actions.push('<a class="btn btn-danger btn-xs ' + auditFlagContract + '" href="javascript:void(0)" onclick="auditNoContract(\'' + row.contractId + '\')"><i class="fa fa-reply"></i>驳回</a> ');
+                        }
+                        else if(row.contractStatus=="3"){
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlagContract + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+                        else if(row.contractStatus=="0"){
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlagContract + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlagContract + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+		 
+        function auditOkOrderPrice(orderId)
+        {        	
+        	$.modal.confirm("确认审核通过吗？", function() {
+        		$.operate.post(prefixOrderPrice + "/auditOk/"+orderId);
+        	});
+        }        
+        function auditNoOrderPrice(orderId)
+        {        	
+        	$.modal.confirm("确认驳回吗？", function() {
+        		$.operate.post(prefixOrderPrice + "/auditNo/"+orderId);
+        	});
+        }
+        function cancelOkOrderPrice(orderId)
+        {        	
+        	$.modal.confirm("确认作废吗？", function() {
+        		$.operate.post(prefixOrderPrice + "/cancelOk/"+orderId);
+        	});
+        }        
+        function cancelNoOrderPrice(orderId)
+        {        	
+        	$.modal.confirm("确认取消作废吗？", function() {
+        		$.operate.post(prefixOrderPrice + "/cancelNo/"+orderId);
+        	});
+        }
+        function priceOrderPrice(orderId)
+        {        	
+        	$.modal.confirm("确认报价吗？", function() {
+        		$.operate.post(prefixOrderPrice + "/price/"+orderId);
+        	});
+        }        
+        
+		/*转成订单*/
+		function convertOrderPrice(orderId) {
+		    $.modal.confirm("确认要转成订单吗?", function() {
+    			$.operate.post(prefixOrderPrice + "/convert/"+orderId);
+    		});
+		}
+		function auditOkContract(contractId)
+        {        	
+        	$.modal.confirm("确认审核通过吗？", function() {
+        		$.operate.post(prefix + "/auditOk/"+contractId);
+        	});        	
+        }
+	        
+        function auditNoContract(contractId)
+        {        	
+        	$.modal.confirm("确认驳回吗？", function() {
+        		$.operate.post(prefix + "/auditNo/"+contractId);
+        	});        	
+        }
+        
+		 function addPerson()
+		 {
+			 table.set();
+			 $.modal.open('添加联系人', prefixPerson + '/addPerson/'+customerId);
+		 }
+		 
+		 function addOrderPrcie()
+		 {
+			 table.set();
+			 $.modal.open('添加报价单', prefixOrderPrice + '/addOrderPrice/'+customerId);
+		 }
+		 
+		 function addOrder(){
+			 table.set();
+			 $.modal.open('添加订单', prefixOrder + '/addOrder/'+customerId);
+		 }
+		 
+		 function addContract(){
+			 table.set();
+			 $.modal.openTab('添加合同', prefixContract + '/addContract/'+customerId);
+		 }
+		 
+		 function addComplaint()
+		 {
+			 table.set();
+			 $.modal.open('添加投诉', prefixComplaint + '/addComplaint/'+customerId);
+		 }
+
+		 function addVisit()
+		 {
+			 table.set();
+			 $.modal.open('添加拜访', prefixVisit + '/addVisit/'+customerId);
+		 }
+		 
+		 function addFollow()
+		 {
+			 table.set();
+			 $.modal.open('添加跟进', prefixFollow + '/addFollow/'+customerId);
+		 }
+		 function exportExcel()
+		 {
+			 table.set();
+			 $.table.exportExcel();
+		 }
+		 
+		//打印操作
+    	function printContent(contractId) {
+    		$.modal.confirm("确认打印吗？", function() {
+    			var userAgent = navigator.userAgent.toLowerCase(); //取得浏览器的userAgent字符串
+        		if (userAgent.indexOf("trident") > -1||userAgent.indexOf('msie') > -1) {
+        			$.modal.msgWarning("请使用google或者360浏览器打印");
+        			return false;
+        		}
+    			else {//其它浏览器使用lodop
+    				var wind = window.open("", "newwin",
+   					'toolbar=no,scrollbars=yes,menubar=no');
+	    			/* wind.document.body.innerHTML = headstr + printContent + footstr;
+	    			wind.print();
+	    			wind.close();    */
+        		}
+        	});
+    	}
+	</script>
+</body>
+</html>

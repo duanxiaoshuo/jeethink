@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet"/>
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-primary pull-right">本月</span>
+						<h5>新增线索</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 class="no-margins"><a href="javascript:openClue();" id="clueCount"></a>个</h1>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-success pull-right">本月</span>
+						<h5>新增客户</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 class="no-margins"><a href="javascript:openCustomer();" id="customerCount"></a>个</h1>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-info pull-right">本月</span>
+						<h5>新增报价单</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 class="no-margins"><a href="javascript:openOrderPrice();" id="orderPriceCount"></a>个</h1>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<span class="label label-warning pull-right">本月</span>
+						<h5>新增订单</h5>
+					</div>
+					<div class="ibox-content">
+						<h1 class="no-margins"><a href="javascript:openOrder();" id="orderCount"></a>个</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="panel panel-primary" style="height: 260px;">
+					<div class="panel-heading">最新线索</div>
+					<div class="col-sm-12 select-table table-striped">
+						<table id="bootstrap-tableClue"></table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="panel panel-success" style="height: 260px;">
+					<div class="panel-heading">最新客户</div>
+					<div class="col-sm-12 select-table table-striped">
+						<table id="bootstrap-tableCustomer"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="panel panel-info" style="height: 260px;">
+					<div class="panel-heading">最新报价单</div>
+					<div class="col-sm-12 select-table table-striped">
+						<table id="bootstrap-tableOrderPrice"></table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="panel panel-warning" style="height: 260px;">
+					<div class="panel-heading">最新订单</div>
+					<div class="col-sm-12 select-table table-striped">
+						<table id="bootstrap-tableOrder"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/ajax/libs/flot/jquery.flot.js}"></script>
+
+	<th:block th:include="include :: sparkline-js" />
+	<th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+	//线索
+	var sexDatas = [[${@dict.getType('sys_user_sex')}]];
+	var clueSourceDatas = [[${@dict.getType('crm_customer_source')}]];
+    var decisionLevelDatas = [[${@dict.getType('person_decision_level')}]];
+    var clueStatusDatas = [[${@dict.getType('clue_status')}]];
+	
+	//客户
+	var industryDatas = [[${@dict.getType('industry')}]];
+	var customerStatusDatas = [[${@dict.getType('crm_customer_status')}]];
+    var customerSourceDatas = [[${@dict.getType('crm_customer_source')}]];
+    var customerDegreeDatas = [[${@dict.getType('crm_customer_degree')}]];
+    var customerPriorityDatas = [[${@dict.getType('crm_customer_priority')}]];
+    var customerCreditDatas = [[${@dict.getType('crm_customer_credit')}]];
+    
+    var priceOrderStatusDatas = [[${@dict.getType('price_order_status')}]];
+    var orderStatusDatas = [[${@dict.getType('order_status')}]];
+    
+	var prefix = ctx + "crm/main";
+	var prefixClue = ctx + "crm/clue";
+	var prefixCustomer = ctx + "crm/customer";
+	var prefixOrderPrice = ctx + "crm/orderPrice";
+	var prefixOrder = ctx + "crm/order";
+	$(function() {
+		$.get(prefix+"/listClueMonthCount", function(result){
+			$("#clueCount").html(result);
+		  });
+		
+		$.get(prefix+"/listCustomerMonthCount", function(result){
+			$("#customerCount").html(result);
+		  });
+		
+		$.get(prefix+"/listOrderPriceMonthCount", function(result){
+			$("#orderPriceCount").html(result);
+		  });
+		
+		$.get(prefix+"/listOrderMonthCount", function(result){
+			$("#orderCount").html(result);
+		  });
+	});
+	
+	$(function() {
+        var options = {
+        	id:"bootstrap-tableClue",
+            url: prefix + "/listClueTop5",
+            detailUrl: prefix + "/detail/{id}",
+            sortName: "createTime",
+		    sortOrder: "desc",
+		    showSearch: false,
+	        showRefresh: false,
+	        showToggle: false,
+	        showColumns: false,
+	        showPageGo: false,
+	        pagination: false,
+            modalName: "线索",
+            columns: [
+            	{
+                    field : 'clueId', 
+                    title : '线索ID',
+                    visible: false
+                },
+                {
+                    field : 'name', 
+                    title : '姓名'
+                },
+                {
+                    field : 'company', 
+                    title : '公司',
+                    visible: false
+                },
+                {
+                    field : 'duty', 
+                    title : '职务',
+                    visible: false
+                },
+                {
+                    field : 'mobile', 
+                    title : '手机'
+                },
+                {
+                    field : 'email', 
+                    title : '用户邮箱'
+                },
+                {
+                    field : 'sex', 
+                    title : '性别',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(sexDatas, value);
+                    }
+                },
+                {
+                    field : 'clueStatus', 
+                    title : '线索状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(clueStatusDatas, value);
+                    }
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+                    visible: false
+                },
+                {
+                    field : 'clueSource', 
+                    title : '线索来源',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(clueSourceDatas, value);
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+	
+	$(function() {
+        var options = {
+            id:"bootstrap-tableCustomer",
+            url: prefix + "/listCustomerTop5",
+            detailUrl: prefix + "/detail/{id}",
+            sortName: "createTime",
+	        sortOrder: "desc",
+	        showSearch: false,
+	        showRefresh: false,
+	        showToggle: false,
+	        showColumns: false,
+	        showPageGo: false,
+	        pagination: false,
+            modalName: "客户",
+            columns: [
+            {
+                field : 'customerId', 
+                title : '客户ID',
+                visible: false
+            },
+            {
+                field : 'customerName', 
+                title : '客户名称'
+            },
+            {
+                field : 'industry', 
+                title : '所属行业',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(industryDatas, value);
+                }
+            },
+            {
+                field : 'customerStatus', 
+                title : '客户状态',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(customerStatusDatas, value);
+                }
+            },
+            {
+                field : 'customerSource', 
+                title : '客户来源',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(customerSourceDatas, value);
+                }
+            },
+            {
+                field : 'customerDegree', 
+                title : '客户等级',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(customerDegreeDatas, value);
+                }
+            },
+            {
+                field : 'customerPriority', 
+                title : '客户优先级',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(customerPriorityDatas, value);
+                },
+                visible: false
+            },
+            {
+                field : 'customerCredit', 
+                title : '客户信誉度',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(customerCreditDatas, value);
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+	
+	$(function() {
+        var options = {
+        	id:"bootstrap-tableOrderPrice",
+            url: prefix + "/listOrderPriceTop5",
+	        sortName: "createTime",
+	        sortOrder: "desc",
+	        showSearch: false,
+	        showRefresh: false,
+	        showToggle: false,
+	        showColumns: false,
+	        showPageGo: false,
+	        pagination: false,
+            modalName: "报价单",
+            columns: [
+            {
+                field : 'orderId', 
+                title : '订单ID',
+                visible: false
+            },
+            {
+                field : 'orderCode', 
+                title : '订单编码',
+                visible:false
+            },
+            {
+                field : 'totalPrice', 
+                title : '报价总额'
+            },
+            {
+            	field : 'customer.customerName', 
+                title : '报价客户'
+            },
+            {
+                field : 'contractId', 
+                title : '合同ID',
+                visible:false,
+	            sortable: true
+            },
+            {
+                field : 'customerId', 
+                title : '客户id',
+                visible:false
+            },
+            {
+                field : 'orderName', 
+                title : '主题',
+                visible:false
+            },
+            {
+                field : 'prcieDate', 
+                title : '报价时间',
+                formatter: function(value, row, index) {
+                    return value.substring(0,10);
+                 }
+            },
+            {
+                field : 'prcieEndDate', 
+                title : '报价截止时间',
+                formatter: function(value, row, index) {
+                    return value.substring(0,10);
+                 }
+            },
+            {
+                field : 'orderStatus', 
+                title : '报价单状态',
+                formatter: function(value, row, index) {
+                   return $.table.selectDictLabel(priceOrderStatusDatas, value);
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+	
+	$(function() {
+        var options = {
+        	id:"bootstrap-tableOrder",
+            url: prefix + "/listOrderTop5",
+    	    sortName: "createTime",
+    	    sortOrder: "desc",
+    	    showSearch: false,
+    	    showRefresh: false,
+    	    showToggle: false,
+    	    showColumns: false,
+    	    showPageGo: false,
+    	    pagination: false,
+            modalName: "订单",
+            columns: [
+            	{
+                    field : 'orderId', 
+                    title : '订单ID',
+                    visible: false
+                },
+                {
+                    field : 'orderCode', 
+                    title : '订单编码',
+                    visible:false
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+                    visible:false
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible:false
+                },
+                {
+                    field : 'orderName', 
+                    title : '主题',
+                    visible:false
+                },
+                {
+                    field : 'orderDate', 
+                    title : '成交/签约时间',
+		            sortable: true,
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     }
+                },
+                {
+                	field : 'customer.customerName', 
+                    title : '成交客户'
+                },
+                {
+                    field : 'totalPrice', 
+                    title : '成交总额'
+                },
+                {
+                    field : 'costPrice', 
+                    title : '总成本'
+                },
+                {
+                    field : 'aaa', 
+                    title : '利润',
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(row.totalPrice)&&$.common.isNotEmpty(row.costPrice)){
+                    		return row.totalPrice-row.costPrice;
+                    	}
+                     }
+                },
+                {
+                    field : 'orderStatus', 
+                    title : '订单状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderStatusDatas, value);
+                    }
+                },
+                {
+                    field : 'validStart', 
+                    title : '有效期开始时间',
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     },
+                     visible:false
+                },
+                {
+                    field : 'validEnd', 
+                    title : '有效期结束时间',
+                    formatter: function(value, row, index) {
+                    	if($.common.isNotEmpty(value)){
+                    		return value.substring(0,10);
+                    	}
+                     },
+                     visible:false
+                }]
+        };
+        $.table.init(options);
+    });
+	
+	function openClue()
+	{
+		$.modal.openTab("线索管理",prefixClue);
+	}
+	function openCustomer()
+	{
+		$.modal.openTab("客户信息管理",prefixCustomer);
+	}
+	function openOrderPrice()
+	{
+		$.modal.openTab("报价单管理",prefixOrderPrice);
+	}
+	function openOrder()
+	{
+		$.modal.openTab("订单管理",prefixOrder);
+	}
+	</script>
+</body>
+</html>

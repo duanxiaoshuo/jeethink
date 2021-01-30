@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('合同发票管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>合同名称：</label>
+                                <input type="text" id="contractName"  name="params[contractName]"/>
+                            </li>
+                            <li>
+                                <label>发票号码：</label>
+                                <input type="text" name="invoiceNo"/>
+                            </li>
+                            <li>
+                                <label>发票金额：</label>
+                                <input type="text" name="invoiceMoney"/>
+                            </li>
+                            <li>
+                                <label>发票类型：</label>
+                                <select name="invoiceType" th:with="type=${@dict.getType('invoice_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>税率%：</label>
+                                <input type="text" name="invoiceFate"/>
+                            </li>
+                            <li>
+                                <label>发票状态：</label>
+                                <select name="invoiceStatus" th:with="type=${@dict.getType('invoice_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+                                <label>发票日期：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginInvoiceDate]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endInvoiceDate]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i> 搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i> 重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="crm:contractInvoice:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="crm:contractInvoice:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+    	var auditFlag=[[${@permission.hasPermi('crm:contractInvoice:audit')}]];
+    	var invoiceFlag=[[${@permission.hasPermi('crm:contractInvoice:invoice')}]];
+        var editFlag = [[${@permission.hasPermi('crm:contractInvoice:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('crm:contractInvoice:remove')}]];
+        var invoiceTypeDatas = [[${@dict.getType('invoice_type')}]];
+        var invoiceStatusDatas = [[${@dict.getType('invoice_status')}]];
+        var prefix = ctx + "crm/contractInvoice";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+		        sortName: "createTime",
+		        sortOrder: "desc",
+                modalName: "合同发票管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'invoiceId', 
+                    title : '发票ID',
+                    visible: false
+                },
+                {
+                    field : 'contractId', 
+                    title : '关联合同id',
+                    visible: false
+                },
+                {
+                    field : 'contract.contractName', 
+                    title : '合同名称'
+                },
+                {
+                    field : 'contract.totalMoney', 
+                    title : '合同总金额'
+                },
+                {
+                    field : 'invoiceMoney', 
+                    title : '发票金额'
+                },
+                {
+                    field : 'invoiceNo', 
+                    title : '发票号码'
+                },
+                {
+                    field : 'invoiceType', 
+                    title : '发票类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(invoiceTypeDatas, value);
+                    }
+                },
+                {
+                    field : 'invoiceFate', 
+                    title : '发票税率',
+                    formatter: function(value, row, index) {
+                        return value+"%";
+                     }
+                },
+                {
+                    field : 'invoiceDate', 
+                    title : '发票日期'
+                },
+                {
+                    field : 'invoiceStatus', 
+                    title : '发票状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(invoiceStatusDatas, value);
+                    }
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人'
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.invoiceStatus=="0"){//已保存
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.invoiceId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.invoiceId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        else if(row.invoiceStatus=="1"){//已提交
+                        	actions.push('<a class="btn btn-primary btn-xs ' + auditFlag + '" href="javascript:void(0)" onclick="auditOk(\'' + row.invoiceId + '\')"><i class="fa fa-check"></i>审核通过</a> ');
+                        	actions.push('<a class="btn btn-danger btn-xs ' + auditFlag + '" href="javascript:void(0)" onclick="auditNo(\'' + row.invoiceId + '\')"><i class="fa fa-reply"></i>驳回</a> ');
+                        }
+                        else if(row.invoiceStatus=="2"){//已审核
+                        	actions.push('<a class="btn btn-primary btn-xs ' + invoiceFlag + '" href="javascript:void(0)" onclick="invoice(\'' + row.invoiceId + '\')"><i class="fa fa-file-text-o"></i>确认开票</a> ');
+                        }
+                        else if(row.invoiceStatus=="3"){//已驳回
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.invoiceId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }                        
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+        
+        function auditOk(id)
+        {        	
+        	$.modal.confirm("确认审核通过吗？", function() {
+        		$.operate.post(prefix + "/auditOk/"+id);
+        	});        	
+        }
+        
+        function auditNo(id)
+        {        	
+        	$.modal.confirm("确认驳回吗？", function() {
+        		$.operate.post(prefix + "/auditNo/"+id);
+        	});        	
+        }
+        
+        function invoice(id)
+        {        	
+        	$.modal.confirm("确认已经开票吗？", function() {
+        		$.operate.post(prefix + "/invoice/"+id);
+        	});        	
+        }
+    </script>
+</body>
+</html>
