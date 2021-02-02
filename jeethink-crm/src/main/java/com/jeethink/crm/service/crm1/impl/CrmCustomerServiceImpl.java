@@ -198,48 +198,51 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
     /**
      * 批量分享客户
      *
-     * @param ids      需要分享的数据ID
-     * @param isShare  是否分享
-     * @param operName 操作人
+     * @param customerId 需要分享的数据ID
+     * @param isShare    是否分享
+     * @param operName   操作人
      * @return 结果
      */
     @Override
     @Transactional
-    public int shareCrmCustomerByIds(String ids, String isShare, String operName, Long share, Long shred, String loginName) {
+    public int shareCrmCustomerByIds(Long customerId, String isShare, String operName, Long share, Long shred, String loginName) {
         int successNum = 0;
-        Long[] customerIds = Convert.toLongArray(ids);
-        for (int j = 0; j < customerIds.length; j++) {
-            Long customerId = customerIds[j];
-            CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
-            if (null == crmCustomer) {
-                continue;
-            }
-            //公客不能设置共享属性
-            if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {
-                continue;
-            }
+        CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
+        if (null == crmCustomer) {
+            return successNum;
 
-            CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
-            crmCustomer.setIsShare(isShare);
-            crmCustomer.setUpdateBy(operName);
-            this.updateCrmCustomer(crmCustomer);
-            if (isShare.equals("1")) {
-                crmShareRelation = new CrmShareRelation();
-                crmShareRelation.setCustomerId(customerId);
-                crmShareRelation.setShareUserId(share);
-                crmShareRelation.setSharedUserId(shred);
-                crmShareRelation.setDelFlag("0");
-                crmShareRelation.setCreateBy(loginName);
-                crmShareRelation.setCreateTime(new Date());
-                crmShareRelation.setUpdateTime(new Date());
-                crmShareRelation.setUpdateBy(loginName);
-                crmShareRelationMapper.insertCrmShareRelation(crmShareRelation);
-            } else {
-                crmShareRelationMapper.deleteByCustomerId(customerId, loginName);
-            }
-
-            successNum++;
         }
+        //公客不能设置共享属性
+        if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {
+            return successNum;
+
+        }
+
+
+        crmCustomer.setIsShare(isShare);
+        crmCustomer.setUpdateBy(operName);
+        this.updateCrmCustomer(crmCustomer);
+        if (isShare.equals("1")) {
+            CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
+            if (null == crmShareRelation) {
+                return successNum;
+
+            }
+            crmShareRelation = new CrmShareRelation();
+            crmShareRelation.setCustomerId(customerId);
+            crmShareRelation.setShareUserId(share);
+            crmShareRelation.setSharedUserId(shred);
+            crmShareRelation.setDelFlag("0");
+            crmShareRelation.setCreateBy(loginName);
+            crmShareRelation.setCreateTime(new Date());
+            crmShareRelation.setUpdateTime(new Date());
+            crmShareRelation.setUpdateBy(loginName);
+            crmShareRelationMapper.insertCrmShareRelation(crmShareRelation);
+        } else {
+            crmShareRelationMapper.deleteByCustomerId(customerId, loginName);
+        }
+
+        successNum++;
 
         return successNum;
     }

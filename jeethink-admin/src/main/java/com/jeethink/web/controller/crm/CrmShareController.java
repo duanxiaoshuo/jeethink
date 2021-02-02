@@ -20,8 +20,8 @@ public class CrmShareController {
      * 转交为个人页面      填写原因
      */
     @GetMapping("/sharePerson")
-    public String transferPerson(String customerIds, String isShare , ModelMap mmap) {
-        mmap.put("customerIds", customerIds);
+    public String transferPerson(String customerId, String isShare , ModelMap mmap) {
+        mmap.put("customerId", customerId);
         mmap.put("isShare", isShare);
 
         return prefix + "/sharePerson";

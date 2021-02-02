@@ -94,7 +94,7 @@ public interface ICrmCustomerService
      * @param operName 操作人
      * @return 结果
      */
-    public int shareCrmCustomerByIds(String ids,String isShare, String operName,Long share,Long shared,String updateBy);
+    public int shareCrmCustomerByIds(Long ids,String isShare, String operName,Long share,Long shared,String updateBy);
     
     /**
      * 导入客户数据

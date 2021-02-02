@@ -6,9 +6,9 @@ function detail(id) {
 
 /* 共享客户 */
 function share(isShare) {
-    var customerIds = $.table.selectColumns("customerId");
+    var customerId = $.table.selectColumns("customerId");
     var belongTos = $.table.selectColumnsNoUnique("belongTo");
-    if (customerIds.length == 0) {
+    if (customerId.length == 0) {
         $.modal.alertWarning("请至少选择一条记录");
         return;
     }
@@ -24,11 +24,11 @@ function share(isShare) {
     }
 
     if (isShare == 1) {
-        var url = ctx + 'crm/share/sharePerson?customerIds=' + customerIds.join() + "&isShare=" + isShare;
+        var url = ctx + 'crm/share/sharePerson?customerId=' + customerId + "&isShare=" + isShare;
         $.modal.open("共享给其他人员", url);
     } else {
         var data = {
-            "customerIds": customerIds.join(),
+            "customerId": customerId,
             "isShare": isShare
         };
         $.operate.post(prefix + "/share", data);

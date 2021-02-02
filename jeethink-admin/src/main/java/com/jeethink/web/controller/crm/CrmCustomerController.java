@@ -246,11 +246,11 @@ public class CrmCustomerController extends BaseController
     @Log(title = "客户", businessType = BusinessType.UPDATE)
     @PostMapping( "/share")
     @ResponseBody
-    public AjaxResult share(String customerIds,String isShare,Long shared)
+    public AjaxResult share(Long customerId,String isShare,Long shared)
     {
         Long share = ShiroUtils.getUserId();
         String loginName = ShiroUtils.getLoginName();
-        return toAjax(crmCustomerService.shareCrmCustomerByIds(customerIds,isShare,ShiroUtils.getLoginName(),share,shared, loginName));
+        return toAjax(crmCustomerService.shareCrmCustomerByIds(customerId,isShare,ShiroUtils.getLoginName(),share,shared, loginName));
     }
     
     /**
