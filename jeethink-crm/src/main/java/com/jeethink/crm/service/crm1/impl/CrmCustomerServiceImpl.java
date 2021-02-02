@@ -205,25 +205,26 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
      */
     @Override
     @Transactional
-    public int shareCrmCustomerByIds(String ids, String isShare, String operName, Long share, Long shred,String loginName) {
+    public int shareCrmCustomerByIds(String ids, String isShare, String operName, Long share, Long shred, String loginName) {
         int successNum = 0;
         Long[] customerIds = Convert.toLongArray(ids);
         for (int j = 0; j < customerIds.length; j++) {
             Long customerId = customerIds[j];
             CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
+            if (null == crmCustomer) {
+                continue;
+            }
             //公客不能设置共享属性
             if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {
                 continue;
             }
-            //和isShare值相同不做处理
-            if (crmCustomer.getIsShare().equals(isShare)) {
-                continue;
-            }
+
+            CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
             crmCustomer.setIsShare(isShare);
             crmCustomer.setUpdateBy(operName);
             this.updateCrmCustomer(crmCustomer);
-            if(isShare.equals("1")){
-                CrmShareRelation crmShareRelation = new CrmShareRelation();
+            if (isShare.equals("1")) {
+                crmShareRelation = new CrmShareRelation();
                 crmShareRelation.setCustomerId(customerId);
                 crmShareRelation.setShareUserId(share);
                 crmShareRelation.setSharedUserId(shred);
@@ -233,8 +234,8 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
                 crmShareRelation.setUpdateTime(new Date());
                 crmShareRelation.setUpdateBy(loginName);
                 crmShareRelationMapper.insertCrmShareRelation(crmShareRelation);
-            }else{
-                crmShareRelationMapper.deleteByCustomerId(customerId,loginName);
+            } else {
+                crmShareRelationMapper.deleteByCustomerId(customerId, loginName);
             }
 
             successNum++;

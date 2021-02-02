@@ -36,7 +36,7 @@ function share(isShare) {
 
 }
 
-}
+
 
 /* 转交给其他人 */
 function transferPerson() {

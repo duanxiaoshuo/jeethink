@@ -133,7 +133,7 @@ public class CrmCustomer extends BaseEntity
 
     /** 是否共享客户 */
     @Excel(name = "是否共享客户")
-    private String isShare;
+    private String isShare="";
     
     /** 共享时间 */
     //@Excel(name = "共享时间", width = 30, dateFormat = "yyyy-MM-dd")

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jeethink.crm.mapper.Crm2ContractInvoiceMapper">
-    
+
     <resultMap type="CrmContractInvoice" id="CrmContractInvoiceResult">
         <result property="invoiceId"    column="invoice_id"    />
         <result property="contractId"    column="contract_id"    />
@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <association property="contract"    column="contract_id" javaType="CrmContract" resultMap="CrmContractResult" />
     </resultMap>
-    
+
     <resultMap type="CrmContract" id="CrmContractResult">
         <result property="contractId"    column="contract_id"    />
         <result property="customerId"    column="customer_id"    />
@@ -31,13 +31,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCrmContractInvoiceVo">
-        select p.invoice_id, p.contract_id, p.invoice_no, p.invoice_money, p.invoice_type, p.invoice_fate, p.invoice_date, p.invoice_status, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,c.contract_no,c.contract_name,c.total_money from crm_contract_invoice p
-    	left join crm_contract c on c.contract_id=p.contract_id
+        select p.invoice_id, p.contract_id, p.invoice_no, p.invoice_money, p.invoice_type, p.invoice_fate, p.invoice_date, p.invoice_status, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,c.contract_no,c.contract_name,c.total_money from crm2_contract_invoice p
+    	left join crm2_contract c on c.contract_id=p.contract_id
     </sql>
 
     <select id="selectCrmContractInvoiceList" parameterType="CrmContractInvoice" resultMap="CrmContractInvoiceResult">
         <include refid="selectCrmContractInvoiceVo"/>
-        <where>  
+        <where>
         	p.del_flag='0'
             <if test="contractId != null "> and contract_id = #{contractId}</if>
             <if test="invoiceNo != null  and invoiceNo != ''"> and p.invoice_no = #{invoiceNo}</if>
@@ -55,12 +55,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
         </where>
     </select>
-    
+
     <select id="selectCrmContractInvoiceById" parameterType="Long" resultMap="CrmContractInvoiceResult">
         <include refid="selectCrmContractInvoiceVo"/>
         where p.invoice_id = #{invoiceId}
     </select>
-        
+
     <insert id="insertCrmContractInvoice" parameterType="CrmContractInvoice" useGeneratedKeys="true" keyProperty="invoiceId">
         insert into crm_contract_invoice
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -116,11 +116,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCrmContractInvoiceById" parameterType="Long">
-        update crm_contract_invoice set del_flag="1" where invoice_id = #{invoiceId}
+        update crm2_contract_invoice set del_flag="1" where invoice_id = #{invoiceId}
     </delete>
 
     <delete id="deleteCrmContractInvoiceByIds" parameterType="String">
-        update crm_contract_invoice set del_flag="1" where invoice_id in 
+        update crm2_contract_invoice set del_flag="1" where invoice_id in
         <foreach item="invoiceId" collection="array" open="(" separator="," close=")">
             #{invoiceId}
         </foreach>

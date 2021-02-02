@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jeethink.crm.mapper.Crm2TransferMapper">
-    
+
     <resultMap type="CrmTransfer" id="CrmTransferResult">
         <result property="transferId"    column="transfer_id"    />
         <result property="businessId"    column="business_id"    />
@@ -22,12 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCrmTransferVo">
-        select transfer_id, business_id, business_type, transfer_type, transfer_to, belong_to, reason, public_id, del_flag, create_by, create_time, update_by, update_time, remark from crm_transfer
+        select transfer_id, business_id, business_type, transfer_type, transfer_to, belong_to, reason, public_id, del_flag, create_by, create_time, update_by, update_time, remark from crm2_transfer
     </sql>
 
     <select id="selectCrmTransferList" parameterType="CrmTransfer" resultMap="CrmTransferResult">
         <include refid="selectCrmTransferVo"/>
-        <where>  
+        <where>
         	del_flag='0'
             <if test="transferTo != null  and transferTo != ''"> and transfer_to = #{transferTo}</if>
             <if test="belongTo != null  and belongTo != ''"> and belong_to = #{belongTo}</if>
@@ -35,14 +35,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="businessType != null  and businessType != ''"> and business_type = #{businessType}</if>
         </where>
     </select>
-    
+
     <select id="selectCrmTransferById" parameterType="Long" resultMap="CrmTransferResult">
         <include refid="selectCrmTransferVo"/>
         where transfer_id = #{transferId}
     </select>
-        
+
     <insert id="insertCrmTransfer" parameterType="CrmTransfer" useGeneratedKeys="true" keyProperty="transferId">
-        insert into crm_transfer
+        insert into crm2_transfer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="businessId != null ">business_id,</if>
             <if test="businessType != null  and businessType != ''">business_type,</if>
@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateCrmTransfer" parameterType="CrmTransfer">
-        update crm_transfer
+        update crm2_transfer
         <trim prefix="SET" suffixOverrides=",">
             <if test="businessId != null ">business_id = #{businessId},</if>
             <if test="businessType != null  and businessType != ''">business_type = #{businessType},</if>
@@ -96,11 +96,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCrmTransferById" parameterType="Long">
-        delete from crm_transfer where transfer_id = #{transferId}
+        delete from crm2_transfer where transfer_id = #{transferId}
     </delete>
 
     <delete id="deleteCrmTransferByIds" parameterType="String">
-        delete from crm_transfer where transfer_id in 
+        delete from crm2_transfer where transfer_id in
         <foreach item="transferId" collection="array" open="(" separator="," close=")">
             #{transferId}
         </foreach>

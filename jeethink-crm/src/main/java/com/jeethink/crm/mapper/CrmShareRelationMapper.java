@@ -74,4 +74,13 @@ public interface CrmShareRelationMapper {
      * @param customerId
      */
     void deleteByCustomerId(@Param("customerId") Long customerId, @Param("updateBy") String updateBy);
+
+    /**
+     * 查询是否存在共享关系
+     * @param customerId
+     * @param share
+     * @param shred
+     * @return
+     */
+    CrmShareRelation selectCrmShareRelation(@Param("customerId") Long customerId, @Param("share")Long share,@Param("shred") Long shred);
 }
