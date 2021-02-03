@@ -23,72 +23,66 @@ import java.util.List;
 
 /**
  * 客户Controller
- * 
+ *
  * @author jeethink
  * @date 2020-03-01
  */
 @Controller
 @RequestMapping("/crm2/customer")
-public class Crm2CustomerController extends BaseController
-{
+public class Crm2CustomerController extends BaseController {
     private String prefix = "crm2/customer";
-    
+
     @Autowired
-    private ICrm2CustomerService crmCustomerService;
+    private ICrm2CustomerService crm2CustomerService;
 
     @RequiresPermissions("crm:customer:view")
     @GetMapping()
-    public String customer()
-    {
+    public String customer() {
         return prefix + "/customer";
     }
-  
+
     /**
-     * 查询客户列表 
+     * 查询客户列表
      */
     @RequiresPermissions("crm:customer:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(CrmCustomer crmCustomer)
-    {
+    public TableDataInfo list(CrmCustomer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerList(crmCustomer);
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 我的
      */
     @RequiresPermissions("crm:customer:viewMy")
     @GetMapping("/my")
-    public String customerMy()
-    {
+    public String customerMy() {
         return prefix + "/customerMy";
     }
-  
+
     /**
      * 查询客户列表 我的
      */
     @RequiresPermissions("crm:customer:listMy")
     @PostMapping("/listMy")
     @ResponseBody
-    public TableDataInfo listMy(CrmCustomer crmCustomer)
-    {
+    public TableDataInfo listMy(CrmCustomer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListMy(crmCustomer);
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListMy(crmCustomer);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 共享
      */
     @RequiresPermissions("crm:customer:viewShare")
     @GetMapping("/share")
-    public String customerShare()
-    {
+    public String customerShare() {
         return prefix + "/customerShare";
     }
-  
+
     /**
      * 查询客户列表 共享
      */
@@ -97,34 +91,33 @@ public class Crm2CustomerController extends BaseController
     @ResponseBody
     public TableDataInfo listShare(CrmCustomer crmCustomer)
     {
+        Long userId = ShiroUtils.getUserId();
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListShare(crmCustomer);
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListShare(crmCustomer,userId);
         return getDataTable(list);
     }
-    
+
     /**
      * 查询客户列表 公共
      */
     @RequiresPermissions("crm:customer:viewPublic")
     @GetMapping("/public")
-    public String customerPublic()
-    {
+    public String customerPublic() {
         return prefix + "/customerPublic";
     }
-  
+
     /**
      * 查询客户列表 公共
      */
     @RequiresPermissions("crm:customer:listPublic")
     @PostMapping("/listPublic")
     @ResponseBody
-    public TableDataInfo listPublic(CrmCustomer crmCustomer)
-    {
+    public TableDataInfo listPublic(CrmCustomer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerListPublic(crmCustomer);
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListPublic(crmCustomer);
         return getDataTable(list);
-    }    
-    
+    }
+
     /**
      * 导出客户列表
      */
@@ -132,9 +125,8 @@ public class Crm2CustomerController extends BaseController
     @Log(title = "客户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(CrmCustomer crmCustomer)
-    {
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerList(crmCustomer);
+    public AjaxResult export(CrmCustomer crmCustomer) {
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
         ExcelUtil<CrmCustomer> util = new ExcelUtil<CrmCustomer>(CrmCustomer.class);
         return util.exportExcel(list, "customer");
     }
@@ -143,8 +135,7 @@ public class Crm2CustomerController extends BaseController
      * 新增客户
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -155,23 +146,21 @@ public class Crm2CustomerController extends BaseController
     @Log(title = "客户", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(CrmCustomer crmCustomer)
-    {    	
-    	String loginName=ShiroUtils.getLoginName();
-    	crmCustomer.setDelFlag("0");
-    	crmCustomer.setCreateBy(loginName);
-    	crmCustomer.setSourceBelongTo(loginName);
-    	crmCustomer.setBelongTo(loginName);
-        return toAjax(crmCustomerService.insertCrmCustomer(crmCustomer));
+    public AjaxResult addSave(CrmCustomer crmCustomer) {
+        String loginName = ShiroUtils.getLoginName();
+        crmCustomer.setDelFlag("0");
+        crmCustomer.setCreateBy(loginName);
+        crmCustomer.setSourceBelongTo(loginName);
+        crmCustomer.setBelongTo(loginName);
+        return toAjax(crm2CustomerService.insertCrmCustomer(crmCustomer));
     }
 
     /**
      * 修改客户
      */
     @GetMapping("/edit/{customerId}")
-    public String edit(@PathVariable("customerId") Long customerId, ModelMap mmap)
-    {
-        CrmCustomer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
+    public String edit(@PathVariable("customerId") Long customerId, ModelMap mmap) {
+        CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/edit";
     }
@@ -183,68 +172,65 @@ public class Crm2CustomerController extends BaseController
     @Log(title = "客户", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(CrmCustomer crmCustomer)
-    {
-    	crmCustomer.setUpdateBy(ShiroUtils.getLoginName());
-        return toAjax(crmCustomerService.updateCrmCustomer(crmCustomer));
+    public AjaxResult editSave(CrmCustomer crmCustomer) {
+        crmCustomer.setUpdateBy(ShiroUtils.getLoginName());
+        return toAjax(crm2CustomerService.updateCrmCustomer(crmCustomer));
     }
-    
+
     /**
      * 查看客户
      */
     @GetMapping("/detail/{customerId}")
-    public String detail(@PathVariable("customerId") Long customerId, ModelMap mmap)
-    {
-        CrmCustomer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
+    public String detail(@PathVariable("customerId") Long customerId, ModelMap mmap) {
+        CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/detail";
     }
-    
+
     /**
      * 删除客户
      */
     @RequiresPermissions("crm:customer:remove")
     @Log(title = "客户", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
-        return toAjax(crmCustomerService.deleteCrmCustomerByIds(ids));
+    public AjaxResult remove(String ids) {
+        return toAjax(crm2CustomerService.deleteCrmCustomerByIds(ids));
     }
-    
+
     /**
      * 查询选择客户
      */
     @GetMapping("/selectCustomer")
-    public String selectCustomer()
-    {
+    public String selectCustomer() {
         return prefix + "/selectCustomer";
     }
-    
+
     /**
      * 查询客户列表(all)
      */
     @PostMapping("/listAll")
     @ResponseBody
-    public TableDataInfo listAll(CrmCustomer crmCustomer)
-    {
+    public TableDataInfo listAll(CrmCustomer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crmCustomerService.selectCrmCustomerList(crmCustomer);
+        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
         return getDataTable(list);
     }
+
 
     /**
      * 共享客户
      */
     @RequiresPermissions("crm:customer:share")
     @Log(title = "客户", businessType = BusinessType.UPDATE)
-    @PostMapping( "/share")
+    @PostMapping("/share")
     @ResponseBody
-    public AjaxResult share(String customerIds,String isShare)
-    {
-        return toAjax(crmCustomerService.shareCrmCustomerByIds(customerIds,isShare,ShiroUtils.getLoginName()));
+    public AjaxResult share(Long customerId, String isShare, Long shared) {
+        Long share = ShiroUtils.getUserId();
+        String loginName = ShiroUtils.getLoginName();
+        return toAjax(crm2CustomerService.shareCrmCustomerByIds(customerId, isShare, ShiroUtils.getLoginName(), share, shared, loginName));
     }
-    
+
     /**
      * 导入客户
      */
@@ -252,12 +238,11 @@ public class Crm2CustomerController extends BaseController
     @RequiresPermissions("crm:customer:import")
     @PostMapping("/importData")
     @ResponseBody
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<CrmCustomerTemplate> util = new ExcelUtil<CrmCustomerTemplate>(CrmCustomerTemplate.class);
         List<CrmCustomerTemplate> customerList = util.importExcel(file.getInputStream());
         String operName = ShiroUtils.getSysUser().getLoginName();
-        String message = crmCustomerService.importCustomer(customerList, updateSupport, operName);
+        String message = crm2CustomerService.importCustomer(customerList, updateSupport, operName);
         return AjaxResult.success(message);
     }
 
@@ -267,45 +252,44 @@ public class Crm2CustomerController extends BaseController
     @RequiresPermissions("crm:customer:view")
     @GetMapping("/importTemplate")
     @ResponseBody
-    public AjaxResult importTemplate()
-    {
+    public AjaxResult importTemplate() {
         ExcelUtil<CrmCustomerTemplate> util = new ExcelUtil<CrmCustomerTemplate>(CrmCustomerTemplate.class);
         return util.importTemplateExcel("客户模版");
     }
 
-	/**
-	 * 校验客户名称
-	 */
-	@PostMapping("/checkCustomerNameUnique")
-	@ResponseBody
-	public String checkCustomerNameUnique(CrmCustomer crmCustomer) {
-		return crmCustomerService.checkCustomerNameUnique(crmCustomer);
-	}
+    /**
+     * 校验客户名称
+     */
+    @PostMapping("/checkCustomerNameUnique")
+    @ResponseBody
+    public String checkCustomerNameUnique(CrmCustomer crmCustomer) {
+        return crm2CustomerService.checkCustomerNameUnique(crmCustomer);
+    }
 
-	/**
-	 * 校验手机号码
-	 */
-	@PostMapping("/checkMobileUnique")
-	@ResponseBody
-	public String checkMobileUnique(CrmCustomer crmCustomer) {
-		return crmCustomerService.checkMobileUnique(crmCustomer);
-	}
-	
-	/**
-	 * 校验座机
-	 */
-	@PostMapping("/checkTelephoneUnique")
-	@ResponseBody
-	public String checkTelephoneUnique(CrmCustomer crmCustomer) {
-		return crmCustomerService.checkTelephoneUnique(crmCustomer);
-	}
+    /**
+     * 校验手机号码
+     */
+    @PostMapping("/checkMobileUnique")
+    @ResponseBody
+    public String checkMobileUnique(CrmCustomer crmCustomer) {
+        return crm2CustomerService.checkMobileUnique(crmCustomer);
+    }
 
-	/**
-	 * 校验座机
-	 */
-	@PostMapping("/checkEmailUnique")
-	@ResponseBody
-	public String checkEmailUnique(CrmCustomer crmCustomer) {
-		return crmCustomerService.checkEmailUnique(crmCustomer);
-	}
+    /**
+     * 校验座机
+     */
+    @PostMapping("/checkTelephoneUnique")
+    @ResponseBody
+    public String checkTelephoneUnique(CrmCustomer crmCustomer) {
+        return crm2CustomerService.checkTelephoneUnique(crmCustomer);
+    }
+
+    /**
+     * 校验座机
+     */
+    @PostMapping("/checkEmailUnique")
+    @ResponseBody
+    public String checkEmailUnique(CrmCustomer crmCustomer) {
+        return crm2CustomerService.checkEmailUnique(crmCustomer);
+    }
 }

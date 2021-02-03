@@ -195,7 +195,7 @@
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 AND date_format(c.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
-            AND c.is_share="1"
+            -- AND c.is_share="1"
         </where>
     </select>
 

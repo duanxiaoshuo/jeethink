@@ -217,7 +217,7 @@
             </if>
             and customer_id in
             <foreach collection="customerIds" item="item" open="(" separator="," close=")">
-              #{item}
+                #{item}
             </foreach>
             -- AND c.is_share="1"
         </where>

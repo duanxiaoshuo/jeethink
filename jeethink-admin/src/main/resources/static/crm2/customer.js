@@ -24,7 +24,7 @@ function share(isShare) {
     }
 
     if (isShare == 1) {
-        var url = ctx + 'crm2/share/sharePerson?customerId=' + customerId + "&isShare=" + isShare;
+        var url = ctx + 'crm/share/sharePerson?customerId=' + customerId + "&isShare=" + isShare;
         $.modal.open("共享给其他人员", url);
     } else {
         var data = {
@@ -45,7 +45,7 @@ function transferPerson() {
         $.modal.alertWarning("请至少选择一条记录");
         return;
     }
-    var url = ctx + 'crm2/transfer/transferPerson?ids=' + customerIds.join() + "&businessType=Customer";
+    var url = ctx + 'crm/transfer/transferPerson?ids=' + customerIds.join() + "&businessType=Customer";
     $.modal.open("转给其它团队成员（变更负责人）", url);
 }
 
@@ -63,7 +63,7 @@ function transferPublic() {
             return;
         }
     }
-    var url = ctx + 'crm2/transfer/transferPublic?ids=' + customerIds.join() + "&businessType=Customer";
+    var url = ctx + 'crm/transfer/transferPublic?ids=' + customerIds.join() + "&businessType=Customer";
     $.modal.open("转为公共客户", url);
 }
 
@@ -74,6 +74,6 @@ function get() {
         $.modal.alertWarning("请至少选择一条记录");
         return;
     }
-    var url = ctx + 'crm2/transfer/getPublic?ids=' + customerIds.join() + "&businessType=Customer";
+    var url = ctx + 'crm/transfer/getPublic?ids=' + customerIds.join() + "&businessType=Customer";
     $.modal.open("领取公共客户", url);
 }

@@ -43,7 +43,8 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer);
+    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer,Long userId);
+
     
     /**
      * 查询客户列表 公共
@@ -85,17 +86,17 @@ public interface ICrm2CustomerService
      * @return 结果
      */
     public int deleteCrmCustomerById(Long customerId);
-    
+
     /**
      * 批量分享客户
-     * 
-     * @param customerIds 需要分享的数据ID
+     *
+     * @param ids 需要分享的数据ID
      * @param isShare 是否分享
      * @param operName 操作人
      * @return 结果
      */
-    public int shareCrmCustomerByIds(String ids,String isShare, String operName);
-    
+    public int shareCrmCustomerByIds(Long ids,String isShare, String operName,Long share,Long shared,String updateBy);
+
     /**
      * 导入客户数据
      * 

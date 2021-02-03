@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-sm-12 search-collapse" style="display: none;">
                 <form id="formId">
-                	
+
                     <div class="select-list">
                         <ul>
                             <li>
@@ -175,35 +175,35 @@
                     checkbox: true
                 },
                 {
-                    field : 'customerId', 
+                    field : 'customerId',
                     title : '客户ID',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'customerName', 
+                    field : 'customerName',
                     title : '客户名称',
 		            formatter: function(value, row, index) {
 		            	if(row.isShare=="1"){
 		            		return '<i class="fa fa-group green" title="共享客户"></i><a style="color:blue;" href="javascript:void(0)" title="查看详情" onclick="detail(\'' +row.customerId + '\')">'+value+'</a> ';
 		            	}
-		            	else if(row.belongTo==""||row.belongTo==null){ 
+		            	else if(row.belongTo==""||row.belongTo==null){
 		            		return '<span style="color:red;" title="这是一个公客">[公客]</span><a style="color:blue;" href="javascript:void(0)" title="查看详情" onclick="detail(\'' +row.customerId + '\')">'+value+'</a> ';
 		            	}
 		            	else{
 		            		return '<a style="color:blue;" href="javascript:void(0)" title="查看详情" onclick="detail(\'' +row.customerId + '\')">'+value+'</a> ';
-		            	} 
+		            	}
 	                },
 		            sortable: true
                 },
                 {
-                    field : 'nameShort', 
+                    field : 'nameShort',
                     title : '客户简称',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'customerType', 
+                    field : 'customerType',
                     title : '客户类型',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerTypeDatas, value);
@@ -211,25 +211,25 @@
 		            sortable: true
                 },
                 {
-                    field : 'telephone', 
+                    field : 'telephone',
                     title : '公司座机',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'mobile', 
+                    field : 'mobile',
                     title : '公司手机',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'email', 
+                    field : 'email',
                     title : '公司邮箱',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'industry', 
+                    field : 'industry',
                     title : '所属行业',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(industryDatas, value);
@@ -237,7 +237,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerStatus', 
+                    field : 'customerStatus',
                     title : '客户状态',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerStatusDatas, value);
@@ -245,7 +245,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerSource', 
+                    field : 'customerSource',
                     title : '客户来源',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerSourceDatas, value);
@@ -253,7 +253,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerDegree', 
+                    field : 'customerDegree',
                     title : '客户等级',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerDegreeDatas, value);
@@ -261,7 +261,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerPriority', 
+                    field : 'customerPriority',
                     title : '客户优先级',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerPriorityDatas, value);
@@ -269,7 +269,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerCredit', 
+                    field : 'customerCredit',
                     title : '客户信誉度',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerCreditDatas, value);
@@ -277,7 +277,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerMaturity', 
+                    field : 'customerMaturity',
                     title : '客户成熟度',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerMaturityDatas, value);
@@ -285,7 +285,7 @@
 		            sortable: true
                 },
                 {
-                    field : 'customerCategory', 
+                    field : 'customerCategory',
                     title : '客户类别',
                     formatter: function(value, row, index) {
                        return $.table.selectDictLabel(customerCategoryDatas, value);
@@ -293,50 +293,50 @@
 		            sortable: true
                 },
                 {
-                    field : 'getDate', 
+                    field : 'getDate',
                     title : '客户获取时间',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'sourceBelongTo', 
+                    field : 'sourceBelongTo',
                     title : '原负责人',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'belongTo', 
+                    field : 'belongTo',
                     title : '负责人',
 		            sortable: true,
 		            formatter: function(value, row, index) {
 		            	if(row.belongTo==""||row.belongTo==null){
-		            		return '<div style="color:red;">[公客]</div>'; 
+		            		return '<div style="color:red;">[公客]</div>';
 		            	}else{
 		            		return value;
 		            	}
 	                }
                 },
                 {
-                    field : 'trasferDate', 
+                    field : 'trasferDate',
                     title : '转交时间',
                     visible: false,
 		            sortable: true
                 },
                 {
-                    field : 'trasferTo', 
+                    field : 'trasferTo',
                     title : '转交人',
                     visible: false,
 		            sortable: true
                 },
 
                 {
-                    field : 'createBy', 
+                    field : 'createBy',
                     title : '录入人',
 		            sortable: true,
                     visible: false
                 },
                 {
-                    field : 'createTime', 
+                    field : 'createTime',
                     title : '录入时间',
 		            sortable: true,
                     visible: false
@@ -355,9 +355,9 @@
             };
             $.table.init(options);
         });
-        
+
     </script>
-    <script src="../static/crm/customer.js" th:src="@{/crm/customer.js}"></script>
+    <script src="../static/crm2/customer.js" th:src="@{/crm2/customer.js}"></script>
 </body>
 <!-- 导入区域 -->
 <script id="importTpl" type="text/template">

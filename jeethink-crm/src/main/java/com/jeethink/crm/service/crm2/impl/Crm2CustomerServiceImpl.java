@@ -7,17 +7,22 @@ import com.jeethink.common.utils.DateUtils;
 import com.jeethink.common.utils.StringUtils;
 import com.jeethink.crm.domain.*;
 import com.jeethink.crm.mapper.Crm2CustomerMapper;
+import com.jeethink.crm.mapper.Crm2ShareRelationMapper;
+import com.jeethink.crm.mapper.CrmShareRelationMapper;
 import com.jeethink.crm.service.crm1.ICrmCustomerService;
 import com.jeethink.crm.service.crm2.ICrm2ComplaintService;
 import com.jeethink.crm.service.crm2.ICrm2CustomerService;
 import com.jeethink.crm.service.crm2.ICrm2PersonService;
 import com.jeethink.crm.service.crm2.ICrm2VisitService;
+import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +37,8 @@ public class Crm2CustomerServiceImpl implements ICrm2CustomerService
 	private static final Logger log = LoggerFactory.getLogger(ICrmCustomerService.class);
     @Autowired
     private Crm2CustomerMapper crm2CustomerMapper;
-    
+    @Autowired
+    private Crm2ShareRelationMapper crm2ShareRelationMapper;
     @Autowired
     private ICrm2PersonService crm2PersonService;
     
@@ -67,30 +73,27 @@ public class Crm2CustomerServiceImpl implements ICrm2CustomerService
     {
         return crm2CustomerMapper.selectCrmCustomerList(crmCustomer);
     }
-    
-    /**
-     * 查询客户列表 我的
-     * 
-     * @param crmCustomer 客户
-     * @return 客户集合
-     */
-    @DataScope(deptAlias = "d", userAlias = "u")
-    public List<CrmCustomer> selectCrmCustomerListMy(CrmCustomer crmCustomer)
-    {
-    	return crm2CustomerMapper.selectCrmCustomerListMy(crmCustomer);
+
+    @Override
+    public List<CrmCustomer> selectCrmCustomerListMy(CrmCustomer crmCustomer) {
+        return crm2CustomerMapper.selectCrmCustomerListMy(crmCustomer);
     }
-    
+
+
     /**
      * 查询客户列表 共享
      * 
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer)
-    {
-    	return crm2CustomerMapper.selectCrmCustomerListShare(crmCustomer);
+    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer, Long userid) {
+        List<Long> customerIds = crm2ShareRelationMapper.selectShareCustomerId(userid);
+        if (CollectionUtils.isEmpty(customerIds)) {
+            return Collections.emptyList();
+        }
+        return crm2CustomerMapper.selectCrmCustomerListShare(customerIds, crmCustomer);
     }
-    
+
     /**
      * 查询客户列表 公共
      * 
@@ -202,34 +205,53 @@ public class Crm2CustomerServiceImpl implements ICrm2CustomerService
     /**
      * 批量分享客户
      * 
-     * @param customerIds 需要分享的数据ID
+     * @param customerId 需要分享的数据ID
      * @param isShare 是否分享
      * @param operName 操作人
      * @return 结果
      */
     @Override
     @Transactional
-    public int shareCrmCustomerByIds(String ids,String isShare, String operName)
-    {
-    	int successNum = 0;
-    	Long[] customerIds = Convert.toLongArray(ids);
-    	for(int j=0;j<customerIds.length;j++){    
-    		Long customerId=customerIds[j];
-    		CrmCustomer crmCustomer=this.selectCrmCustomerById(customerId);
-    		//公客不能设置共享属性
-    		if(StringUtils.isEmpty(crmCustomer.getBelongTo())||StringUtils.isNull(crmCustomer.getBelongTo())) {
-    			continue;
-    		}
-    		//和isShare值相同不做处理
-    		if(crmCustomer.getIsShare().equals(isShare)) {
-    			continue;
-    		}
-    		successNum++;
-    		crmCustomer.setIsShare(isShare);
-    		crmCustomer.setUpdateBy(operName);
-    		this.updateCrmCustomer(crmCustomer);    		
-    	}
-    	return successNum;
+    public int shareCrmCustomerByIds(Long customerId, String isShare, String operName, Long share, Long shred, String loginName) {
+        int successNum = 0;
+        CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
+        if (null == crmCustomer) {
+            return successNum;
+
+        }
+        //公客不能设置共享属性
+        if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {
+            return successNum;
+
+        }
+
+
+        crmCustomer.setIsShare(isShare);
+        crmCustomer.setUpdateBy(operName);
+        this.updateCrmCustomer(crmCustomer);
+        if (isShare.equals("1")) {
+            CrmShareRelation crmShareRelation = crm2ShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
+            if (null == crmShareRelation) {
+                return successNum;
+
+            }
+            crmShareRelation = new CrmShareRelation();
+            crmShareRelation.setCustomerId(customerId);
+            crmShareRelation.setShareUserId(share);
+            crmShareRelation.setSharedUserId(shred);
+            crmShareRelation.setDelFlag("0");
+            crmShareRelation.setCreateBy(loginName);
+            crmShareRelation.setCreateTime(new Date());
+            crmShareRelation.setUpdateTime(new Date());
+            crmShareRelation.setUpdateBy(loginName);
+            crm2ShareRelationMapper.insertCrmShareRelation(crmShareRelation);
+        } else {
+            crm2ShareRelationMapper.deleteByCustomerId(customerId, loginName);
+        }
+
+        successNum++;
+
+        return successNum;
     }
     
     /**
