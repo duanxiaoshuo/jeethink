@@ -1,5 +1,6 @@
 package com.jeethink.crm.mapper;
 
+import com.jeethink.crm.domain.Crm2Clue;
 import com.jeethink.crm.domain.CrmClue;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,7 +20,7 @@ public interface Crm2ClueMapper
      * @param clueId 线索管理ID
      * @return 线索管理
      */
-    public CrmClue selectCrmClueById(Long clueId);
+    public Crm2Clue selectCrmClueById(Long clueId);
 
     /**
      * 查询线索管理列表
@@ -27,7 +28,7 @@ public interface Crm2ClueMapper
      * @param crmClue 线索管理
      * @return 线索管理集合
      */
-    public List<CrmClue> selectCrmClueList(CrmClue crmClue);
+    public List<Crm2Clue> selectCrmClueList(Crm2Clue crmClue);
     
     /**
      * 查询线索管理列表 公共线索
@@ -35,7 +36,7 @@ public interface Crm2ClueMapper
      * @param crmClue 线索管理
      * @return 线索管理集合
      */
-    public List<CrmClue> selectCrmClueListPublic(CrmClue crmClue);
+    public List<Crm2Clue> selectCrmClueListPublic(Crm2Clue crmClue);
 
     /**
      * 新增线索管理
@@ -43,7 +44,7 @@ public interface Crm2ClueMapper
      * @param crmClue 线索管理
      * @return 结果
      */
-    public int insertCrmClue(CrmClue crmClue);
+    public int insertCrmClue(Crm2Clue crmClue);
 
     /**
      * 修改线索管理
@@ -51,7 +52,7 @@ public interface Crm2ClueMapper
      * @param crmClue 线索管理
      * @return 结果
      */
-    public int updateCrmClue(CrmClue crmClue);
+    public int updateCrmClue(Crm2Clue crmClue);
 
     /**
      * 删除线索管理
@@ -84,19 +85,19 @@ public interface Crm2ClueMapper
      * @param mobile 手机号
      * @return 线索管理
      */
-    public CrmClue selectCrmClueByMobile(String mobile);
+    public Crm2Clue selectCrmClueByMobile(String mobile);
     
     /**
      * 查询超过30天未跟进的线索
      * 
      * @return 线索
      */
-    public List<CrmClue> selectCrmClueListFollowMoreThan30();
+    public List<Crm2Clue> selectCrmClueListFollowMoreThan30();
     
     /**
      * 查询未跟进过的线索
      * 
      * @return 线索
      */
-    public List<CrmClue> selectCrmClueListNoFollow();
+    public List<Crm2Clue> selectCrmClueListNoFollow();
 }

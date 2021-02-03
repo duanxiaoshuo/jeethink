@@ -6,6 +6,7 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Customer;
 import com.jeethink.crm.domain.CrmComplaint;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.service.crm1.ICrmComplaintService;
@@ -139,7 +140,7 @@ public class Crm2ComplaintController extends BaseController
     @GetMapping("/addComplaint/{customerId}")
     public String addComplaint(@PathVariable("customerId") Long customerId, ModelMap mmap)
     {
-    	CrmCustomer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
+    	Crm2Customer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/addComplaint";
     }

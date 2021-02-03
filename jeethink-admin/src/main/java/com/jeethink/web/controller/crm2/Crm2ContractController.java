@@ -7,6 +7,7 @@ import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.core.text.Convert;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Customer;
 import com.jeethink.crm.domain.CrmContract;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.service.crm1.ICrmContractService;
@@ -188,7 +189,7 @@ public class Crm2ContractController extends BaseController
     @GetMapping("/addContract/{customerId}")
     public String addContract(@PathVariable("customerId") Long customerId, ModelMap mmap)
     {
-    	CrmCustomer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
+    	Crm2Customer crmCustomer = crmCustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/addContract";
     }

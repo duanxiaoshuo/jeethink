@@ -1,16 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 线索跟进记录对象 crm2_clue_follow
+ * 线索跟进记录对象 crm_clue_follow
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-09-2
  */
 public class Crm2ClueFollow extends BaseEntity
 {
@@ -23,6 +25,9 @@ public class Crm2ClueFollow extends BaseEntity
     @Excel(name = "线索id")
     private Long clueId;
 
+    @Excel(name = "所属线索", targetAttr = "name", type = Type.EXPORT)
+    private CrmClue clue;
+    
     /** 跟进时间 */
     @Excel(name = "跟进时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date followDate;
@@ -56,7 +61,16 @@ public class Crm2ClueFollow extends BaseEntity
     {
         return clueId;
     }
-    public void setFollowDate(Date followDate) 
+
+	public CrmClue getClue() {
+		return clue;
+	}
+
+	public void setClue(CrmClue clue) {
+		this.clue = clue;
+	}
+
+	public void setFollowDate(Date followDate) 
     {
         this.followDate = followDate;
     }
@@ -83,6 +97,7 @@ public class Crm2ClueFollow extends BaseEntity
     {
         return followType;
     }
+    
     public void setDelFlag(String delFlag) 
     {
         this.delFlag = delFlag;

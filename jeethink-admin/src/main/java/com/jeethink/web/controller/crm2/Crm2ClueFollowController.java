@@ -6,6 +6,7 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Clue;
 import com.jeethink.crm.domain.CrmClue;
 import com.jeethink.crm.domain.CrmClueFollow;
 import com.jeethink.crm.service.crm2.ICrm2ClueService;
@@ -81,7 +82,7 @@ public class Crm2ClueFollowController extends BaseController {
      */
     @GetMapping("/addFollow/{clueId}")
     public String addFollow(@PathVariable("clueId") Long clueId, ModelMap mmap) {
-        CrmClue crmCLue = iCrm2ClueService.selectCrmClueById(clueId);
+        Crm2Clue crmCLue = iCrm2ClueService.selectCrmClueById(clueId);
         mmap.put("crmCLue", crmCLue);
         return prefix + "/addFollow";
     }

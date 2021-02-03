@@ -1,16 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 客户拜访对象 crm2_visit
+ * 客户拜访对象 crm_visit
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-03-10
  */
 public class Crm2Visit extends BaseEntity
 {
@@ -20,8 +22,10 @@ public class Crm2Visit extends BaseEntity
     private Long visitId;
 
     /** 客户id */
-    @Excel(name = "客户id")
     private Long customerId;
+    
+    @Excel(name = "所属客户", targetAttr = "customerName", type = Type.EXPORT)
+    private CrmCustomer customer;
 
     /** 拜访人姓名 */
     @Excel(name = "拜访人姓名")
@@ -40,15 +44,13 @@ public class Crm2Visit extends BaseEntity
     private Date visitDate;
 
     /** 下次拜访时间（保留） */
-    @Excel(name = "下次拜访时间", readConverterExp = "保=留")
     private String nextTime;
 
     /** 拜访类型（保留） */
-    @Excel(name = "拜访类型", readConverterExp = "保=留")
     private String visitType;
 
-    /** 拜访状态（保留） */
-    @Excel(name = "拜访状态", readConverterExp = "保=留")
+    /** 拜访状态 */
+    @Excel(name = "拜访状态")
     private String visitStatus;
 
     /** 删除标识 */
@@ -72,7 +74,15 @@ public class Crm2Visit extends BaseEntity
     {
         return customerId;
     }
-    public void setVisitName(String visitName) 
+    public CrmCustomer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CrmCustomer customer) {
+		this.customer = customer;
+	}
+
+	public void setVisitName(String visitName) 
     {
         this.visitName = visitName;
     }

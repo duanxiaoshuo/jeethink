@@ -1,15 +1,15 @@
 package com.jeethink.crm.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.jeethink.common.annotation.Excel;
 import com.jeethink.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 转交记录对象 crm2_transfer
+ * 转交记录对象 crm_transfer
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-04-19
  */
 public class Crm2Transfer extends BaseEntity
 {
@@ -19,23 +19,20 @@ public class Crm2Transfer extends BaseEntity
     private Long transferId;
 
     /** 业务ID，客户，订单、回款等的ID */
-    @Excel(name = "业务ID，客户，订单、回款等的ID")
     private Long businessId;
 
     /** 业务类型，客户，订单、回款等 */
-    @Excel(name = "业务类型，客户，订单、回款等")
     private String businessType;
 
     /** 转交类型（0 公客  1 转交人） */
-    @Excel(name = "转交类型", readConverterExp = "0=,公=客,1=,转=交人")
     private String transferType;
 
     /** 转交人 */
     @Excel(name = "转交人")
     private String transferTo;
 
-    /** 转给谁，负责人 */
-    @Excel(name = "转给谁，负责人")
+    /** 转给谁 */
+    @Excel(name = "转给谁")
     private String belongTo;
 
     /** 转交原因 */

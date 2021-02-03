@@ -1,17 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 合同发票对象 crm2_contract_invoice
+ * 合同发票管理对象 crm_contract_invoice
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-03-25
  */
 public class Crm2ContractInvoice extends BaseEntity
 {
@@ -23,6 +24,9 @@ public class Crm2ContractInvoice extends BaseEntity
     /** 合同ID */
     @Excel(name = "合同ID")
     private Long contractId;
+    
+    @Excel(name = "所属合同", targetAttr = "contractName", type = Type.EXPORT)
+    private CrmContract contract;
 
     /** 发票号码 */
     @Excel(name = "发票号码")
@@ -30,10 +34,10 @@ public class Crm2ContractInvoice extends BaseEntity
 
     /** 发票金额 */
     @Excel(name = "发票金额")
-    private BigDecimal invoiceMoney;
+    private Double invoiceMoney;
 
-    /** 发票类型（增值税普票、增值税专票） */
-    @Excel(name = "发票类型", readConverterExp = "增=值税普票、增值税专票")
+    /** 发票类型 */
+    @Excel(name = "发票类型")
     private String invoiceType;
 
     /** 发票税率/% */
@@ -69,6 +73,13 @@ public class Crm2ContractInvoice extends BaseEntity
     {
         return contractId;
     }
+    public CrmContract getContract() {
+		return contract;
+	}
+
+	public void setContract(CrmContract contract) {
+		this.contract = contract;
+	}
     public void setInvoiceNo(String invoiceNo) 
     {
         this.invoiceNo = invoiceNo;
@@ -78,12 +89,12 @@ public class Crm2ContractInvoice extends BaseEntity
     {
         return invoiceNo;
     }
-    public void setInvoiceMoney(BigDecimal invoiceMoney) 
+    public void setInvoiceMoney(Double invoiceMoney) 
     {
         this.invoiceMoney = invoiceMoney;
     }
 
-    public BigDecimal getInvoiceMoney() 
+    public Double getInvoiceMoney() 
     {
         return invoiceMoney;
     }

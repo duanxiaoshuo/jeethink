@@ -6,6 +6,8 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Customer;
+import com.jeethink.crm.domain.Crm2Person;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.domain.CrmPerson;
 import com.jeethink.crm.service.crm2.ICrm2CustomerService;
@@ -49,9 +51,9 @@ public class Crm2PersonController extends BaseController {
 	@RequiresPermissions("crm:person:list")
 	@PostMapping("/list")
 	@ResponseBody
-	public TableDataInfo list(CrmPerson crmPerson) {
+	public TableDataInfo list(Crm2Person crmPerson) {
 		startPage();
-		List<CrmPerson> list = crm2PersonService.selectCrmPersonList(crmPerson);
+		List<Crm2Person> list = crm2PersonService.selectCrmPersonList(crmPerson);
 		return getDataTable(list);
 	}
 
@@ -62,9 +64,9 @@ public class Crm2PersonController extends BaseController {
 	@Log(title = "联系人", businessType = BusinessType.EXPORT)
 	@PostMapping("/export")
 	@ResponseBody
-	public AjaxResult export(CrmPerson crmPerson) {
-		List<CrmPerson> list = crm2PersonService.selectCrmPersonList(crmPerson);
-		ExcelUtil<CrmPerson> util = new ExcelUtil<CrmPerson>(CrmPerson.class);
+	public AjaxResult export(Crm2Person crmPerson) {
+		List<Crm2Person> list = crm2PersonService.selectCrmPersonList(crmPerson);
+		ExcelUtil<Crm2Person> util = new ExcelUtil<Crm2Person>(Crm2Person.class);
 		return util.exportExcel(list, "person");
 	}
 	
@@ -83,7 +85,7 @@ public class Crm2PersonController extends BaseController {
 	@GetMapping("/addPerson/{customerId}")
 	public String addPerson(@PathVariable("customerId") Long customerId, ModelMap mmap) {
 		if (customerId != null) {
-			CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
+			Crm2Customer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
 			mmap.put("crmCustomer", crmCustomer);
 		}
 		return prefix + "/addPerson";
@@ -96,7 +98,7 @@ public class Crm2PersonController extends BaseController {
 	@Log(title = "联系人", businessType = BusinessType.INSERT)
 	@PostMapping("/add")
 	@ResponseBody
-	public AjaxResult addSave(CrmPerson crmPerson) {
+	public AjaxResult addSave(Crm2Person crmPerson) {
 		crmPerson.setDelFlag("0");
 		crmPerson.setCreateBy(ShiroUtils.getLoginName());
 		return toAjax(crm2PersonService.insertCrmPerson(crmPerson));
@@ -107,7 +109,7 @@ public class Crm2PersonController extends BaseController {
 	 */
 	@GetMapping("/edit/{personId}")
 	public String edit(@PathVariable("personId") Long personId, ModelMap mmap) {
-		CrmPerson crmPerson = crm2PersonService.selectCrmPersonById(personId);
+		Crm2Person crmPerson = crm2PersonService.selectCrmPersonById(personId);
 		mmap.put("crmPerson", crmPerson);
 		return prefix + "/edit";
 	}
@@ -119,7 +121,7 @@ public class Crm2PersonController extends BaseController {
 	@Log(title = "联系人", businessType = BusinessType.UPDATE)
 	@PostMapping("/edit")
 	@ResponseBody
-	public AjaxResult editSave(CrmPerson crmPerson) {
+	public AjaxResult editSave(Crm2Person crmPerson) {
 		crmPerson.setUpdateBy(ShiroUtils.getLoginName());
 		return toAjax(crm2PersonService.updateCrmPerson(crmPerson));
 	}

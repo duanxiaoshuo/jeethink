@@ -1,16 +1,17 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.jeethink.common.annotation.Excel;
 import com.jeethink.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
- * 电话本对象 crm2_phonenumber
+ * 电话本对象 crm_phonenumber
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-03-15
  */
 public class Crm2Phonenumber extends BaseEntity
 {
@@ -24,7 +25,6 @@ public class Crm2Phonenumber extends BaseEntity
     private String name;
 
     /** 英文名 */
-    @Excel(name = "英文名")
     private String englshName;
 
     /** 性别 */
@@ -32,11 +32,9 @@ public class Crm2Phonenumber extends BaseEntity
     private String sex;
 
     /** 职务 */
-    @Excel(name = "职务")
     private String duty;
 
     /** 固定电话 */
-    @Excel(name = "固定电话")
     private String telephone;
 
     /** 手机 */
@@ -48,7 +46,6 @@ public class Crm2Phonenumber extends BaseEntity
     private String email;
 
     /** 传值 */
-    @Excel(name = "传值")
     private String fax;
 
     /** qq */
@@ -56,23 +53,19 @@ public class Crm2Phonenumber extends BaseEntity
     private String qq;
 
     /** MSN */
-    @Excel(name = "MSN")
     private String msn;
 
     /** 爱好 */
-    @Excel(name = "爱好")
     private String hobby;
 
-    /** 婚否   字典 */
-    @Excel(name = "婚否   字典")
+    /** 婚否 */
+    @Excel(name = "婚否")
     private String marriage;
 
     /** 出生日期 */
-    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date birthday;
 
     /** 头像（保留） */
-    @Excel(name = "头像", readConverterExp = "保=留")
     private String avatar;
 
     /** 数据字典（个人、公有） */

@@ -1,16 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 合同申请对象 crm2_contract_apply
+ * 合同申请对象 crm_contract_applye
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-04-10
  */
 public class Crm2ContractApply extends BaseEntity
 {
@@ -23,9 +25,16 @@ public class Crm2ContractApply extends BaseEntity
     @Excel(name = "客户id")
     private Long customerId;
 
+    @Excel(name = "所属客户", targetAttr = "customerName", type = Type.EXPORT)
+    private CrmCustomer customer;
+    
     /** 成交订单id */
-    @Excel(name = "成交订单id")
+    //@Excel(name = "成交订单id")
     private Long orderId;
+    
+    /** 订单对象 */
+    @Excel(name = "订单主题", targetAttr = "orderName", type = Type.EXPORT)
+    private CrmOrder order;
 
     /** 合同编号（按一定规则生成） */
     @Excel(name = "合同编号", readConverterExp = "按=一定规则生成")
@@ -61,7 +70,7 @@ public class Crm2ContractApply extends BaseEntity
 
     /** 总金额，应收款 */
     @Excel(name = "总金额，应收款")
-    private Long totalMoney;
+    private Double totalMoney;
 
     /** 合同签署人 */
     @Excel(name = "合同签署人")
@@ -74,22 +83,14 @@ public class Crm2ContractApply extends BaseEntity
     /** 合同签署日期 */
     @Excel(name = "合同签署日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date signDate;
-
+    
     /** 原负责人(login_name) */
     @Excel(name = "原负责人(login_name)")
     private String sourceBelongTo;
 
-    /** 原负责人姓名 */
-    @Excel(name = "原负责人姓名")
-    private String sourceBelongToName;
-
     /** 负责人(login_name) */
     @Excel(name = "负责人(login_name)")
     private String belongTo;
-
-    /** 负责人姓名 */
-    @Excel(name = "负责人姓名")
-    private String belongToName;
 
     /** 转交时间 */
     @Excel(name = "转交时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -98,10 +99,6 @@ public class Crm2ContractApply extends BaseEntity
     /** 转交人(login_name) */
     @Excel(name = "转交人(login_name)")
     private String trasferTo;
-
-    /** 转交人姓名 */
-    @Excel(name = "转交人姓名")
-    private String trasferToName;
 
     /** 删除标识 */
     private String delFlag;
@@ -208,7 +205,16 @@ public class Crm2ContractApply extends BaseEntity
     {
         return customerId;
     }
-    public void setOrderId(Long orderId) 
+    
+    public CrmCustomer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CrmCustomer customer) {
+		this.customer = customer;
+	}
+
+	public void setOrderId(Long orderId) 
     {
         this.orderId = orderId;
     }
@@ -217,7 +223,16 @@ public class Crm2ContractApply extends BaseEntity
     {
         return orderId;
     }
-    public void setContractNo(String contractNo) 
+    
+    public CrmOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(CrmOrder order) {
+		this.order = order;
+	}
+
+	public void setContractNo(String contractNo) 
     {
         this.contractNo = contractNo;
     }
@@ -289,12 +304,12 @@ public class Crm2ContractApply extends BaseEntity
     {
         return payMethod;
     }
-    public void setTotalMoney(Long totalMoney) 
+    public void setTotalMoney(Double totalMoney) 
     {
         this.totalMoney = totalMoney;
     }
 
-    public Long getTotalMoney() 
+    public Double getTotalMoney() 
     {
         return totalMoney;
     }
@@ -325,70 +340,39 @@ public class Crm2ContractApply extends BaseEntity
     {
         return signDate;
     }
-    public void setSourceBelongTo(String sourceBelongTo) 
-    {
-        this.sourceBelongTo = sourceBelongTo;
-    }
+    
+    public String getSourceBelongTo() {
+		return sourceBelongTo;
+	}
 
-    public String getSourceBelongTo() 
-    {
-        return sourceBelongTo;
-    }
-    public void setSourceBelongToName(String sourceBelongToName) 
-    {
-        this.sourceBelongToName = sourceBelongToName;
-    }
+	public void setSourceBelongTo(String sourceBelongTo) {
+		this.sourceBelongTo = sourceBelongTo;
+	}
 
-    public String getSourceBelongToName() 
-    {
-        return sourceBelongToName;
-    }
-    public void setBelongTo(String belongTo) 
-    {
-        this.belongTo = belongTo;
-    }
+	public String getBelongTo() {
+		return belongTo;
+	}
 
-    public String getBelongTo() 
-    {
-        return belongTo;
-    }
-    public void setBelongToName(String belongToName) 
-    {
-        this.belongToName = belongToName;
-    }
+	public void setBelongTo(String belongTo) {
+		this.belongTo = belongTo;
+	}
+	public Date getTrasferDate() {
+		return trasferDate;
+	}
 
-    public String getBelongToName() 
-    {
-        return belongToName;
-    }
-    public void setTrasferDate(Date trasferDate) 
-    {
-        this.trasferDate = trasferDate;
-    }
+	public void setTrasferDate(Date trasferDate) {
+		this.trasferDate = trasferDate;
+	}
 
-    public Date getTrasferDate() 
-    {
-        return trasferDate;
-    }
-    public void setTrasferTo(String trasferTo) 
-    {
-        this.trasferTo = trasferTo;
-    }
+	public String getTrasferTo() {
+		return trasferTo;
+	}
 
-    public String getTrasferTo() 
-    {
-        return trasferTo;
-    }
-    public void setTrasferToName(String trasferToName) 
-    {
-        this.trasferToName = trasferToName;
-    }
+	public void setTrasferTo(String trasferTo) {
+		this.trasferTo = trasferTo;
+	}
 
-    public String getTrasferToName() 
-    {
-        return trasferToName;
-    }
-    public void setDelFlag(String delFlag) 
+	public void setDelFlag(String delFlag) 
     {
         this.delFlag = delFlag;
     }
@@ -606,12 +590,9 @@ public class Crm2ContractApply extends BaseEntity
             .append("signByName", getSignByName())
             .append("signDate", getSignDate())
             .append("sourceBelongTo", getSourceBelongTo())
-            .append("sourceBelongToName", getSourceBelongToName())
             .append("belongTo", getBelongTo())
-            .append("belongToName", getBelongToName())
             .append("trasferDate", getTrasferDate())
             .append("trasferTo", getTrasferTo())
-            .append("trasferToName", getTrasferToName())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

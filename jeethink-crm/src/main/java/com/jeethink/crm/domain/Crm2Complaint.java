@@ -1,16 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 客户投诉对象 crm2_complaint
+ * 客户投诉对象 crm_complaint
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-03-09
  */
 public class Crm2Complaint extends BaseEntity
 {
@@ -19,9 +21,12 @@ public class Crm2Complaint extends BaseEntity
     /** 投诉ID */
     private Long complaintId;
 
-    /** 客户id */
+	/** 客户id */
     @Excel(name = "客户id")
     private Long customerId;
+    
+    @Excel(name = "所属客户", targetAttr = "customerName", type = Type.EXPORT)
+    private CrmCustomer customer;
 
     /** 投诉时间 */
     @Excel(name = "投诉时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -30,21 +35,21 @@ public class Crm2Complaint extends BaseEntity
     /** 投诉人姓名 */
     @Excel(name = "投诉人姓名")
     private String complaintName;
-
+    
     /** 投诉人电话 */
     @Excel(name = "投诉人电话")
     private String complaintPhone;
-
+    
     /** 投诉内容 */
     @Excel(name = "投诉内容")
     private String complaintContent;
 
-    /** 投诉类型（产品投诉、服务投诉、） */
-    @Excel(name = "投诉类型", readConverterExp = "产=品投诉、服务投诉、")
+    /** 投诉类型 */
+    @Excel(name = "投诉类型")
     private String complaintType;
 
-    /** 投诉状态（0：未解决 1：解决中 2：已解决） */
-    @Excel(name = "投诉状态", readConverterExp = "0=：未解决,1=：解决中,2=：已解决")
+    /** 投诉状态 */
+    @Excel(name = "投诉状态")
     private String complaintStatus;
 
     /** 删除标识 */
@@ -68,6 +73,14 @@ public class Crm2Complaint extends BaseEntity
     {
         return customerId;
     }
+    public CrmCustomer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CrmCustomer customer) {
+		this.customer = customer;
+	}
+
     public void setComplaintDate(Date complaintDate) 
     {
         this.complaintDate = complaintDate;
@@ -86,16 +99,15 @@ public class Crm2Complaint extends BaseEntity
     {
         return complaintName;
     }
-    public void setComplaintPhone(String complaintPhone) 
-    {
-        this.complaintPhone = complaintPhone;
-    }
+    public String getComplaintPhone() {
+		return complaintPhone;
+	}
 
-    public String getComplaintPhone() 
-    {
-        return complaintPhone;
-    }
-    public void setComplaintContent(String complaintContent) 
+	public void setComplaintPhone(String complaintPhone) {
+		this.complaintPhone = complaintPhone;
+	}
+
+	public void setComplaintContent(String complaintContent) 
     {
         this.complaintContent = complaintContent;
     }

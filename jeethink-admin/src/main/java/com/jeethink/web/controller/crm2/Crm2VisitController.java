@@ -6,6 +6,7 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Customer;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.domain.CrmVisit;
 import com.jeethink.crm.service.crm2.ICrm2CustomerService;
@@ -88,7 +89,7 @@ public class Crm2VisitController extends BaseController
     @GetMapping("/addVisit/{customerId}")
     public String addVisit(@PathVariable("customerId") Long customerId, ModelMap mmap)
     {
-    	CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
+    	Crm2Customer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/addVisit";
     }

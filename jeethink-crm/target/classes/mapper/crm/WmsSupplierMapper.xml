@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsSupplierMapper">
+    
+    <resultMap type="WmsSupplier" id="WmsSupplierResult">
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="nameShort"    column="name_short"    />
+        <result property="leader"    column="leader"    />
+        <result property="duty"    column="duty"    />
+        <result property="address"    column="address"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="email"    column="email"    />
+        <result property="fax"    column="fax"    />
+        <result property="website"    column="website"    />
+        <result property="zip"    column="zip"    />
+        <result property="country"    column="country"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="region"    column="region"    />
+        <result property="industry"    column="industry"    />
+        <result property="supplierStatus"    column="supplier_status"    />
+        <result property="supplierDegree"    column="supplier_degree"    />
+        <result property="supplierCredit"    column="supplier_credit"    />
+        <result property="sex"    column="sex"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="qq"    column="qq"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWmsSupplierVo">
+        select supplier_id, supplier_name, name_short, leader, duty, address, telephone, mobile, email, fax, website, zip, country, province, city, region, industry, supplier_status, supplier_degree, supplier_credit, sex, avatar, qq, del_flag, create_by, create_time, update_by, update_time, remark from wms_supplier
+    </sql>
+
+    <select id="selectWmsSupplierList" parameterType="WmsSupplier" resultMap="WmsSupplierResult">
+        <include refid="selectWmsSupplierVo"/>
+        <where>  
+        	del_flag='0'
+            <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="duty != null  and duty != ''"> and duty = #{duty}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="telephone != null  and telephone != ''"> and telephone = #{telephone}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="industry != null  and industry != ''"> and industry = #{industry}</if>
+            <if test="supplierStatus != null  and supplierStatus != ''"> and supplier_status = #{supplierStatus}</if>
+            <if test="supplierDegree != null  and supplierDegree != ''"> and supplier_degree = #{supplierDegree}</if>
+            <if test="supplierCredit != null  and supplierCredit != ''"> and supplier_credit = #{supplierCredit}</if>
+        </where>
+    </select>
+    
+    <select id="selectWmsSupplierById" parameterType="Long" resultMap="WmsSupplierResult">
+        <include refid="selectWmsSupplierVo"/>
+        where supplier_id = #{supplierId}
+    </select>
+        
+    <insert id="insertWmsSupplier" parameterType="WmsSupplier" useGeneratedKeys="true" keyProperty="supplierIid">
+        insert into wms_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierName != null  and supplierName != ''">supplier_name,</if>
+            <if test="nameShort != null  and nameShort != ''">name_short,</if>
+            <if test="leader != null  and leader != ''">leader,</if>
+            <if test="duty != null  and duty != ''">duty,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="telephone != null  and telephone != ''">telephone,</if>
+            <if test="mobile != null  and mobile != ''">mobile,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="fax != null  and fax != ''">fax,</if>
+            <if test="website != null  and website != ''">website,</if>
+            <if test="zip != null  and zip != ''">zip,</if>
+            <if test="country != null  and country != ''">country,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="region != null  and region != ''">region,</if>
+            <if test="industry != null  and industry != ''">industry,</if>
+            <if test="supplierStatus != null  and supplierStatus != ''">supplier_status,</if>
+            <if test="supplierDegree != null  and supplierDegree != ''">supplier_degree,</if>
+            <if test="supplierCredit != null  and supplierCredit != ''">supplier_credit,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="avatar != null  and avatar != ''">avatar,</if>
+            <if test="qq != null  and qq != ''">qq,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierName != null  and supplierName != ''">#{supplierName},</if>
+            <if test="nameShort != null  and nameShort != ''">#{nameShort},</if>
+            <if test="leader != null  and leader != ''">#{leader},</if>
+            <if test="duty != null  and duty != ''">#{duty},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="telephone != null  and telephone != ''">#{telephone},</if>
+            <if test="mobile != null  and mobile != ''">#{mobile},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="fax != null  and fax != ''">#{fax},</if>
+            <if test="website != null  and website != ''">#{website},</if>
+            <if test="zip != null  and zip != ''">#{zip},</if>
+            <if test="country != null  and country != ''">#{country},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="region != null  and region != ''">#{region},</if>
+            <if test="industry != null  and industry != ''">#{industry},</if>
+            <if test="supplierStatus != null  and supplierStatus != ''">#{supplierStatus},</if>
+            <if test="supplierDegree != null  and supplierDegree != ''">#{supplierDegree},</if>
+            <if test="supplierCredit != null  and supplierCredit != ''">#{supplierCredit},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="avatar != null  and avatar != ''">#{avatar},</if>
+            <if test="qq != null  and qq != ''">#{qq},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsSupplier" parameterType="WmsSupplier">
+        update wms_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierName != null  and supplierName != ''">supplier_name = #{supplierName},</if>
+            <if test="nameShort != null  and nameShort != ''">name_short = #{nameShort},</if>
+            <if test="leader != null  and leader != ''">leader = #{leader},</if>
+            <if test="duty != null  and duty != ''">duty = #{duty},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="telephone != null  and telephone != ''">telephone = #{telephone},</if>
+            <if test="mobile != null  and mobile != ''">mobile = #{mobile},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="fax != null  and fax != ''">fax = #{fax},</if>
+            <if test="website != null  and website != ''">website = #{website},</if>
+            <if test="zip != null  and zip != ''">zip = #{zip},</if>
+            <if test="country != null  and country != ''">country = #{country},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="region != null  and region != ''">region = #{region},</if>
+            <if test="industry != null  and industry != ''">industry = #{industry},</if>
+            <if test="supplierStatus != null  and supplierStatus != ''">supplier_status = #{supplierStatus},</if>
+            <if test="supplierDegree != null  and supplierDegree != ''">supplier_degree = #{supplierDegree},</if>
+            <if test="supplierCredit != null  and supplierCredit != ''">supplier_credit = #{supplierCredit},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+            <if test="qq != null  and qq != ''">qq = #{qq},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where supplier_id = #{supplierId}
+    </update>
+
+    <delete id="deleteWmsSupplierById" parameterType="Long">
+        update wms_supplier set del_flag="1" where supplier_Id = #{supplierId}
+    </delete>
+
+    <delete id="deleteWmsSupplierByIds" parameterType="String">
+        update wms_supplier set del_flag="1" where supplier_Id in 
+        <foreach item="supplierIid" collection="array" open="(" separator="," close=")">
+            #{supplierIid}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,5 +1,6 @@
 package com.jeethink.crm.service.crm2;
 
+import com.jeethink.crm.domain.Crm2Person;
 import com.jeethink.crm.domain.CrmPerson;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface ICrm2PersonService
      * @param personId 联系人ID
      * @return 联系人
      */
-    public CrmPerson selectCrmPersonById(Long personId);
+    public Crm2Person selectCrmPersonById(Long personId);
 
     /**
      * 查询联系人列表
@@ -26,7 +27,7 @@ public interface ICrm2PersonService
      * @param crmPerson 联系人
      * @return 联系人集合
      */
-    public List<CrmPerson> selectCrmPersonList(CrmPerson crmPerson);
+    public List<Crm2Person> selectCrmPersonList(Crm2Person crmPerson);
     
     /**
      * 查询联系人列表
@@ -34,7 +35,7 @@ public interface ICrm2PersonService
      * @param crmPerson 联系人
      * @return 联系人集合
      */
-    public List<CrmPerson> selectCrmPersonListAll(CrmPerson crmPerson);
+    public List<Crm2Person> selectCrmPersonListAll(Crm2Person crmPerson);
 
     /**
      * 新增联系人
@@ -42,7 +43,7 @@ public interface ICrm2PersonService
      * @param crmPerson 联系人
      * @return 结果
      */
-    public int insertCrmPerson(CrmPerson crmPerson);
+    public int insertCrmPerson(Crm2Person crmPerson);
 
     /**
      * 修改联系人
@@ -50,7 +51,7 @@ public interface ICrm2PersonService
      * @param crmPerson 联系人
      * @return 结果
      */
-    public int updateCrmPerson(CrmPerson crmPerson);
+    public int updateCrmPerson(Crm2Person crmPerson);
 
     /**
      * 批量删除联系人
@@ -74,5 +75,5 @@ public interface ICrm2PersonService
      * @param personName 联系人名称
      * @return 联系人
      */
-    public CrmPerson selectCrmPersonByName(String personName);
+    public Crm2Person selectCrmPersonByName(String personName);
 }

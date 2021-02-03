@@ -5,9 +5,7 @@ import com.jeethink.common.core.text.Convert;
 import com.jeethink.common.exception.BusinessException;
 import com.jeethink.common.utils.DateUtils;
 import com.jeethink.common.utils.StringUtils;
-import com.jeethink.crm.domain.CrmClue;
-import com.jeethink.crm.domain.CrmCustomer;
-import com.jeethink.crm.domain.CrmPerson;
+import com.jeethink.crm.domain.*;
 import com.jeethink.crm.mapper.Crm2ClueMapper;
 import com.jeethink.crm.service.crm2.ICrm2ClueService;
 import com.jeethink.crm.service.crm2.ICrm2CustomerService;
@@ -45,7 +43,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      * @return 线索管理
      */
     @Override
-    public CrmClue selectCrmClueById(Long clueId) {
+    public Crm2Clue selectCrmClueById(Long clueId) {
         return crm2ClueMapper.selectCrmClueById(clueId);
     }
 
@@ -57,7 +55,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<CrmClue> selectCrmClueList(CrmClue crmClue) {
+    public List<Crm2Clue> selectCrmClueList(Crm2Clue crmClue) {
         return crm2ClueMapper.selectCrmClueList(crmClue);
     }
 
@@ -68,7 +66,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      * @return 线索管理集合
      */
     @Override
-    public List<CrmClue> selectCrmClueListPublic(CrmClue crmClue) {
+    public List<Crm2Clue> selectCrmClueListPublic(Crm2Clue crmClue) {
         return crm2ClueMapper.selectCrmClueListPublic(crmClue);
     }
 
@@ -79,7 +77,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      * @return 结果
      */
     @Override
-    public int insertCrmClue(CrmClue crmClue) {
+    public int insertCrmClue(Crm2Clue crmClue) {
         crmClue.setCreateTime(DateUtils.getNowDate());
         return crm2ClueMapper.insertCrmClue(crmClue);
     }
@@ -91,7 +89,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      * @return 结果
      */
     @Override
-    public int updateCrmClue(CrmClue crmClue) {
+    public int updateCrmClue(Crm2Clue crmClue) {
         crmClue.setUpdateTime(DateUtils.getNowDate());
         return crm2ClueMapper.updateCrmClue(crmClue);
     }
@@ -139,11 +137,11 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
     @Override
     @Transactional
     public int convertCrmClueById(Long clueId, String loginName) {
-        CrmClue crmClue = crm2ClueMapper.selectCrmClueById(clueId);
+        Crm2Clue crmClue = crm2ClueMapper.selectCrmClueById(clueId);
         crmClue.setClueStatus("2");
         crm2ClueMapper.updateCrmClue(crmClue);
 
-        CrmCustomer crmCustomer = new CrmCustomer();
+        Crm2Customer crmCustomer = new Crm2Customer();
         crmCustomer.setDelFlag("0");
         crmCustomer.setCustomerType("0");//默认个人客户
         crmCustomer.setCreateBy(loginName);
@@ -157,7 +155,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
         crm2CustomerService.insertCrmCustomer(crmCustomer);
         Long customerId = crmCustomer.getCustomerId();
 
-        CrmPerson crmPerson = new CrmPerson();
+        Crm2Person crmPerson = new Crm2Person();
         crmPerson.setDelFlag("0");
         crmPerson.setCreateBy(loginName);
         crmPerson.setCreateTime(DateUtils.getNowDate());
@@ -184,7 +182,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      */
     @Override
     @Transactional
-    public String importClue(List<CrmClue> clueList, Boolean isUpdateSupport, String operName) {
+    public String importClue(List<Crm2Clue> clueList, Boolean isUpdateSupport, String operName) {
         if (StringUtils.isNull(clueList) || clueList.size() == 0) {
             throw new BusinessException("导入线索数据不能为空！");
         }
@@ -192,7 +190,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        for (CrmClue crmClue : clueList) {
+        for (Crm2Clue crmClue : clueList) {
             try {
                 String mobile = crmClue.getMobile();
                 if (StringUtils.isEmpty(mobile)) {
@@ -201,7 +199,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
                     continue;
                 }
                 // 验证是否存在这个线索
-                CrmClue c = crm2ClueMapper.selectCrmClueByMobile(mobile);
+                Crm2Clue c = crm2ClueMapper.selectCrmClueByMobile(mobile);
                 if (StringUtils.isNull(c)) {
                     crmClue.setClueStatus("0");
                     crmClue.setDelFlag("0");
@@ -210,21 +208,21 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
                     crmClue.setBelongTo(operName);
                     this.insertCrmClue(crmClue);
                     successNum++;
-                    successMsg.append("<br/>" + successNum + "、姓名 :" + crmClue.getName() + ",手机号:" + crmClue.getMobile() + " 导入成功");
+                    successMsg.append("<br/>").append(successNum).append("、姓名 :").append(crmClue.getName()).append(",手机号:").append(crmClue.getMobile()).append(" 导入成功");
                 } else if (isUpdateSupport) {
                     crmClue.setClueId(c.getClueId());
                     crmClue.setUpdateBy(operName);
                     this.updateCrmClue(crmClue);
                     successNum++;
-                    successMsg.append("<br/>" + successNum + "、姓名 :" + crmClue.getName() + ",手机号:" + crmClue.getMobile() + " 更新成功");
+                    successMsg.append("<br/>").append(successNum).append("、姓名 :").append(crmClue.getName()).append(",手机号:").append(crmClue.getMobile()).append(" 更新成功");
                 } else {
                     failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、姓名 :" + crmClue.getName() + ",手机号:" + crmClue.getMobile() + " 已存在");
+                    failureMsg.append("<br/>").append(failureNum).append("、姓名 :").append(crmClue.getName()).append(",手机号:").append(crmClue.getMobile()).append(" 已存在");
                 }
             } catch (Exception e) {
                 failureNum++;
                 String msg = "<br/>" + failureNum + "、姓名: " + crmClue.getName() + ",手机号:" + crmClue.getMobile() + " 导入失败：";
-                failureMsg.append(msg + e.getMessage());
+                failureMsg.append(msg).append(e.getMessage());
                 log.error(msg, e);
             }
         }
@@ -245,9 +243,9 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      * @return
      */
     @Override
-    public String checkMobileUnique(CrmClue user) {
+    public String checkMobileUnique(Crm2Clue user) {
         Long clueId = StringUtils.isNull(user.getClueId()) ? -1L : user.getClueId();
-        CrmClue info = crm2ClueMapper.selectCrmClueByMobile(user.getMobile());
+        Crm2Clue info = crm2ClueMapper.selectCrmClueByMobile(user.getMobile());
         if (StringUtils.isNotNull(info) && info.getClueId().longValue() != clueId.longValue()) {
             return "1";
         }
@@ -260,11 +258,11 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
      */
     @Override
     public void convertCrmClueToPublic() {
-        List<CrmClue> listClueNoFollow = crm2ClueMapper.selectCrmClueListNoFollow();
-        List<CrmClue> listClueFollowMoreThan30 = crm2ClueMapper.selectCrmClueListFollowMoreThan30();
+        List<Crm2Clue> listClueNoFollow = crm2ClueMapper.selectCrmClueListNoFollow();
+        List<Crm2Clue> listClueFollowMoreThan30 = crm2ClueMapper.selectCrmClueListFollowMoreThan30();
         if (listClueNoFollow != null && listClueNoFollow.size() > 0) {
             for (int i = 0; i < listClueNoFollow.size(); i++) {
-                CrmClue clue = listClueNoFollow.get(i);
+                Crm2Clue clue = listClueNoFollow.get(i);
                 if (clue.getBelongTo() == null || clue.getBelongTo().equals("")) {
                     break;
                 }
@@ -275,7 +273,7 @@ public class Crm2ClueServiceImpl implements ICrm2ClueService {
         }
         if (listClueFollowMoreThan30 != null && listClueFollowMoreThan30.size() > 0) {
             for (int i = 0; i < listClueFollowMoreThan30.size(); i++) {
-                CrmClue clue = listClueFollowMoreThan30.get(i);
+                Crm2Clue clue = listClueFollowMoreThan30.get(i);
                 if (clue.getBelongTo() == null || clue.getBelongTo().equals("")) {
                     break;
                 }

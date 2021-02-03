@@ -3,6 +3,7 @@ package com.jeethink.crm.service.crm2.impl;
 import com.jeethink.common.annotation.DataScope;
 import com.jeethink.common.core.text.Convert;
 import com.jeethink.common.utils.DateUtils;
+import com.jeethink.crm.domain.Crm2Person;
 import com.jeethink.crm.domain.CrmPerson;
 import com.jeethink.crm.mapper.Crm2PersonMapper;
 import com.jeethink.crm.service.crm2.ICrm2PersonService;
@@ -29,7 +30,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      * @return 联系人
      */
     @Override
-    public CrmPerson selectCrmPersonById(Long personId) {
+    public Crm2Person selectCrmPersonById(Long personId) {
         return crm2PersonMapper.selectCrmPersonById(personId);
     }
 
@@ -41,7 +42,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<CrmPerson> selectCrmPersonList(CrmPerson crmPerson) {
+    public List<Crm2Person> selectCrmPersonList(Crm2Person crmPerson) {
         return crm2PersonMapper.selectCrmPersonList(crmPerson);
     }
 
@@ -52,7 +53,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      * @return 联系人
      */
     @Override
-    public List<CrmPerson> selectCrmPersonListAll(CrmPerson crmPerson) {
+    public List<Crm2Person> selectCrmPersonListAll(Crm2Person crmPerson) {
         return crm2PersonMapper.selectCrmPersonListAll(crmPerson);
     }
 
@@ -63,7 +64,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      * @return 结果
      */
     @Override
-    public int insertCrmPerson(CrmPerson crmPerson) {
+    public int insertCrmPerson(Crm2Person crmPerson) {
         crmPerson.setDelFlag("0");
         crmPerson.setCreateTime(DateUtils.getNowDate());
         return crm2PersonMapper.insertCrmPerson(crmPerson);
@@ -76,7 +77,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      * @return 结果
      */
     @Override
-    public int updateCrmPerson(CrmPerson crmPerson) {
+    public int updateCrmPerson(Crm2Person crmPerson) {
         crmPerson.setUpdateTime(DateUtils.getNowDate());
         return crm2PersonMapper.updateCrmPerson(crmPerson);
     }
@@ -109,7 +110,7 @@ public class Crm2PersonServiceImpl implements ICrm2PersonService {
      * @param personName 联系人名称
      * @return 联系人
      */
-    public CrmPerson selectCrmPersonByName(String personName) {
+    public Crm2Person selectCrmPersonByName(String personName) {
         return crm2PersonMapper.selectCrmPersonByName(personName);
     }
 }

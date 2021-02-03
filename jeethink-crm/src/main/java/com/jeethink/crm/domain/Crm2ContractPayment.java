@@ -1,17 +1,18 @@
 package com.jeethink.crm.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import com.jeethink.common.annotation.Excel;
+import com.jeethink.common.annotation.Excel.Type;
+import com.jeethink.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.jeethink.common.annotation.Excel;
-import com.jeethink.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
- * 合同付款对象 crm2_contract_payment
+ * 合同付款管理对象 crm_contract_payment
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-03-22
  */
 public class Crm2ContractPayment extends BaseEntity
 {
@@ -23,21 +24,24 @@ public class Crm2ContractPayment extends BaseEntity
     /** 关联合同id */
     @Excel(name = "关联合同id")
     private Long contractId;
+    
+    @Excel(name = "所属合同", targetAttr = "contractName", type = Type.EXPORT)
+    private CrmContract contract;
 
     /** 金额 */
     @Excel(name = "金额")
-    private BigDecimal payMoney;
+    private Double payMoney;
 
     /** 付款日期 */
     @Excel(name = "付款日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date payDate;
 
-    /** 付款方式（支付宝、微信、支票、银行转账等） */
-    @Excel(name = "付款方式", readConverterExp = "支=付宝、微信、支票、银行转账等")
+    /** 付款方式 */
+    @Excel(name = "付款方式")
     private String payType;
 
-    /** 付款状态(未确认、确认中、已确认) */
-    @Excel(name = "付款状态(未确认、确认中、已确认)")
+    /** 付款状态 */
+    @Excel(name = "付款状态")
     private String payStatus;
 
     /** 是否需要发票(0:不需要  1:需要) */
@@ -65,12 +69,20 @@ public class Crm2ContractPayment extends BaseEntity
     {
         return contractId;
     }
-    public void setPayMoney(BigDecimal payMoney) 
+    public CrmContract getContract() {
+		return contract;
+	}
+
+	public void setContract(CrmContract contract) {
+		this.contract = contract;
+	}
+
+	public void setPayMoney(Double payMoney) 
     {
         this.payMoney = payMoney;
     }
 
-    public BigDecimal getPayMoney() 
+    public Double getPayMoney() 
     {
         return payMoney;
     }

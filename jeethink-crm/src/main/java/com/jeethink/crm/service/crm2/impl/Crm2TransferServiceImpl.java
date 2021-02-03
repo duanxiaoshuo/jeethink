@@ -145,7 +145,7 @@ public class Crm2TransferServiceImpl implements ICrm2TransferService
     	for(int j=0;j<arrIds.length;j++){    
     		Long id=arrIds[j];
     		if(businessType.equals(BusinessTypeConstants.Customer)) {//客户
-    			CrmCustomer crmCustomer= crm2CustomerService.selectCrmCustomerById(id);
+    			Crm2Customer crmCustomer= crm2CustomerService.selectCrmCustomerById(id);
         		if(crmCustomer.getBelongTo().equals(belongTo)) {
         			if(arrIds.length==1) {
         				throw new BusinessException(String.format("该客户原负责人和目标负责人相同，无法转交！", id));
@@ -160,7 +160,7 @@ public class Crm2TransferServiceImpl implements ICrm2TransferService
         		crm2CustomerService.updateCrmCustomer(crmCustomer);
     		}
     		else if(businessType.equals(BusinessTypeConstants.Clue)) {//线索
-    			CrmClue crmClue=crm2ClueService.selectCrmClueById(id);
+    			Crm2Clue crmClue=crm2ClueService.selectCrmClueById(id);
     			if(crmClue.getBelongTo().equals(belongTo)) {
         			if(arrIds.length==1) {
         				throw new BusinessException(String.format("该线索原负责人和目标负责人相同，无法转交！", id));
@@ -290,13 +290,13 @@ public class Crm2TransferServiceImpl implements ICrm2TransferService
     	for(int j=0;j<arrIds.length;j++){    
     		Long id=arrIds[j];
     		if(businessType.equals(BusinessTypeConstants.Customer)) {//客户
-    			CrmCustomer crmCustomer= crm2CustomerService.selectCrmCustomerById(id);
+    			Crm2Customer crmCustomer= crm2CustomerService.selectCrmCustomerById(id);
         		crmCustomer.setBelongTo(operName);
         		crmCustomer.setUpdateBy(operName);
         		crm2CustomerService.updateCrmCustomer(crmCustomer);
     		}
     		else if(businessType.equals(BusinessTypeConstants.Clue)) {//线索
-    			CrmClue crmClue=crm2ClueService.selectCrmClueById(id);
+    			Crm2Clue crmClue=crm2ClueService.selectCrmClueById(id);
     			crmClue.setBelongTo(operName);
     			crmClue.setUpdateBy(operName);
     			crm2ClueService.updateCrmClue(crmClue);

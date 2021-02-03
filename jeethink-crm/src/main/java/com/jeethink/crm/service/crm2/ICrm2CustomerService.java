@@ -1,5 +1,7 @@
 package com.jeethink.crm.service.crm2;
 
+import com.jeethink.crm.domain.Crm2Customer;
+import com.jeethink.crm.domain.Crm2CustomerTemplate;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.domain.CrmCustomerTemplate;
 
@@ -19,7 +21,7 @@ public interface ICrm2CustomerService
      * @param customerId 客户ID
      * @return 客户
      */
-    public CrmCustomer selectCrmCustomerById(Long customerId);
+    public Crm2Customer selectCrmCustomerById(Long customerId);
 
     /**
      * 查询客户列表
@@ -27,7 +29,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerList(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerList(Crm2Customer crmCustomer);
     
     /**
      * 查询客户列表 我的
@@ -35,7 +37,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListMy(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerListMy(Crm2Customer crmCustomer);
     
     /**
      * 查询客户列表 共享
@@ -43,7 +45,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListShare(CrmCustomer crmCustomer,Long userId);
+    public List<Crm2Customer> selectCrmCustomerListShare(Crm2Customer crmCustomer,Long userId);
 
     
     /**
@@ -52,7 +54,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListPublic(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerListPublic(Crm2Customer crmCustomer);
     
 
     /**
@@ -61,7 +63,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 结果
      */
-    public int insertCrmCustomer(CrmCustomer crmCustomer);
+    public int insertCrmCustomer(Crm2Customer crmCustomer);
 
     /**
      * 修改客户
@@ -69,7 +71,7 @@ public interface ICrm2CustomerService
      * @param crmCustomer 客户
      * @return 结果
      */
-    public int updateCrmCustomer(CrmCustomer crmCustomer);
+    public int updateCrmCustomer(Crm2Customer crmCustomer);
 
     /**
      * 批量删除客户
@@ -105,7 +107,7 @@ public interface ICrm2CustomerService
      * @param operName 操作用户
      * @return 结果
      */
-    public String importCustomer(List<CrmCustomerTemplate> customerList, Boolean isUpdateSupport, String operName);
+    public String importCustomer(List<Crm2CustomerTemplate> customerList, Boolean isUpdateSupport, String operName);
     
     /**
      * 校验客户名称是否唯一
@@ -113,7 +115,7 @@ public interface ICrm2CustomerService
     * @param crmCustomer 客户信息
     * @return
     */
-    public String checkCustomerNameUnique(CrmCustomer crmCustomer);
+    public String checkCustomerNameUnique(Crm2Customer crmCustomer);
     
     /**
      * 校验Email是否唯一
@@ -121,7 +123,7 @@ public interface ICrm2CustomerService
     * @param crmCustomer 客户信息
     * @return
     */
-    public String checkEmailUnique(CrmCustomer crmCustomer);
+    public String checkEmailUnique(Crm2Customer crmCustomer);
     
     /**
      * 校验座机是否唯一
@@ -129,7 +131,7 @@ public interface ICrm2CustomerService
     * @param crmCustomer 客户信息
     * @return
     */
-    public String checkTelephoneUnique(CrmCustomer crmCustomer);
+    public String checkTelephoneUnique(Crm2Customer crmCustomer);
     
     /**
      * 校验手机是否唯一
@@ -137,7 +139,7 @@ public interface ICrm2CustomerService
     * @param crmCustomer 客户信息
     * @return
     */
-    public String checkMobileUnique(CrmCustomer crmCustomer);
+    public String checkMobileUnique(Crm2Customer crmCustomer);
     
     /**
      * 将客户转为公告客户

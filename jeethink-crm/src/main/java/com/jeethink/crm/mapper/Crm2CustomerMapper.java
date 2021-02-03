@@ -1,5 +1,6 @@
 package com.jeethink.crm.mapper;
 
+import com.jeethink.crm.domain.Crm2Customer;
 import com.jeethink.crm.domain.CrmCustomer;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,7 +19,7 @@ public interface Crm2CustomerMapper {
      * @param customerId 客户ID
      * @return 客户
      */
-    public CrmCustomer selectCrmCustomerById(Long customerId);
+    public Crm2Customer selectCrmCustomerById(Long customerId);
 
     /**
      * 查询客户
@@ -26,7 +27,7 @@ public interface Crm2CustomerMapper {
      * @param customerName 客户名称
      * @return 客户
      */
-    public CrmCustomer selectCrmCustomerByName(String customerName);
+    public Crm2Customer selectCrmCustomerByName(String customerName);
 
     /**
      * 查询客户列表
@@ -34,7 +35,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerList(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerList(Crm2Customer crmCustomer);
 
     /**
      * 查询客户列表 我的
@@ -42,7 +43,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListMy(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerListMy(Crm2Customer crmCustomer);
 
     /**
      * 查询客户列表 共享
@@ -50,7 +51,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListShare(@Param("customerIds") List<Long> customerIds, @Param("crmCustomer") CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerListShare(@Param("customerIds") List<Long> customerIds, @Param("crmCustomer") Crm2Customer crmCustomer);
 
     /**
      * 查询客户列表 公共
@@ -58,7 +59,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 客户集合
      */
-    public List<CrmCustomer> selectCrmCustomerListPublic(CrmCustomer crmCustomer);
+    public List<Crm2Customer> selectCrmCustomerListPublic(Crm2Customer crmCustomer);
 
 
     /**
@@ -67,7 +68,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 结果
      */
-    public int insertCrmCustomer(CrmCustomer crmCustomer);
+    public int insertCrmCustomer(Crm2Customer crmCustomer);
 
     /**
      * 修改客户
@@ -75,7 +76,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户
      * @return 结果
      */
-    public int updateCrmCustomer(CrmCustomer crmCustomer);
+    public int updateCrmCustomer(Crm2Customer crmCustomer);
 
     /**
      * 删除客户
@@ -99,7 +100,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户信息
      * @return
      */
-    public CrmCustomer checkEmailUnique(String email);
+    public Crm2Customer checkEmailUnique(String email);
 
     /**
      * 校验座机是否唯一
@@ -107,7 +108,7 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户信息
      * @return
      */
-    public CrmCustomer checkTelephoneUnique(String telephone);
+    public Crm2Customer checkTelephoneUnique(String telephone);
 
     /**
      * 校验手机是否唯一
@@ -115,19 +116,19 @@ public interface Crm2CustomerMapper {
      * @param crmCustomer 客户信息
      * @return
      */
-    public CrmCustomer checkMobileUnique(String mobile);
+    public Crm2Customer checkMobileUnique(String mobile);
 
     /**
      * 查询超过30天未跟进的客户
      *
      * @return 客户
      */
-    public List<CrmCustomer> selectCrmCustomerListFollowMoreThan30();
+    public List<Crm2Customer> selectCrmCustomerListFollowMoreThan30();
 
     /**
      * 查询未跟进过的客户
      *
      * @return 客户
      */
-    public List<CrmCustomer> selectCrmCustomerListNoFollow();
+    public List<Crm2Customer> selectCrmCustomerListNoFollow();
 }

@@ -1,16 +1,17 @@
 package com.jeethink.crm.domain;
 
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.jeethink.common.annotation.Excel;
 import com.jeethink.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
- * 客户对象 crm2_customer
+ * 客户管理对象 crm_customer
  * 
  * @author jeethink
- * @date 2021-01-24
+ * @date 2020-04-02
  */
 public class Crm2Customer extends BaseEntity
 {
@@ -18,6 +19,14 @@ public class Crm2Customer extends BaseEntity
 
     /** 客户ID */
     private Long customerId;
+
+    /** 客户获取时间 */
+    @Excel(name = "客户获取时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date getDate;    
+
+    /** 客户类型 */
+    @Excel(name = "客户类型")
+    private String customerType;
 
     /** 客户名称 */
     @Excel(name = "客户名称")
@@ -32,31 +41,30 @@ public class Crm2Customer extends BaseEntity
     private String telephone;
 
     /** 手机 */
-    @Excel(name = "手机")
+    @Excel(name = "公司手机")
     private String mobile;
 
     /** 邮箱 */
-    @Excel(name = "邮箱")
+    @Excel(name = "公司邮箱")
     private String email;
 
     /** 传值 */
-    @Excel(name = "传值")
+    @Excel(name = "公司传值")
     private String fax;
 
     /** 网址 */
-    @Excel(name = "网址")
+    @Excel(name = "公司网址")
     private String website;
 
     /** 邮编 */
-    @Excel(name = "邮编")
+    @Excel(name = "公司邮编")
     private String zip;
 
     /** 国家 */
-    @Excel(name = "国家")
+    //@Excel(name = "国家")
     private String country;
 
     /** 省份 */
-    @Excel(name = "省份")
     private String province;
 
     /** 城市 */
@@ -64,95 +72,85 @@ public class Crm2Customer extends BaseEntity
     private String city;
 
     /** 地区 */
-    @Excel(name = "地区")
     private String region;
+
+    /** 意向产品（后期应可以选择） */
+    @Excel(name = "意向产品")
+    private String intrestedProdcut;
+
+    /** 所属行业（字典型） */
+    @Excel(name = "所属行业")
+    private String industry;
+
+    /** 客户状态 */
+    @Excel(name = "客户状态")
+    private String customerStatus;
+
+    /** 客户来源 */
+    @Excel(name = "客户来源")
+    private String customerSource;
+
+    /** 客户等级 */
+    @Excel(name = "客户等级")
+    private String customerDegree;
+
+    /** 客户优先级 */
+    @Excel(name = "客户优先级")
+    private String customerPriority;
+
+    /** 客户信誉度 */
+    @Excel(name = "客户信誉度")
+    private String customerCredit;
+
+    /** 客户成熟度 */
+    @Excel(name = "客户成熟度")
+    private String customerMaturity;
+
+    /** 客户类别 */
+    @Excel(name = "客户类别")
+    private String customerCategory;
+
+
 
     /** 客户地址 */
     @Excel(name = "客户地址")
     private String address;
 
-    /** 意向产品（后期应可以选择） */
-    @Excel(name = "意向产品", readConverterExp = "后=期应可以选择")
-    private String intrestedProdcut;
-
-    /** 所属行业（字典型） */
-    @Excel(name = "所属行业", readConverterExp = "字=典型")
-    private String industry;
-
-    /** 客户状态（新开发、洽谈中、已成交） */
-    @Excel(name = "客户状态", readConverterExp = "新=开发、洽谈中、已成交")
-    private String customerStatus;
-
-    /** 客户来源(字典类型) */
-    @Excel(name = "客户来源(字典类型)")
-    private String customerSource;
-
-    /** 客户等级（字典类型) */
-    @Excel(name = "客户等级", readConverterExp = "客户等级（字典类型)")
-    private String customerDegree;
-
-    /** 客户优先级（字典类型) */
-    @Excel(name = "客户优先级", readConverterExp = "客户优先级（字典类型)")
-    private String customerPriority;
-
-    /** 客户信誉度（字典 分星展示） */
-    @Excel(name = "客户信誉度", readConverterExp = "字=典,分=星展示")
-    private String customerCredit;
-
-    /** 客户类型（0  个人、1  企业） */
-    @Excel(name = "客户类型", readConverterExp = "0=,个=人、1,企=业")
-    private String customerType;
-
-    /** 客户成熟度 A+ A- B+ B-  新加 */
-    @Excel(name = "客户成熟度 A+ A- B+ B-  新加")
-    private String customerMaturity;
-
-    /** 客户类别(普通，vip ，代理商等) */
-    @Excel(name = "客户类别(普通，vip ，代理商等)")
-    private String customerCategory;
-
-    /** 年收入 */
-    @Excel(name = "年收入")
-    private String annualIncome;
-
-    /** 客户获取时间 */
-    @Excel(name = "客户获取时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date getDate;
-
-    /** 原负责人(login_name) */
-    @Excel(name = "原负责人(login_name)")
+    /** 原负责人 */
+    //@Excel(name = "原负责人")
     private String sourceBelongTo;
 
-    /** 负责人(login_name) */
-    @Excel(name = "负责人(login_name)")
+    /** 负责人 */
+    //@Excel(name = "负责人")
     private String belongTo;
 
     /** 转交时间 */
-    @Excel(name = "转交时间", width = 30, dateFormat = "yyyy-MM-dd")
+    //@Excel(name = "转交时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date trasferDate;
 
-    /** 转交人(login_name) */
-    @Excel(name = "转交人(login_name)")
+    /** 转交人 */
+    //@Excel(name = "转交人")
     private String trasferTo;
 
     /** 是否共享客户 */
     @Excel(name = "是否共享客户")
-    private String isShare;
-
+    private String isShare="";
+    
     /** 共享时间 */
-    @Excel(name = "共享时间", width = 30, dateFormat = "yyyy-MM-dd")
+    //@Excel(name = "共享时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date shareDate;
 
     /** 头像（保留） */
-    @Excel(name = "头像", readConverterExp = "保=留")
+    //@Excel(name = "头像", readConverterExp = "保留")
     private String avatar;
 
     /** qq（保留） */
-    @Excel(name = "qq", readConverterExp = "保=留")
+    //@Excel(name = "qq", readConverterExp = "保留")
     private String qq;
 
     /** 删除标识 */
     private String delFlag;
+
 
     public void setCustomerId(Long customerId) 
     {
@@ -361,24 +359,7 @@ public class Crm2Customer extends BaseEntity
     {
         return customerMaturity;
     }
-    public void setCustomerCategory(String customerCategory) 
-    {
-        this.customerCategory = customerCategory;
-    }
 
-    public String getCustomerCategory() 
-    {
-        return customerCategory;
-    }
-    public void setAnnualIncome(String annualIncome) 
-    {
-        this.annualIncome = annualIncome;
-    }
-
-    public String getAnnualIncome() 
-    {
-        return annualIncome;
-    }
     public void setGetDate(Date getDate) 
     {
         this.getDate = getDate;
@@ -397,6 +378,7 @@ public class Crm2Customer extends BaseEntity
     {
         return sourceBelongTo;
     }
+
     public void setBelongTo(String belongTo) 
     {
         this.belongTo = belongTo;
@@ -406,6 +388,7 @@ public class Crm2Customer extends BaseEntity
     {
         return belongTo;
     }
+
     public void setTrasferDate(Date trasferDate) 
     {
         this.trasferDate = trasferDate;
@@ -424,6 +407,7 @@ public class Crm2Customer extends BaseEntity
     {
         return trasferTo;
     }
+
     public void setIsShare(String isShare) 
     {
         this.isShare = isShare;
@@ -433,16 +417,16 @@ public class Crm2Customer extends BaseEntity
     {
         return isShare;
     }
-    public void setShareDate(Date shareDate) 
-    {
-        this.shareDate = shareDate;
-    }
+    
+    public Date getShareDate() {
+		return shareDate;
+	}
 
-    public Date getShareDate() 
-    {
-        return shareDate;
-    }
-    public void setAvatar(String avatar) 
+	public void setShareDate(Date shareDate) {
+		this.shareDate = shareDate;
+	}
+
+	public void setAvatar(String avatar) 
     {
         this.avatar = avatar;
     }
@@ -468,6 +452,15 @@ public class Crm2Customer extends BaseEntity
     public String getDelFlag() 
     {
         return delFlag;
+    }
+    public void setCustomerCategory(String customerCategory) 
+    {
+        this.customerCategory = customerCategory;
+    }
+
+    public String getCustomerCategory() 
+    {
+        return customerCategory;
     }
 
     @Override
@@ -496,8 +489,6 @@ public class Crm2Customer extends BaseEntity
             .append("customerCredit", getCustomerCredit())
             .append("customerType", getCustomerType())
             .append("customerMaturity", getCustomerMaturity())
-            .append("customerCategory", getCustomerCategory())
-            .append("annualIncome", getAnnualIncome())
             .append("getDate", getGetDate())
             .append("sourceBelongTo", getSourceBelongTo())
             .append("belongTo", getBelongTo())
@@ -513,6 +504,7 @@ public class Crm2Customer extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("customerCategory", getCustomerCategory())
             .toString();
     }
 }

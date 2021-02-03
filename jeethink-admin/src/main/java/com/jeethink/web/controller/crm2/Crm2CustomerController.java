@@ -7,6 +7,8 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Customer;
+import com.jeethink.crm.domain.Crm2CustomerTemplate;
 import com.jeethink.crm.domain.CrmCustomer;
 import com.jeethink.crm.domain.CrmCustomerTemplate;
 import com.jeethink.crm.service.crm1.ICrmCustomerService;
@@ -47,9 +49,9 @@ public class Crm2CustomerController extends BaseController {
     @RequiresPermissions("crm:customer:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(CrmCustomer crmCustomer) {
+    public TableDataInfo list(Crm2Customer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
         return getDataTable(list);
     }
 
@@ -68,9 +70,9 @@ public class Crm2CustomerController extends BaseController {
     @RequiresPermissions("crm:customer:listMy")
     @PostMapping("/listMy")
     @ResponseBody
-    public TableDataInfo listMy(CrmCustomer crmCustomer) {
+    public TableDataInfo listMy(Crm2Customer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListMy(crmCustomer);
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerListMy(crmCustomer);
         return getDataTable(list);
     }
 
@@ -89,11 +91,11 @@ public class Crm2CustomerController extends BaseController {
     @RequiresPermissions("crm:customer:listShare")
     @PostMapping("/listShare")
     @ResponseBody
-    public TableDataInfo listShare(CrmCustomer crmCustomer)
+    public TableDataInfo listShare(Crm2Customer crmCustomer)
     {
         Long userId = ShiroUtils.getUserId();
         startPage();
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListShare(crmCustomer,userId);
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerListShare(crmCustomer,userId);
         return getDataTable(list);
     }
 
@@ -112,9 +114,9 @@ public class Crm2CustomerController extends BaseController {
     @RequiresPermissions("crm:customer:listPublic")
     @PostMapping("/listPublic")
     @ResponseBody
-    public TableDataInfo listPublic(CrmCustomer crmCustomer) {
+    public TableDataInfo listPublic(Crm2Customer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerListPublic(crmCustomer);
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerListPublic(crmCustomer);
         return getDataTable(list);
     }
 
@@ -125,9 +127,9 @@ public class Crm2CustomerController extends BaseController {
     @Log(title = "客户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(CrmCustomer crmCustomer) {
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
-        ExcelUtil<CrmCustomer> util = new ExcelUtil<CrmCustomer>(CrmCustomer.class);
+    public AjaxResult export(Crm2Customer crmCustomer) {
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
+        ExcelUtil<Crm2Customer> util = new ExcelUtil<Crm2Customer>(Crm2Customer.class);
         return util.exportExcel(list, "customer");
     }
 
@@ -146,7 +148,7 @@ public class Crm2CustomerController extends BaseController {
     @Log(title = "客户", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(CrmCustomer crmCustomer) {
+    public AjaxResult addSave(Crm2Customer crmCustomer) {
         String loginName = ShiroUtils.getLoginName();
         crmCustomer.setDelFlag("0");
         crmCustomer.setCreateBy(loginName);
@@ -160,7 +162,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @GetMapping("/edit/{customerId}")
     public String edit(@PathVariable("customerId") Long customerId, ModelMap mmap) {
-        CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
+        Crm2Customer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/edit";
     }
@@ -172,7 +174,7 @@ public class Crm2CustomerController extends BaseController {
     @Log(title = "客户", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(CrmCustomer crmCustomer) {
+    public AjaxResult editSave(Crm2Customer crmCustomer) {
         crmCustomer.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(crm2CustomerService.updateCrmCustomer(crmCustomer));
     }
@@ -182,7 +184,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @GetMapping("/detail/{customerId}")
     public String detail(@PathVariable("customerId") Long customerId, ModelMap mmap) {
-        CrmCustomer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
+        Crm2Customer crmCustomer = crm2CustomerService.selectCrmCustomerById(customerId);
         mmap.put("crmCustomer", crmCustomer);
         return prefix + "/detail";
     }
@@ -211,9 +213,9 @@ public class Crm2CustomerController extends BaseController {
      */
     @PostMapping("/listAll")
     @ResponseBody
-    public TableDataInfo listAll(CrmCustomer crmCustomer) {
+    public TableDataInfo listAll(Crm2Customer crmCustomer) {
         startPage();
-        List<CrmCustomer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
+        List<Crm2Customer> list = crm2CustomerService.selectCrmCustomerList(crmCustomer);
         return getDataTable(list);
     }
 
@@ -239,8 +241,8 @@ public class Crm2CustomerController extends BaseController {
     @PostMapping("/importData")
     @ResponseBody
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
-        ExcelUtil<CrmCustomerTemplate> util = new ExcelUtil<CrmCustomerTemplate>(CrmCustomerTemplate.class);
-        List<CrmCustomerTemplate> customerList = util.importExcel(file.getInputStream());
+        ExcelUtil<Crm2CustomerTemplate> util = new ExcelUtil<Crm2CustomerTemplate>(Crm2CustomerTemplate.class);
+        List<Crm2CustomerTemplate> customerList = util.importExcel(file.getInputStream());
         String operName = ShiroUtils.getSysUser().getLoginName();
         String message = crm2CustomerService.importCustomer(customerList, updateSupport, operName);
         return AjaxResult.success(message);
@@ -262,7 +264,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @PostMapping("/checkCustomerNameUnique")
     @ResponseBody
-    public String checkCustomerNameUnique(CrmCustomer crmCustomer) {
+    public String checkCustomerNameUnique(Crm2Customer crmCustomer) {
         return crm2CustomerService.checkCustomerNameUnique(crmCustomer);
     }
 
@@ -271,7 +273,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @PostMapping("/checkMobileUnique")
     @ResponseBody
-    public String checkMobileUnique(CrmCustomer crmCustomer) {
+    public String checkMobileUnique(Crm2Customer crmCustomer) {
         return crm2CustomerService.checkMobileUnique(crmCustomer);
     }
 
@@ -280,7 +282,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @PostMapping("/checkTelephoneUnique")
     @ResponseBody
-    public String checkTelephoneUnique(CrmCustomer crmCustomer) {
+    public String checkTelephoneUnique(Crm2Customer crmCustomer) {
         return crm2CustomerService.checkTelephoneUnique(crmCustomer);
     }
 
@@ -289,7 +291,7 @@ public class Crm2CustomerController extends BaseController {
      */
     @PostMapping("/checkEmailUnique")
     @ResponseBody
-    public String checkEmailUnique(CrmCustomer crmCustomer) {
+    public String checkEmailUnique(Crm2Customer crmCustomer) {
         return crm2CustomerService.checkEmailUnique(crmCustomer);
     }
 }
