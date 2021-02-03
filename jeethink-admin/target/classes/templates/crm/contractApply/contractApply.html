@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('合同申请列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>客户名称：</p>
+                                <input type="text" id="customerName"  name="params[customerName]"/>
+                            </li>
+                            <li>
+                                <p>合同编号：</p>
+                                <input type="text" name="contractNo"/>
+                            </li>
+                            <li>
+                                <p>合同名称：</p>
+                                <input type="text" name="contractName"/>
+                            </li>
+                            <li>
+                                <p>合同类型：</p>
+                                <select name="contractType" th:with="type=${@dict.getType('contract_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <p>合同状态：</p>
+                                <select name="contractStatus" th:with="type=${@dict.getType('contract_apply_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <p>销售人员：</p>
+                                <input type="text" name="saleBy"/>
+                            </li>
+                            <li class="select-time">
+                                <p>合同日期：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始日期" name="params[beginCreateTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束日期" name="params[endCreateTime]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="crm:contract:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-info multiple disabled" onclick="javascript:transferPerson();" shiro:hasPermission="crm:contractApply:transfer">
+                    <i class="fa fa-exchange"></i> 转交
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="crm:contract:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+    	var printFlag=[[${@permission.hasPermi('crm:ContractApply:print')}]];
+   	    var fileFlag=[[${@permission.hasPermi('crm:ContractApply:file')}]];
+    	var auditFlag=[[${@permission.hasPermi('crm:ContractApply:audit')}]];
+        var editFlag = [[${@permission.hasPermi('crm:ContractApply:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('crm:ContractApply:remove')}]];
+        var contractTypeDatas = [[${@dict.getType('contract_type')}]];
+        var contractApplyStatusDatas = [[${@dict.getType('contract_apply_status')}]];
+        var prefix = ctx + "crm/contractApply";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+		        sortName: "createTime",
+		        sortOrder: "desc",
+                modalName: "合同申请",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'contractId', 
+                    title : '合同ID',
+                    visible: false
+                },
+                {
+                    field : 'customerId', 
+                    title : '客户id',
+                    visible: false
+                },
+                {
+                    field : 'customer.customerName', 
+                    title : '客户名称',
+		            sortable: true
+                },
+                {
+                    field : 'totalMoney', 
+                    title : '合同金额',
+		            sortable: true
+                },
+                {
+                    field : 'contractNo', 
+                    title : '合同编号',
+		            sortable: true
+                },
+                {
+                    field : 'contractName', 
+                    title : '合同名称',
+		            sortable: true,
+		            formatter: function(value, row, index) {
+		            	return '<a style="color:blue;" href="javascript:void(0)" title="查看详情" onclick="$.operate.detail(\'' +row.contractId + '\')">'+value+'</a> ';
+	                }
+                },
+                {
+                    field : 'contractType', 
+                    title : '合同类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractTypeDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'contractStatus', 
+                    title : '合同状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(contractApplyStatusDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'dateStart', 
+                    title : '合同日期',
+                    formatter: function(value, row, index) {
+                        return value.substring(0,10)+'--'+row.dateEnd.substring(0,10);
+                     },
+ 		            sortable: true
+                },
+                {
+                    field : 'signBy', 
+                    title : '合同签署人',
+		            sortable: true
+                },
+                {
+                    field : 'sourceBelongTo', 
+                    title : '原负责人',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'belongTo', 
+                    title : '负责人',
+		            sortable: true
+                },
+                {
+                    field : 'trasferDate', 
+                    title : '转交时间',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'trasferTo', 
+                    title : '转交人',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.contractStatus=="1"){
+                        	actions.push('<a class="btn btn-primary btn-xs ' + auditFlag + '" href="javascript:void(0)" onclick="auditOk(\'' + row.contractId + '\')"><i class="fa fa-check"></i>审核通过</a> ');
+                        	actions.push('<a class="btn btn-danger btn-xs ' + auditFlag + '" href="javascript:void(0)" onclick="auditNo(\'' + row.contractId + '\')"><i class="fa fa-reply"></i>驳回</a> ');
+                        }
+                        else if(row.contractStatus=="2"){
+                        	actions.push('<a class="btn btn-primary btn-xs ' + fileFlag + '" href="javascript:void(0)" onclick="file(\'' + row.contractId + '\')"><i class="fa fa-check"></i>归档</a> ');
+                        	actions.push('<a class="btn btn-warning btn-xs ' + printFlag + '" href="javascript:void(0)" onclick="printContent(\'' + row.contractId + '\')"><i class="fa fa-print"></i>打印</a> ');
+                        }
+                        else if(row.contractStatus=="3"){
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+                        else if(row.contractStatus=="4"){
+                        	actions.push('<a class="btn btn-warning btn-xs ' + printFlag + '" href="javascript:void(0)" onclick="printContent(\'' + row.contractId + '\')"><i class="fa fa-print"></i>打印</a> ');
+                        }
+                        else if(row.contractStatus=="0"){
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.contractId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.contractId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+        
+        function auditOk(contractId)
+        {        	
+        	$.modal.confirm("确认审核通过吗？", function() {
+        		$.operate.post(prefix + "/auditOk/"+contractId);
+        	});        	
+        }
+        
+        function auditNo(contractId)
+        {        	
+        	$.modal.confirm("确认驳回吗？", function() {
+        		$.operate.post(prefix + "/auditNo/"+contractId);
+        	});        	
+        }
+        
+        function file(contractId)
+        {        	
+        	$.modal.confirm("确认归档吗？", function() {
+        		$.operate.post(prefix + "/file/"+contractId);
+        	});        	
+        }
+        
+        /* 转交给其他人 */
+		function transferPerson() {
+			var contractId = $.table.selectColumns("contractId");
+			if (contractId.length == 0) {
+				$.modal.alertWarning("请至少选择一条记录");
+				return;
+			}	
+			var url = ctx + 'crm/transfer/transferPerson?ids=' + contractId.join()+"&businessType=ContractApply";
+			$.modal.open("转给其它团队成员（变更负责人）", url);
+		}
+
+      	//打印操作
+    	function printContent(contractId) {
+    		$.modal.confirm("确认打印合同吗？", function() {
+    			var userAgent = navigator.userAgent.toLowerCase(); //取得浏览器的userAgent字符串
+        		if (userAgent.indexOf("trident") > -1||userAgent.indexOf('msie') > -1) {
+        			$.modal.msgWarning("请使用google或者360浏览器打印");
+        			return false;
+        		}
+    			else {//其它浏览器使用lodop
+        			var printContent;
+        			$.ajax({
+        	            url: prefix + "/selectContractContent",
+        	            data: {
+        					"contractApplyId" : contractId
+        				},
+        	            type: "post",
+        	            success: function(result) {
+        	            	if (result.code == 0) {
+        	            		printContent=result.data.contractContent;
+        	            		var headstr = "<html><head><title></title></head><body>";
+        	        			var footstr = "</body></html>";    			
+        	        			var wind = window.open("", "newwin",
+        	        					'toolbar=no,scrollbars=yes,menubar=no');
+        	        			wind.document.body.innerHTML = headstr + printContent + footstr;
+        	        			wind.print();
+        	        			wind.close();   	         
+        	            	} else {
+        	            		$.modal.msgError(result.msg);
+        	            	}
+        	            },
+        				error : function(e) {
+        					$.modal.msgError("系统异常");
+        				}
+        	        })
+        		}
+        	});
+    	}
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsProductCatogoryMapper">
+    
+    <resultMap type="WmsProductCatogory" id="WmsProductCatogoryResult">
+        <result property="productCatogoryId"    column="product_catogory_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="catogoryName"    column="catogory_name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="leader"    column="leader"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectWmsProductCatogoryVo">
+        select product_catogory_id, parent_id, ancestors, catogory_name, order_num, leader, phone, email, status, del_flag, create_by, create_time, update_by, update_time from wms_product_catogory
+    </sql>
+
+    <select id="selectWmsProductCatogoryList" parameterType="WmsProductCatogory" resultMap="WmsProductCatogoryResult">
+        <include refid="selectWmsProductCatogoryVo"/>
+        <where>  
+        	del_flag = '0'
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="catogoryName != null  and catogoryName != ''"> and catogory_name like concat('%', #{catogoryName}, '%')</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by parent_id, order_num
+    </select>
+    
+    <select id="selectWmsProductCatogoryById" parameterType="Long" resultMap="WmsProductCatogoryResult">
+        select t.product_catogory_id, t.parent_id, t.ancestors, t.catogory_name, t.order_num, t.leader, t.phone, t.email, t.status, t.del_flag, t.create_by, t.create_time, t.update_by, t.update_time, p.catogory_name as parent_name
+        from wms_product_catogory t
+        left join wms_product_catogory p on p.product_catogory_id = t.parent_id
+        where t.product_catogory_id = #{productCatogoryId}
+    </select>
+    
+    <select id="selectChildrenProductCatogoryById" parameterType="Long" resultMap="WmsProductCatogoryResult">
+		select * from wms_product_catogory where find_in_set(#{productCatogoryId}, ancestors)
+	</select>
+        
+    <insert id="insertWmsProductCatogory" parameterType="WmsProductCatogory" useGeneratedKeys="true" keyProperty="productCatogoryId">
+        insert into wms_product_catogory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors,</if>
+            <if test="catogoryName != null  and catogoryName != ''">catogory_name,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="leader != null  and leader != ''">leader,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="ancestors != null  and ancestors != ''">#{ancestors},</if>
+            <if test="catogoryName != null  and catogoryName != ''">#{catogoryName},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="leader != null  and leader != ''">#{leader},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsProductCatogory" parameterType="WmsProductCatogory">
+        update wms_product_catogory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="catogoryName != null  and catogoryName != ''">catogory_name = #{catogoryName},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="leader != null  and leader != ''">leader = #{leader},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where product_catogory_id = #{productCatogoryId}
+    </update>
+    
+    <update id="updateProductCatogoryChildren" parameterType="java.util.List">
+	    update wms_product_catogory set ancestors =
+	    <foreach collection="productCatogorys" item="item" index="index"
+	        separator=" " open="case product_catogory_id" close="end">
+	        when #{item.productCatogoryId} then #{item.ancestors}
+	    </foreach>
+	    where product_catogory_id in
+	    <foreach collection="productCatogorys" item="item" index="index"
+	        separator="," open="(" close=")">
+	        #{item.productCatogoryId}
+	    </foreach>
+	 </update>
+
+    <delete id="deleteWmsProductCatogoryById" parameterType="Long">
+        delete from wms_product_catogory where product_catogory_id = #{productCatogoryId}
+    </delete>
+
+    <delete id="deleteWmsProductCatogoryByIds" parameterType="String">
+        delete from wms_product_catogory where product_catogory_id in 
+        <foreach item="productCatogoryId" collection="array" open="(" separator="," close=")">
+            #{productCatogoryId}
+        </foreach>
+    </delete>
+    
+</mapper>

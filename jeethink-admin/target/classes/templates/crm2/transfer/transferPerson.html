@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:include="include :: header('转交给指定人员')" />
+<th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-convert-edit">
+			<input name="loginName" type="hidden" id="loginName" />
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">    
+		                <label class="col-sm-3 control-label is-required">转交给：</label>
+		                <div class="col-sm-8">
+		                	<div class="input-group">
+			                    <input name="userName" onclick="selectUser()" id="userName" type="text" placeholder="请选择转交人员 " class="form-control" required readonly>
+			                	<span class="input-group-addon"><i class="fa fa-search"></i></span>
+							</div>
+		                </div>
+		            </div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label class="col-xs-3 control-label">转交原因：</label>
+						<div class="col-xs-8">
+							<textarea name="reason" id="reason" maxlength="500" class="form-control" rows="4"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label class="col-xs-3 control-label">转交记录：</label>
+						<div class="col-xs-8">
+							<a href="javascript:showHistory();">[查看转交历史记录]</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script  th:inline="javascript">
+		var prefix = ctx + "crm2/transfer";
+		var ids=[[${ids}]];
+		var businessType=[[${businessType}]];
+		
+		$("#form-convert-edit").validate({
+			focusCleanup : true
+		});
+
+		function submitHandler() {
+			if ($.validate.form()) {
+				var belongTo=$("#loginName").val();
+				var reason=$("#reason").val();
+				if(belongTo==""){
+					$.modal.alertWarning("请选择转交人员");
+	       			return;
+				}					
+				var data = { "ids":ids,"belongTo": belongTo,"businessType":businessType,"reason":reason};
+				var msg="确认转交给"+belongTo+"吗?";
+				$.modal.confirm(msg, function() {
+					$.operate.save(prefix + "/transfer", data);
+	    		});
+			}
+		}
+		
+		function selectUser(){
+			var url = ctx + 'system/user/selectUser';
+		    $.modal.open("选择转交人员", url);
+		}
+		
+		function showHistory(){
+			var url = prefix + '/transferPersonHistory?businessType='+businessType;
+		    $.modal.open("查看转交记录", url);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:include="include :: header('修改电话本')" />
+<th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-phonenumber-edit"
+			th:object="${crmPhonenumber}">
+			<input name="phonenumberId" th:field="*{phonenumberId}" type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所属：</label>
+				<div class="col-sm-8">
+					<select name="phonenumberType" class="form-control m-b"
+						th:with="type=${@dict.getType('phonenumber_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+							th:value="${dict.dictValue}" th:field="*{phonenumberType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">姓名：</label>
+				<div class="col-sm-8">
+					<input name="name" th:field="*{name}" class="form-control"
+						type="text" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">英文名：</label>
+				<div class="col-sm-8">
+					<input name="englshName" th:field="*{englshName}"
+						class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">性别：</label>
+				<div class="col-sm-8">
+					<select name="sex" class="form-control m-b"
+						th:with="type=${@dict.getType('sys_user_sex')}" required>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+							th:value="${dict.dictValue}" th:field="*{sex}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">职务：</label>
+				<div class="col-sm-8">
+					<input name="duty" th:field="*{duty}" class="form-control"
+						type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">固定电话：</label>
+				<div class="col-sm-8">
+					<input name="telephone" th:field="*{telephone}"
+						class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">手机：</label>
+				<div class="col-sm-8">
+					<input name="mobile" th:field="*{mobile}" class="form-control"
+						type="text" maxlength="11" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">邮箱：</label>
+				<div class="col-sm-8">
+					<input name="email" th:field="*{email}" class="form-control"
+						type="email" maxlength="20">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">传值：</label>
+				<div class="col-sm-8">
+					<input name="fax" th:field="*{fax}" class="form-control"
+						type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">qq：</label>
+				<div class="col-sm-8">
+					<input name="qq" th:field="*{qq}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">MSN：</label>
+				<div class="col-sm-8">
+					<input name="msn" th:field="*{msn}" class="form-control"
+						type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">爱好：</label>
+				<div class="col-sm-8">
+					<input name="hobby" th:field="*{hobby}" class="form-control"
+						type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">婚否：</label>
+				<div class="col-sm-8">
+					<div class="radio-box"
+						th:each="dict : ${@dict.getType('marriage')}">
+						<input type="radio" th:id="${'marriage_' + dict.dictCode}"
+							name="marriage" th:value="${dict.dictValue}"
+							th:field="*{marriage}"> <label
+							th:for="${'marriage_' + dict.dictCode}"
+							th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">出生日期：</label>
+				<div class="col-sm-8">
+					<div class="input-group date">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+						<input name="birthday"
+							th:value="${#dates.format(crmPhonenumber.birthday, 'yyyy-MM-dd')}"
+							class="form-control" placeholder="yyyy-MM-dd" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-3 control-label">备注：</label>
+				<div class="col-xs-8">
+					<textarea name="remark" maxlength="500" class="form-control"
+						rows="3">[[*{remark}]]</textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: datetimepicker-js" />
+	<script type="text/javascript">
+		var prefix = ctx + "crm2/phonenumber";
+		$("#form-phonenumber-edit").validate({
+			focusCleanup : true
+		});
+
+		function submitHandler() {
+			if ($.validate.form()) {
+				$.operate.save(prefix + "/edit", $('#form-phonenumber-edit')
+						.serialize());
+			}
+		}
+
+		$("input[name='birthday']").datetimepicker({
+			format : "yyyy-mm-dd",
+			minView : "month",
+			autoclose : true
+		});
+	</script>
+</body>
+</html>

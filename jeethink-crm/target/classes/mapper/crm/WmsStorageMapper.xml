@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsStorageMapper">
+    
+    <resultMap type="WmsStorage" id="WmsStorageResult">
+        <result property="storageId"    column="storage_id"    />
+        <result property="storageNo"    column="storage_no"    />
+        <result property="storageName"    column="storage_name"    />
+        <result property="storageStatus"    column="storage_status"    />
+        <result property="storageAddress"    column="storage_address"    />
+        <result property="belongTo"    column="belong_to"    />
+        <result property="phone"    column="phone"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="image"    column="image"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWmsStorageVo">
+        select storage_id, storage_no, storage_name, storage_status, storage_address, belong_to, phone, mobile, image, del_flag, create_by, create_time, update_by, update_time, remark from wms_storage
+    </sql>
+
+    <select id="selectWmsStorageList" parameterType="WmsStorage" resultMap="WmsStorageResult">
+        <include refid="selectWmsStorageVo"/>
+        <where>  
+            <if test="storageNo != null  and storageNo != ''"> and storage_no like concat('%', #{storageNo}, '%')</if>
+            <if test="storageName != null  and storageName != ''"> and storage_name like concat('%', #{storageName}, '%')</if>
+            <if test="storageStatus != null  and storageStatus != ''"> and storage_status = #{storageStatus}</if>
+            <if test="belongTo != null  and belongTo != ''"> and belong_to like concat('%', #{belongTo}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectWmsStorageById" parameterType="Long" resultMap="WmsStorageResult">
+        <include refid="selectWmsStorageVo"/>
+        where storage_id = #{storageId}
+    </select>
+        
+    <insert id="insertWmsStorage" parameterType="WmsStorage" useGeneratedKeys="true" keyProperty="storageId">
+        insert into wms_storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageNo != null and storageNo != ''">storage_no,</if>
+            <if test="storageName != null and storageName != ''">storage_name,</if>
+            <if test="storageStatus != null and storageStatus != ''">storage_status,</if>
+            <if test="storageAddress != null and storageAddress != ''">storage_address,</if>
+            <if test="belongTo != null and belongTo != ''">belong_to,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="image != null">image,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageNo != null and storageNo != ''">#{storageNo},</if>
+            <if test="storageName != null and storageName != ''">#{storageName},</if>
+            <if test="storageStatus != null and storageStatus != ''">#{storageStatus},</if>
+            <if test="storageAddress != null and storageAddress != ''">#{storageAddress},</if>
+            <if test="belongTo != null and belongTo != ''">#{belongTo},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="image != null">#{image},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsStorage" parameterType="WmsStorage">
+        update wms_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageNo != null and storageNo != ''">storage_no = #{storageNo},</if>
+            <if test="storageName != null and storageName != ''">storage_name = #{storageName},</if>
+            <if test="storageStatus != null and storageStatus != ''">storage_status = #{storageStatus},</if>
+            <if test="storageAddress != null and storageAddress != ''">storage_address = #{storageAddress},</if>
+            <if test="belongTo != null and belongTo != ''">belong_to = #{belongTo},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where storage_id = #{storageId}
+    </update>
+
+    <delete id="deleteWmsStorageById" parameterType="Long">
+        update  wms_storage set del_flag="1" where storage_id = #{storageId}
+    </delete>
+
+    <delete id="deleteWmsStorageByIds" parameterType="String">
+        update  wms_storage set del_flag="1" where storage_id in 
+        <foreach item="storageId" collection="array" open="(" separator="," close=")">
+            #{storageId}
+        </foreach>
+    </delete>
+
+</mapper>

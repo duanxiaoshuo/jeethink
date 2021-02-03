@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.Finance2PayPlanMapper">
+    
+    <resultMap type="FinancePayPlan" id="FinancePayPlanResult">
+        <result property="planId"    column="plan_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="planName"    column="plan_name"    />
+        <result property="planMoney"    column="plan_money"    />
+        <result property="planDate"    column="plan_date"    />
+        <result property="planType"    column="plan_type"    />
+        <result property="planTimes"    column="plan_times"    />
+        <result property="planStatus"    column="plan_status"    />
+        <result property="payedMoney"    column="payed_money"    />
+        <result property="needMoney"    column="need_money"    />
+        <result property="overDays"    column="over_days"    />
+        <result property="sourceBelongTo"    column="source_belong_to"    />
+        <result property="belongTo"    column="belong_to"    />
+        <result property="trasferDate"    column="trasfer_date"    />
+        <result property="trasferTo"    column="trasfer_to"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="extInput1"    column="ext_input1"    />
+        <result property="extInput2"    column="ext_input2"    />
+        <result property="extInput3"    column="ext_input3"    />
+        <result property="extInput4"    column="ext_input4"    />
+        <result property="extInput5"    column="ext_input5"    />
+        <result property="extFinancePayPlanSelect1"    column="ext_finance_pay_plan_select1"    />
+        <result property="extFinancePayPlanSelect2"    column="ext_finance_pay_plan_select2"    />
+        <result property="extFinancePayPlanSelect3"    column="ext_finance_pay_plan_select3"    />
+        <result property="extFinancePayPlanSelect4"    column="ext_finance_pay_plan_select4"    />
+        <result property="extFinancePayPlanSelect5"    column="ext_finance_pay_plan_select5"    />
+        <result property="extNumber1"    column="ext_number1"    />
+        <result property="extNumber2"    column="ext_number2"    />
+        <result property="extNumber3"    column="ext_number3"    />
+        <result property="extNumber4"    column="ext_number4"    />
+        <result property="extNumber5"    column="ext_number5"    />
+        <result property="extDate1"    column="ext_date1"    />
+        <result property="extDate2"    column="ext_date2"    />
+        <result property="extDate3"    column="ext_date3"    />
+        <result property="extDate4"    column="ext_date4"    />
+        <result property="extDate5"    column="ext_date5"    />
+        <result property="extMemo1"    column="ext_memo1"    />
+        <association property="customer"    column="customer_id" javaType="CrmCustomer" resultMap="customerResult" />
+    	<association property="order"    column="order_id" javaType="CrmOrder" resultMap="CrmOrderResult" />
+    </resultMap>
+    
+    <resultMap id="customerResult" type="CrmCustomer">
+		<id     property="customerId"   column="customer_id"     />
+		<result property="customerName" column="customer_name"   />
+		<result property="customerType" column="customer_type"   />
+	</resultMap>
+    
+    <resultMap type="CrmOrder" id="CrmOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="orderName"    column="order_name"    />
+    </resultMap>
+
+    <sql id="selectFinancePayPlanVo">
+        select p.plan_id, p.customer_id, p.order_id,p.plan_name, p.plan_money, p.plan_date, p.plan_type, p.plan_times, p.plan_status, p.payed_money, p.need_money, p.over_days,p.source_belong_to, p.belong_to, p.trasfer_date, p.trasfer_to, p.del_flag, p.create_by, p.create_time, p.update_by, p.update_time, p.remark, p.ext_input1, p.ext_input2, p.ext_input3, p.ext_input4, p.ext_input5, p.ext_finance_pay_plan_select1, p.ext_finance_pay_plan_select2, p.ext_finance_pay_plan_select3, p.ext_finance_pay_plan_select4, p.ext_finance_pay_plan_select5, p.ext_number1, p.ext_number2, p.ext_number3, p.ext_number4, p.ext_number5, p.ext_date1, p.ext_date2, p.ext_date3, p.ext_date4, p.ext_date5, p.ext_memo1,o.order_name,c.customer_name from finance2_pay_plan p
+    	left join crm2_order o on o.order_id = p.order_id
+        left join crm2_customer c on c.customer_id = p.customer_id
+        left join sys_user u on u.login_name=p.belong_to
+        left join sys_dept d on u.dept_id=d.dept_id
+    </sql>
+
+    <select id="selectFinancePayPlanList" parameterType="FinancePayPlan" resultMap="FinancePayPlanResult">
+        <include refid="selectFinancePayPlanVo"/>
+        <where>  
+        	p.del_flag='0'
+        	<if test="customerId != null "> and p.customer_id = #{customerId}</if>
+            <if test="orderId != null "> and p.order_id = #{orderId}</if>
+            <if test="planType != null  and planType != ''"> and p.plan_type = #{planType}</if>
+            <if test="planTimes != null  and planTimes != ''"> and p.plan_times = #{planTimes}</if>
+            <if test="planStatus != null  and planStatus != ''"> and p.plan_status = #{planStatus}</if>
+            <if test="params.customerName != null  and params.customerName != ''"> and c.customer_name like concat('%', #{params.customerName}, '%')</if>
+            <if test="params.orderName != null  and params.orderName != ''"> and o.order_name like concat('%', #{params.orderName }, '%')</if>
+            <if test="params.beginPlanDate != null and params.beginPlanDate != ''"><!-- 计划回款开始时间检索 -->
+				AND date_format(p.planDate,'%y%m%d') &gt;= date_format(#{params.beginPlanDate},'%y%m%d')
+			</if>
+			<if test="params.endPlanDate != null and params.endPlanDate != ''"><!-- 计划回款结束时间检索 -->
+				AND date_format(p.planDate,'%y%m%d') &lt;= date_format(#{params.endPlanDate},'%y%m%d')
+			</if>
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectFinancePayPlanById" parameterType="Long" resultMap="FinancePayPlanResult">
+        <include refid="selectFinancePayPlanVo"/>
+        where p.plan_id = #{planId}
+    </select>
+        
+    <insert id="insertFinancePayPlan" parameterType="FinancePayPlan" useGeneratedKeys="true" keyProperty="planId">
+        insert into finance2_pay_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="customerId != null ">customer_id,</if>
+            <if test="orderId != null ">order_id,</if>
+            <if test="planName != null  and planName != ''">plan_name,</if>
+            <if test="planMoney != null ">plan_money,</if>
+            <if test="planDate != null ">plan_date,</if>
+            <if test="planType != null  and planType != ''">plan_type,</if>
+            <if test="planTimes != null  and planTimes != ''">plan_times,</if>
+            <if test="planStatus != null  and planStatus != ''">plan_status,</if>
+            <if test="payedMoney != null ">payed_money,</if>
+            <if test="needMoney != null ">need_money,</if>
+            <if test="overDays != null ">over_days,</if>
+            <if test="sourceBelongTo != null  and sourceBelongTo != ''">source_belong_to,</if>
+            <if test="belongTo != null  and belongTo != ''">belong_to,</if>
+            <if test="trasferDate != null ">trasfer_date,</if>
+            <if test="trasferTo != null  and trasferTo != ''">trasfer_to,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="extInput1 != null  and extInput1 != ''">ext_input1,</if>
+            <if test="extInput2 != null  and extInput2 != ''">ext_input2,</if>
+            <if test="extInput3 != null  and extInput3 != ''">ext_input3,</if>
+            <if test="extInput4 != null  and extInput4 != ''">ext_input4,</if>
+            <if test="extInput5 != null  and extInput5 != ''">ext_input5,</if>
+            <if test="extFinancePayPlanSelect1 != null  and extFinancePayPlanSelect1 != ''">ext_finance_pay_plan_select1,</if>
+            <if test="extFinancePayPlanSelect2 != null  and extFinancePayPlanSelect2 != ''">ext_finance_pay_plan_select2,</if>
+            <if test="extFinancePayPlanSelect3 != null  and extFinancePayPlanSelect3 != ''">ext_finance_pay_plan_select3,</if>
+            <if test="extFinancePayPlanSelect4 != null  and extFinancePayPlanSelect4 != ''">ext_finance_pay_plan_select4,</if>
+            <if test="extFinancePayPlanSelect5 != null  and extFinancePayPlanSelect5 != ''">ext_finance_pay_plan_select5,</if>
+            <if test="extNumber1 != null ">ext_number1,</if>
+            <if test="extNumber2 != null ">ext_number2,</if>
+            <if test="extNumber3 != null ">ext_number3,</if>
+            <if test="extNumber4 != null ">ext_number4,</if>
+            <if test="extNumber5 != null ">ext_number5,</if>
+            <if test="extDate1 != null ">ext_date1,</if>
+            <if test="extDate2 != null ">ext_date2,</if>
+            <if test="extDate3 != null ">ext_date3,</if>
+            <if test="extDate4 != null ">ext_date4,</if>
+            <if test="extDate5 != null ">ext_date5,</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">ext_memo1,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="customerId != null ">#{customerId},</if>
+            <if test="orderId != null ">#{orderId},</if>
+            <if test="planName != null  and planName != ''">#{planName},</if>
+            <if test="planMoney != null ">#{planMoney},</if>
+            <if test="planDate != null ">#{planDate},</if>
+            <if test="planType != null  and planType != ''">#{planType},</if>
+            <if test="planTimes != null  and planTimes != ''">#{planTimes},</if>
+            <if test="planStatus != null  and planStatus != ''">#{planStatus},</if>
+            <if test="payedMoney != null ">#{payedMoney},</if>
+            <if test="needMoney != null ">#{needMoney},</if>
+            <if test="overDays != null ">#{overDays},</if>
+            <if test="sourceBelongTo != null  and sourceBelongTo != ''">#{sourceBelongTo},</if>
+            <if test="belongTo != null  and belongTo != ''">#{belongTo},</if>
+            <if test="trasferDate != null ">#{trasferDate},</if>
+            <if test="trasferTo != null  and trasferTo != ''">#{trasferTo},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="extInput1 != null  and extInput1 != ''">#{extInput1},</if>
+            <if test="extInput2 != null  and extInput2 != ''">#{extInput2},</if>
+            <if test="extInput3 != null  and extInput3 != ''">#{extInput3},</if>
+            <if test="extInput4 != null  and extInput4 != ''">#{extInput4},</if>
+            <if test="extInput5 != null  and extInput5 != ''">#{extInput5},</if>
+            <if test="extFinancePayPlanSelect1 != null  and extFinancePayPlanSelect1 != ''">#{extFinancePayPlanSelect1},</if>
+            <if test="extFinancePayPlanSelect2 != null  and extFinancePayPlanSelect2 != ''">#{extFinancePayPlanSelect2},</if>
+            <if test="extFinancePayPlanSelect3 != null  and extFinancePayPlanSelect3 != ''">#{extFinancePayPlanSelect3},</if>
+            <if test="extFinancePayPlanSelect4 != null  and extFinancePayPlanSelect4 != ''">#{extFinancePayPlanSelect4},</if>
+            <if test="extFinancePayPlanSelect5 != null  and extFinancePayPlanSelect5 != ''">#{extFinancePayPlanSelect5},</if>
+            <if test="extNumber1 != null ">#{extNumber1},</if>
+            <if test="extNumber2 != null ">#{extNumber2},</if>
+            <if test="extNumber3 != null ">#{extNumber3},</if>
+            <if test="extNumber4 != null ">#{extNumber4},</if>
+            <if test="extNumber5 != null ">#{extNumber5},</if>
+            <if test="extDate1 != null ">#{extDate1},</if>
+            <if test="extDate2 != null ">#{extDate2},</if>
+            <if test="extDate3 != null ">#{extDate3},</if>
+            <if test="extDate4 != null ">#{extDate4},</if>
+            <if test="extDate5 != null ">#{extDate5},</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">#{extMemo1},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinancePayPlan" parameterType="FinancePayPlan">
+        update finance2_pay_plan
+        <trim prefix="SET" suffixOverrides=",">
+        	<if test="customerId != null ">customer_id = #{customerId},</if>
+            <if test="orderId != null ">order_id = #{orderId},</if>
+            <if test="planName != null  and planName != ''">plan_name = #{planName},</if>
+            <if test="planMoney != null ">plan_money = #{planMoney},</if>
+            <if test="planDate != null ">plan_date = #{planDate},</if>
+            <if test="planType != null  and planType != ''">plan_type = #{planType},</if>
+            <if test="planTimes != null  and planTimes != ''">plan_times = #{planTimes},</if>
+            <if test="planStatus != null  and planStatus != ''">plan_status = #{planStatus},</if>
+            <if test="payedMoney != null ">payed_money = #{payedMoney},</if>
+            <if test="needMoney != null ">need_money = #{needMoney},</if>
+            <if test="overDays != null ">over_days = #{overDays},</if>
+            <if test="sourceBelongTo != null  and sourceBelongTo != ''">source_belong_to = #{sourceBelongTo},</if>
+            <if test="belongTo != null">belong_to = #{belongTo},</if>
+            <if test="trasferDate != null ">trasfer_date = #{trasferDate},</if>
+            <if test="trasferTo != null  and trasferTo != ''">trasfer_to = #{trasferTo},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="extInput1 != null  and extInput1 != ''">ext_input1 = #{extInput1},</if>
+            <if test="extInput2 != null  and extInput2 != ''">ext_input2 = #{extInput2},</if>
+            <if test="extInput3 != null  and extInput3 != ''">ext_input3 = #{extInput3},</if>
+            <if test="extInput4 != null  and extInput4 != ''">ext_input4 = #{extInput4},</if>
+            <if test="extInput5 != null  and extInput5 != ''">ext_input5 = #{extInput5},</if>
+            <if test="extFinancePayPlanSelect1 != null  and extFinancePayPlanSelect1 != ''">ext_finance_pay_plan_select1 = #{extFinancePayPlanSelect1},</if>
+            <if test="extFinancePayPlanSelect2 != null  and extFinancePayPlanSelect2 != ''">ext_finance_pay_plan_select2 = #{extFinancePayPlanSelect2},</if>
+            <if test="extFinancePayPlanSelect3 != null  and extFinancePayPlanSelect3 != ''">ext_finance_pay_plan_select3 = #{extFinancePayPlanSelect3},</if>
+            <if test="extFinancePayPlanSelect4 != null  and extFinancePayPlanSelect4 != ''">ext_finance_pay_plan_select4 = #{extFinancePayPlanSelect4},</if>
+            <if test="extFinancePayPlanSelect5 != null  and extFinancePayPlanSelect5 != ''">ext_finance_pay_plan_select5 = #{extFinancePayPlanSelect5},</if>
+            <if test="extNumber1 != null ">ext_number1 = #{extNumber1},</if>
+            <if test="extNumber2 != null ">ext_number2 = #{extNumber2},</if>
+            <if test="extNumber3 != null ">ext_number3 = #{extNumber3},</if>
+            <if test="extNumber4 != null ">ext_number4 = #{extNumber4},</if>
+            <if test="extNumber5 != null ">ext_number5 = #{extNumber5},</if>
+            <if test="extDate1 != null ">ext_date1 = #{extDate1},</if>
+            <if test="extDate2 != null ">ext_date2 = #{extDate2},</if>
+            <if test="extDate3 != null ">ext_date3 = #{extDate3},</if>
+            <if test="extDate4 != null ">ext_date4 = #{extDate4},</if>
+            <if test="extDate5 != null ">ext_date5 = #{extDate5},</if>
+            <if test="extMemo1 != null  and extMemo1 != ''">ext_memo1 = #{extMemo1},</if>
+        </trim>
+        where plan_id = #{planId}
+    </update>
+    
+    <delete id="deleteFinancePayPlanById" parameterType="Long">
+        update finance2_pay_plan set del_flag="1" where plan_id = #{planId}
+    </delete>
+
+    <delete id="deleteFinancePayPlanByIds" parameterType="String">
+        update finance2_pay_plan set del_flag="1" where plan_id in
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改出库管理')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-stockOut-edit" th:object="${wmsStockOut}">
+            <input name="outId" th:field="*{outId}" type="hidden">
+            <input name="storageId" type="hidden" id="storageId"  th:field="*{storageId}"/>
+        	<h4 class="form-header h4">出库信息</h4>
+        	<div class="row">            
+                <div class="col-sm-6">   
+		            <div class="form-group">
+		                <label class="col-sm-4 control-label ">标题：</label>
+		                <div class="col-sm-8">
+							<div class="form-control-static" th:text="${wmsStockOut.title}"></div>
+	                	</div>   	
+		            </div> 
+                </div>            	           
+                <div class="col-sm-6">  
+		            <div class="form-group">    
+		                <label class="col-sm-4 control-label ">仓库：</label>
+		                <div class="col-sm-8">
+		                	<div class="input-group">
+								<div class="form-control-static" th:text="${wmsStockOut.storage.storageName}"></div>
+							</div>
+		                </div>
+		            </div>
+                </div>
+            </div>
+            
+        	<div class="row">            
+                <div class="col-sm-6"> 
+		            <div class="form-group">    
+		                <label class="col-sm-4 control-label ">出库日期：</label>
+		                <div class="col-sm-8">
+		                    <div class="input-group date">
+		                        <div class="form-control-static" th:text="${#dates.format(wmsStockOut.outDate, 'yyyy-MM-dd')}" ></div>
+		                    </div>
+		                </div>
+		            </div>
+                </div>            	           
+                <div class="col-sm-6">              
+		            <div class="form-group">    
+		                <label class="col-sm-4 control-label ">负责人：</label>
+		                <div class="col-sm-8">               
+		                    <div class="input-group">
+							<div class="form-control-static" th:text="${wmsStockOut.outBy}"></div>
+							</div>
+		                </div>
+		            </div>
+                </div>
+            </div>
+            
+            <h4 class="form-header h4">产品信息</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-12 select-table table-striped">
+					    <table id="bootstrap-table"></table>
+					</div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "crm2/stockOut";
+        var prefixStockProduct = ctx + "crm2/stockProduct";
+        $("#form-stockOut-edit").validate({
+            focusCleanup: true
+        });
+        $("input[name='outDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+        
+        $(function() {
+		    var options = {
+			    url: prefixStockProduct + "/list",
+	            queryParams:{
+	            	'opId':[[${outId}]],
+	            	'type':1
+	            },
+                pagination: false,
+		        showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+		        columns: [
+		        {
+		        	field: 'index',
+		        	align: 'center',
+		        	title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+		        {
+		            field: 'productId',
+		            align: 'center',
+		            title: '产品ID',
+		            width:40
+		        },
+		        {
+		            field: 'productName',
+		            align: 'center',
+		            title: '产品名称'
+		        },
+		        {
+		            field: 'productNum1',
+		            align: 'center',
+		            title: '出库数量'
+		        }]
+		    };
+		    $.table.init(options);
+		});
+    </script>
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.jeethink.crm.service.crm2.impl;
 import com.jeethink.common.annotation.DataScope;
 import com.jeethink.common.core.text.Convert;
 import com.jeethink.common.utils.DateUtils;
+import com.jeethink.crm.domain.Crm2ContractApply;
 import com.jeethink.crm.domain.CrmContract;
 import com.jeethink.crm.domain.CrmContractApply;
 import com.jeethink.crm.mapper.Crm2ContractApplyMapper;
@@ -48,7 +49,7 @@ public class Crm2ContractApplyServiceImpl implements ICrm2ContractApplyService
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<CrmContractApply> selectCrmContractApplyList(CrmContractApply crmContractApply)
+    public List<Crm2ContractApply> selectCrmContractApplyList(Crm2ContractApply crmContractApply)
     {
         return crm2ContractApplyMapper.selectCrmContractApplyList(crmContractApply);
     }

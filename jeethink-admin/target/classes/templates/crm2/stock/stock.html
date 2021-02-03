@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('库存管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>仓库名称：</label>
+                                <input type="text" name="params[storageName]"/>
+                            </li>
+                            <li>
+                                <p>产品名称：</p>
+                                <input type="text" id="productName"  name="params[productName]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <!-- <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="crm:stock:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a> -->
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="crm:stock:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('crm:stock:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('crm:stock:remove')}]];
+        var productCategoryDatas = [[${@dict.getType('product_category')}]];
+        var productUnitDatas = [[${@dict.getType('product_unit')}]];
+        var prefix = ctx + "crm2/stock";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+		        clickToSelect: true,
+		        sortName: "createTime",
+		        sortOrder: "desc",
+                modalName: "库存管理",
+                columns: [
+                {
+                    field : 'stockId', 
+                    title : '库存ID',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'storageId', 
+                    title : '仓库ID',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'productId', 
+                    title : '产品ID',
+                    visible: false,
+		            sortable: true
+                },
+                {
+                    field : 'storage.storageName', 
+                    title : '仓库名称',
+		            sortable: true
+                },
+                {
+                    field : 'product.productName', 
+                    title : '产品名称',
+		            sortable: true
+                },
+                {
+                    field : 'product.productNo', 
+                    title : '货号',
+		            sortable: true
+                },
+                {
+                    field : 'product.productCategory', 
+                    title : '产品类别',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(productCategoryDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'product.productUnit', 
+                    title : '计量单位',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(productUnitDatas, value);
+                    },
+		            sortable: true
+                },
+                {
+                    field : 'product.salePrice', 
+                    title : '市场价格',
+		            sortable: true
+                },
+                {
+                    field : 'stockNum', 
+                    title : '库存数量',
+		            sortable: true
+                },
+                {
+                    field : 'createBy', 
+                    title : '录入人',
+		            sortable: true
+                },
+                {
+                    field : 'createTime', 
+                    title : '录入时间',
+		            sortable: true
+                },
+                {
+                    field : 'updateBy', 
+                    title : '更新者',
+		            sortable: true
+                },
+                {
+                    field : 'updateTime', 
+                    title : '更新时间',
+		            sortable: true
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>
