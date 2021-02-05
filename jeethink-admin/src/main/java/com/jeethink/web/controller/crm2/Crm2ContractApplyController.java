@@ -7,6 +7,7 @@ import com.jeethink.common.core.domain.AjaxResult.Type;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2ContractApply;
 import com.jeethink.crm.domain.CrmContractApply;
 import com.jeethink.crm.service.crm1.ICrmContractApplyService;
 import com.jeethink.crm.service.crm2.ICrm2ContractApplyService;
@@ -49,10 +50,10 @@ public class Crm2ContractApplyController extends BaseController
     @RequiresPermissions("crm:contractApply:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(CrmContractApply crmContractApply)
+    public TableDataInfo list(Crm2ContractApply crmContractApply)
     {
         startPage();
-        List<CrmContractApply> list = crmContractApplyService.selectCrmContractApplyList(crmContractApply);
+        List<Crm2ContractApply> list = crmContractApplyService.selectCrmContractApplyList(crmContractApply);
         return getDataTable(list);
     }
 
@@ -63,10 +64,10 @@ public class Crm2ContractApplyController extends BaseController
     @Log(title = "合同申请", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(CrmContractApply crmContractApply)
+    public AjaxResult export(Crm2ContractApply crmContractApply)
     {
-        List<CrmContractApply> list = crmContractApplyService.selectCrmContractApplyList(crmContractApply);
-        ExcelUtil<CrmContractApply> util = new ExcelUtil<CrmContractApply>(CrmContractApply.class);
+        List<Crm2ContractApply> list = crmContractApplyService.selectCrmContractApplyList(crmContractApply);
+        ExcelUtil<Crm2ContractApply> util = new ExcelUtil<Crm2ContractApply>(Crm2ContractApply.class);
         return util.exportExcel(list, "contractApply");
     }
 

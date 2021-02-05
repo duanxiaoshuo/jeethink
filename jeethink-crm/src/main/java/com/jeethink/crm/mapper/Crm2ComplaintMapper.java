@@ -1,5 +1,6 @@
 package com.jeethink.crm.mapper;
 
+import com.jeethink.crm.domain.Crm2Complaint;
 import com.jeethink.crm.domain.CrmComplaint;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface Crm2ComplaintMapper
      * @param complaintId 客户投诉ID
      * @return 客户投诉
      */
-    public CrmComplaint selectCrmComplaintById(Long complaintId);
+    public Crm2Complaint selectCrmComplaintById(Long complaintId);
 
     /**
      * 查询客户投诉列表
@@ -26,7 +27,7 @@ public interface Crm2ComplaintMapper
      * @param crmComplaint 客户投诉
      * @return 客户投诉集合
      */
-    public List<CrmComplaint> selectCrmComplaintList(CrmComplaint crmComplaint);
+    public List<Crm2Complaint> selectCrmComplaintList(Crm2Complaint crmComplaint);
     
     /**
      * 查询客户投诉列表 无数据权限
@@ -42,7 +43,7 @@ public interface Crm2ComplaintMapper
      * @param crmComplaint 客户投诉
      * @return 结果
      */
-    public int insertCrmComplaint(CrmComplaint crmComplaint);
+    public int insertCrmComplaint(Crm2Complaint crmComplaint);
 
     /**
      * 修改客户投诉
@@ -50,7 +51,7 @@ public interface Crm2ComplaintMapper
      * @param crmComplaint 客户投诉
      * @return 结果
      */
-    public int updateCrmComplaint(CrmComplaint crmComplaint);
+    public int updateCrmComplaint(Crm2Complaint crmComplaint);
 
     /**
      * 删除客户投诉

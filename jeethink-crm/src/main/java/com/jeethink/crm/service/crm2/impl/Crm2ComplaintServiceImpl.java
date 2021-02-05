@@ -3,6 +3,7 @@ package com.jeethink.crm.service.crm2.impl;
 import com.jeethink.common.annotation.DataScope;
 import com.jeethink.common.core.text.Convert;
 import com.jeethink.common.utils.DateUtils;
+import com.jeethink.crm.domain.Crm2Complaint;
 import com.jeethink.crm.domain.CrmComplaint;
 import com.jeethink.crm.mapper.Crm2ComplaintMapper;
 import com.jeethink.crm.service.crm2.ICrm2ComplaintService;
@@ -30,7 +31,7 @@ public class Crm2ComplaintServiceImpl implements ICrm2ComplaintService
      * @return 客户投诉
      */
     @Override
-    public CrmComplaint selectCrmComplaintById(Long complaintId)
+    public Crm2Complaint selectCrmComplaintById(Long complaintId)
     {
         return crm2ComplaintMapper.selectCrmComplaintById(complaintId);
     }
@@ -43,7 +44,7 @@ public class Crm2ComplaintServiceImpl implements ICrm2ComplaintService
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<CrmComplaint> selectCrmComplaintList(CrmComplaint crmComplaint)
+    public List<Crm2Complaint> selectCrmComplaintList(Crm2Complaint crmComplaint)
     {
         return crm2ComplaintMapper.selectCrmComplaintList(crmComplaint);
     }
@@ -67,7 +68,7 @@ public class Crm2ComplaintServiceImpl implements ICrm2ComplaintService
      * @return 结果
      */
     @Override
-    public int insertCrmComplaint(CrmComplaint crmComplaint)
+    public int insertCrmComplaint(Crm2Complaint crmComplaint)
     {
     	crmComplaint.setDelFlag("0");
         crmComplaint.setCreateTime(DateUtils.getNowDate());
@@ -81,7 +82,7 @@ public class Crm2ComplaintServiceImpl implements ICrm2ComplaintService
      * @return 结果
      */
     @Override
-    public int updateCrmComplaint(CrmComplaint crmComplaint)
+    public int updateCrmComplaint(Crm2Complaint crmComplaint)
     {
         crmComplaint.setUpdateTime(DateUtils.getNowDate());
         return crm2ComplaintMapper.updateCrmComplaint(crmComplaint);

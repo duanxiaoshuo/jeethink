@@ -6,6 +6,7 @@ import com.jeethink.common.core.domain.AjaxResult;
 import com.jeethink.common.core.page.TableDataInfo;
 import com.jeethink.common.enums.BusinessType;
 import com.jeethink.common.utils.poi.ExcelUtil;
+import com.jeethink.crm.domain.Crm2Complaint;
 import com.jeethink.crm.domain.Crm2Customer;
 import com.jeethink.crm.domain.CrmComplaint;
 import com.jeethink.crm.domain.CrmCustomer;
@@ -53,10 +54,10 @@ public class Crm2ComplaintController extends BaseController
     @RequiresPermissions("crm:complaint:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(CrmComplaint crmComplaint)
+    public TableDataInfo list(Crm2Complaint crmComplaint)
     {
         startPage();
-        List<CrmComplaint> list = crmComplaintService.selectCrmComplaintList(crmComplaint);
+        List<Crm2Complaint> list = crmComplaintService.selectCrmComplaintList(crmComplaint);
         return getDataTable(list);
     }
 
@@ -67,10 +68,10 @@ public class Crm2ComplaintController extends BaseController
     @Log(title = "客户投诉", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(CrmComplaint crmComplaint)
+    public AjaxResult export(Crm2Complaint crmComplaint)
     {
-        List<CrmComplaint> list = crmComplaintService.selectCrmComplaintList(crmComplaint);
-        ExcelUtil<CrmComplaint> util = new ExcelUtil<CrmComplaint>(CrmComplaint.class);
+        List<Crm2Complaint> list = crmComplaintService.selectCrmComplaintList(crmComplaint);
+        ExcelUtil<Crm2Complaint> util = new ExcelUtil<Crm2Complaint>(Crm2Complaint.class);
         return util.exportExcel(list, "complaint");
     }
     
@@ -90,7 +91,7 @@ public class Crm2ComplaintController extends BaseController
     @Log(title = "客户投诉", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(CrmComplaint crmComplaint)
+    public AjaxResult addSave(Crm2Complaint crmComplaint)
     {
     	crmComplaint.setDelFlag("0");
     	crmComplaint.setCreateBy(ShiroUtils.getLoginName());
@@ -103,7 +104,7 @@ public class Crm2ComplaintController extends BaseController
     @GetMapping("/edit/{complaintId}")
     public String edit(@PathVariable("complaintId") Long complaintId, ModelMap mmap)
     {
-        CrmComplaint crmComplaint = crmComplaintService.selectCrmComplaintById(complaintId);
+        Crm2Complaint crmComplaint = crmComplaintService.selectCrmComplaintById(complaintId);
         mmap.put("crmComplaint", crmComplaint);
         return prefix + "/edit";
     }
@@ -115,7 +116,7 @@ public class Crm2ComplaintController extends BaseController
     @Log(title = "客户投诉", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(CrmComplaint crmComplaint)
+    public AjaxResult editSave(Crm2Complaint crmComplaint)
     {
     	crmComplaint.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(crmComplaintService.updateCrmComplaint(crmComplaint));

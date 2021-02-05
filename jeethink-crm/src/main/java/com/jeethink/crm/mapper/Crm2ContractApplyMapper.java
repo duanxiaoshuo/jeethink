@@ -1,5 +1,6 @@
 package com.jeethink.crm.mapper;
 
+import com.jeethink.crm.domain.Crm2ContractApply;
 import com.jeethink.crm.domain.CrmContractApply;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface Crm2ContractApplyMapper
      * @param crmContractApply 合同申请
      * @return 合同申请集合
      */
-    public List<CrmContractApply> selectCrmContractApplyList(CrmContractApply crmContractApply);
+    public List<Crm2ContractApply> selectCrmContractApplyList(Crm2ContractApply crmContractApply);
 
     /**
      * 新增合同申请
