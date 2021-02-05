@@ -51,7 +51,6 @@
 		var prefix = ctx + "crm/customer";
 		var customerId=[[${customerId}]];
 		var isShare=[[${isShare}]];
-
 		$("#form-convert-edit").validate({
 			focusCleanup : true
 		});
@@ -66,7 +65,7 @@
 					$.modal.alertWarning("请选择共享人员");
 	       			return;
 				}					
-				var data = { "customerIds":customerId,"shared": shared,"reason":reason,"isShare":isShare};
+				var data = { "customerId":customerId,"shared": shared,"reason":reason,"isShare":isShare};
 				var msg="确认共享给"+belongTo+"吗?";
 				$.modal.confirm(msg, function() {
 					$.operate.save(prefix + "/share", data);

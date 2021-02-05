@@ -224,7 +224,7 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
         this.updateCrmCustomer(crmCustomer);
         if (isShare.equals("1")) {
             CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
-            if (null == crmShareRelation) {
+            if (null!= crmShareRelation) {
                 return successNum;
 
             }
