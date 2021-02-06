@@ -176,6 +176,10 @@ public class Crm2CustomerServiceImpl implements ICrm2CustomerService {
             if (listFollow.size() > 0) {
                 throw new BusinessException(String.format("客户%1$s存在关联的跟进记录,不能删除", customerId));
             }
+            List<CrmShareRelation> shareRelations = crm2ShareRelationMapper.selectCustomer(customerId);
+            if (!CollectionUtils.isEmpty(shareRelations)) {
+                throw new BusinessException(String.format("客户%1$s存在共享,不能删除", customerId));
+            }
         }
         return crm2CustomerMapper.deleteCrmCustomerByIds(Convert.toStrArray(ids));
     }

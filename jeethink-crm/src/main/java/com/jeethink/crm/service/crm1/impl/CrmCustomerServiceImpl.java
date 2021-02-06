@@ -180,6 +180,10 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
             if (listFollow.size() > 0) {
                 throw new BusinessException(String.format("客户%1$s存在关联的跟进记录,不能删除", customerId));
             }
+            List<CrmShareRelation> shareRelations = crmShareRelationMapper.selectCustomer(customerId);
+            if (!CollectionUtils.isEmpty(shareRelations)) {
+                throw new BusinessException(String.format("客户%1$s存在共享,不能删除", customerId));
+            }
         }
         return crmCustomerMapper.deleteCrmCustomerByIds(Convert.toStrArray(ids));
     }
@@ -210,8 +214,6 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
         CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
         if (null == crmCustomer) {
             throw new BusinessException("客户不存在！");
-
-
         }
         //公客不能设置共享属性
         if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {

@@ -83,4 +83,11 @@ public interface Crm2ShareRelationMapper {
      * @return
      */
     CrmShareRelation selectCrmShareRelation(@Param("customerId") Long customerId, @Param("share")Long share,@Param("shred") Long shred);
+
+    /**
+     * 查询这个客户的共享关系
+     * @param customerId
+     * @return
+     */
+    List<CrmShareRelation> selectCustomer(Long customerId);
 }

@@ -113,13 +113,14 @@
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="crm:customer:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-<!--                 <div class="btn-group"  shiro:hasPermission="crm:customer:transfer">-->
-                <!--                 	<button data-toggle="dropdown" class="btn  btn-sm btn-success dropdown-toggle  multiple disabled "><i class="fa fa-exchange"></i>&nbsp;转交<span class="caret"></span></button>-->
-                <!--                    	<ul class="dropdown-menu">-->
-                <!--                        	<li><a href="javascript:transferPerson();">转交给指定人员</a></li>-->
-                <!--                            <li><a href="javascript:transferPublic();">转为公共客户</a></li>-->
-                <!--                       	</ul>-->
-                <!--                 </div>-->
+                <div class="btn-group" shiro:hasPermission="crm:customer:transfer">
+                    <button data-toggle="dropdown" class="btn  btn-sm btn-success dropdown-toggle  multiple disabled ">
+                        <i class="fa fa-exchange"></i>&nbsp;转交<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:transferPerson();">转交给指定人员</a></li>
+                        <li><a href="javascript:transferPublic();">转为公共客户</a></li>
+                    </ul>
+                </div>
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="crm:customer:export">
                     <i class="fa fa-download"></i> 导出
                  </a>

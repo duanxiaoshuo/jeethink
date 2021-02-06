@@ -27,11 +27,7 @@ function share(isShare) {
         var url = ctx + 'crm/share/sharePerson?customerId=' + customerId + "&isShare=" + isShare;
         $.modal.open("共享给其他人员", url);
     } else {
-        var data = {
-            "customerId": customerId,
-            "isShare": isShare
-        };
-        $.operate.post(prefix + "/share", data);
+        $.operate.post(prefix + "/share"+'?customerId=' + customerId + "&isShare=" + isShare);
     }
 
 }

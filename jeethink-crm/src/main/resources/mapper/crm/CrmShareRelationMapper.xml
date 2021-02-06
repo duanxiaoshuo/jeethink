@@ -56,6 +56,12 @@
         AND share_user_id = #{share}
         AND shared_user_id =#{shred}
     </select>
+    <select id="selectCustomer" resultType="com.jeethink.crm.domain.CrmShareRelation">
+        <include refid="selectCrmShareRelationVo"/>
+        WHERE
+        del_flag = '0'
+        AND customer_id = #{customerId}
+    </select>
 
     <insert id="insertCrmShareRelation" parameterType="CrmShareRelation">
         insert into crm_share_relation
