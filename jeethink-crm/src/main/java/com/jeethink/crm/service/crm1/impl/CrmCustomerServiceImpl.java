@@ -225,8 +225,14 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
         this.updateCrmCustomer(crmCustomer);
         if (isShare.equals("1")) {
             CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
+<<<<<<< HEAD
             if (null != crmShareRelation) {
                 throw new BusinessException("不能重复共享！");
+=======
+            if (null!= crmShareRelation) {
+                return successNum;
+
+>>>>>>> 5010ddf2521633cfafa4f9495801d5d9fa2127ff
             }
             crmShareRelation = new CrmShareRelation();
             crmShareRelation.setCustomerId(customerId);

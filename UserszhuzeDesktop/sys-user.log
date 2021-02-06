@@ -1,0 +1,14 @@
+01:50:12.713 [schedule-pool-2] INFO  sys-user - [run,111] - [127.0.0.1]内网IP[admin][Error][密码输入错误1次]
+01:50:26.004 [schedule-pool-3] INFO  sys-user - [run,111] - [127.0.0.1]内网IP[admin][Success][登录成功]
+01:54:56.604 [Thread-11] INFO  sys-user - [shutdownSpringSessionValidationScheduler,47] - ====关闭会话验证任务====
+01:54:56.605 [Thread-11] INFO  sys-user - [shutdownAsyncManager,64] - ====关闭后台任务任务线程池====
+01:54:56.606 [Thread-11] INFO  sys-user - [shutdownEhCacheManager,77] - ====关闭缓存====
+01:57:19.281 [Thread-11] INFO  sys-user - [shutdownSpringSessionValidationScheduler,47] - ====关闭会话验证任务====
+01:57:19.282 [Thread-11] INFO  sys-user - [shutdownAsyncManager,64] - ====关闭后台任务任务线程池====
+01:57:19.283 [Thread-11] INFO  sys-user - [shutdownEhCacheManager,77] - ====关闭缓存====
+02:06:53.651 [Thread-11] INFO  sys-user - [shutdownSpringSessionValidationScheduler,47] - ====关闭会话验证任务====
+02:06:53.654 [Thread-11] INFO  sys-user - [shutdownAsyncManager,64] - ====关闭后台任务任务线程池====
+02:06:53.654 [Thread-11] INFO  sys-user - [shutdownEhCacheManager,77] - ====关闭缓存====
+02:09:57.348 [Thread-11] INFO  sys-user - [shutdownSpringSessionValidationScheduler,47] - ====关闭会话验证任务====
+02:09:57.350 [Thread-11] INFO  sys-user - [shutdownAsyncManager,64] - ====关闭后台任务任务线程池====
+02:09:57.350 [Thread-11] INFO  sys-user - [shutdownEhCacheManager,77] - ====关闭缓存====
