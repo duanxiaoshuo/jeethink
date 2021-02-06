@@ -48,6 +48,8 @@ public class Crm2ContractApplyController extends BaseController
      * 查询合同申请列表
      */
     @RequiresPermissions("crm:contractApply:list")
+
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Crm2ContractApply crmContractApply)

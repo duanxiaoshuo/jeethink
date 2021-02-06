@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsStockCheckMapper">
+    
+    <resultMap type="WmsStockCheck" id="WmsStockCheckResult">
+        <result property="checkId"    column="check_id"    />
+        <result property="storageId"    column="storage_id"    />
+        <result property="title"    column="title"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="checkBy"    column="check_by"    />
+        <result property="checkStatus"    column="check_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="storage"    column="storage_id" javaType="WmsStorage" resultMap="WmsStorageResult" />
+		<collection  property="products"   javaType="java.util.List"        resultMap="WmsStockProductResult" />
+    </resultMap>
+    
+    <resultMap type="WmsStorage" id="WmsStorageResult">
+        <result property="storageId"    column="storage_id"    />
+        <result property="storageNo"    column="storage_no"    />
+        <result property="storageName"    column="storage_name"    />
+    </resultMap>
+    
+    <resultMap type="WmsStockProduct" id="WmsStockProductResult">
+        <result property="stockProductId"    column="stock_product_id"    />
+        <result property="opId"    column="op_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productNum1"    column="product_num1"    />
+        <result property="productNum2"    column="product_num2"    />
+    </resultMap>
+
+    <sql id="selectWmsStockCheckVo">
+        select c.check_id, c.storage_id, c.title, c.check_date, c.check_by, c.check_status, c.del_flag, c.create_by, c.create_time, c.update_by, c.update_time, c.remark,s.storage_name,p.product_name,p.product_num1,p.product_num2 
+        from wms_stock_check c          
+        left join wms_storage s on s.storage_id=c.storage_id
+        left join wms_stock_product p on p.op_id=c.check_id and p.type='3'
+    </sql>
+
+    <select id="selectWmsStockCheckList" parameterType="WmsStockCheck" resultMap="WmsStockCheckResult">
+        <include refid="selectWmsStockCheckVo"/>
+        <where>  
+            <if test="params.storageName != null  and params.storageName != ''"> and s.storage_name like concat('%', #{params.storageName}, '%')</if>
+            <if test="checkDate != null "> and c.check_date = #{checkDate}</if>
+            <if test="checkBy != null  and checkBy != ''"> and c.check_by = #{checkBy}</if>
+            <if test="checkStatus != null  and checkStatus != ''"> and c.check_status = #{checkStatus}</if>
+            <if test="params.productName != null  and params.productName != ''"> and p.product_name like concat('%', #{params.productName}, '%')</if>
+        	<if test="params.beginCheckDate != null and params.beginCheckDate != ''"><!-- 开始时间检索 -->
+				AND date_format(c.check_date,'%y%m%d') &gt;= date_format(#{params.beginCheckDate},'%y%m%d')
+			</if>
+			<if test="params.endCheckDate != null and params.endCheckDate != ''"><!-- 结束时间检索 -->
+				AND date_format(c.check_date,'%y%m%d') &lt;= date_format(#{params.endCheckDate},'%y%m%d')
+			</if>
+        </where>
+    </select>
+    
+    <select id="selectWmsStockCheckById" parameterType="Long" resultMap="WmsStockCheckResult">
+        <include refid="selectWmsStockCheckVo"/>
+        where c.check_id = #{checkId}
+    </select>
+        
+    <insert id="insertWmsStockCheck" parameterType="WmsStockCheck" useGeneratedKeys="true" keyProperty="checkId">
+        insert into wms_stock_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageId != null">storage_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="checkBy != null and checkBy != ''">check_by,</if>
+            <if test="checkStatus != null">check_status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageId != null">#{storageId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="checkBy != null and checkBy != ''">#{checkBy},</if>
+            <if test="checkStatus != null">#{checkStatus},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsStockCheck" parameterType="WmsStockCheck">
+        update wms_stock_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageId != null">storage_id = #{storageId},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="checkBy != null and checkBy != ''">check_by = #{checkBy},</if>
+            <if test="checkStatus != null">check_status = #{checkStatus},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where check_id = #{checkId}
+    </update>
+
+    <delete id="deleteWmsStockCheckById" parameterType="Long">
+        delete from wms_stock_check where check_id = #{checkId}
+    </delete>
+
+    <delete id="deleteWmsStockCheckByIds" parameterType="String">
+        delete from wms_stock_check where check_id in 
+        <foreach item="checkId" collection="array" open="(" separator="," close=")">
+            #{checkId}
+        </foreach>
+    </delete>
+
+</mapper>

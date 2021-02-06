@@ -209,24 +209,22 @@ public class CrmCustomerServiceImpl implements ICrmCustomerService {
         int successNum = 0;
         CrmCustomer crmCustomer = this.selectCrmCustomerById(customerId);
         if (null == crmCustomer) {
-            return successNum;
+            throw new BusinessException("客户不存在！");
+
 
         }
         //公客不能设置共享属性
         if (StringUtils.isEmpty(crmCustomer.getBelongTo()) || StringUtils.isNull(crmCustomer.getBelongTo())) {
-            return successNum;
+            throw new BusinessException("不能共享公共客户！");
 
         }
-
-
         crmCustomer.setIsShare(isShare);
         crmCustomer.setUpdateBy(operName);
         this.updateCrmCustomer(crmCustomer);
         if (isShare.equals("1")) {
             CrmShareRelation crmShareRelation = crmShareRelationMapper.selectCrmShareRelation(customerId, share, shred);
-            if (null == crmShareRelation) {
-                return successNum;
-
+            if (null != crmShareRelation) {
+                throw new BusinessException("不能重复共享！");
             }
             crmShareRelation = new CrmShareRelation();
             crmShareRelation.setCustomerId(customerId);

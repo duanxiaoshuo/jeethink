@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeethink.crm.mapper.WmsStockOutMapper">
+    
+    <resultMap type="WmsStockOut" id="WmsStockOutResult">
+        <result property="outId"    column="out_id"    />
+        <result property="storageId"    column="storage_id"    />
+        <result property="title"    column="title"    />
+        <result property="outDate"    column="out_date"    />
+        <result property="outType"    column="out_type"    />
+        <result property="outStatus"    column="out_status"    />
+        <result property="outBy"    column="out_by"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="storage"    column="storage_id" javaType="WmsStorage" resultMap="WmsStorageResult" />
+		<collection  property="products"   javaType="java.util.List"        resultMap="WmsStockProductResult" />
+    </resultMap>
+    
+    <resultMap type="WmsStorage" id="WmsStorageResult">
+        <result property="storageId"    column="storage_id"    />
+        <result property="storageNo"    column="storage_no"    />
+        <result property="storageName"    column="storage_name"    />
+    </resultMap>
+    
+    <resultMap type="WmsStockProduct" id="WmsStockProductResult">
+        <result property="stockProductId"    column="stock_product_id"    />
+        <result property="opId"    column="op_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productNum1"    column="product_num1"    />
+        <result property="productNum2"    column="product_num2"    />
+    </resultMap>
+
+    <sql id="selectWmsStockOutVo">
+        select o.out_id,o.storage_id,o.title, o.out_date, o.out_type, o.out_status, o.out_by, o.del_flag, o.create_by, o.create_time, o.update_by, o.update_time, o.remark,s.storage_name,p.product_name,p.product_num1 
+        from wms_stock_out o
+        left join wms_storage s on s.storage_id=o.storage_id
+        left join wms_stock_product p on p.op_id=o.out_id and p.type='1'
+    </sql>
+
+    <select id="selectWmsStockOutList" parameterType="WmsStockOut" resultMap="WmsStockOutResult">
+        <include refid="selectWmsStockOutVo"/>
+        <where>  
+            o.del_flag='0'
+            <if test="params.storageName != null  and params.storageName != ''"> and s.storage_name like concat('%', #{params.storageName}, '%')</if>
+            <if test="outDate != null "> and out_date = #{outDate}</if>
+            <if test="outType != null  and outType != ''"> and out_type = #{outType}</if>
+            <if test="outStatus != null  and outStatus != ''"> and out_status = #{outStatus}</if>
+            <if test="outBy != null  and outBy != ''"> and out_by = #{outBy}</if>
+            <if test="params.productName != null  and params.productName != ''"> and p.product_name like concat('%', #{params.productName}, '%')</if>
+        	<if test="params.beginOutDate != null and params.beginOutDate != ''"><!-- 出库开始时间检索 -->
+				AND date_format(o.out_date,'%y%m%d') &gt;= date_format(#{params.beginOutDate},'%y%m%d')
+			</if>
+			<if test="params.endOutDate != null and params.endOutDate != ''"><!-- 出库结束时间检索 -->
+				AND date_format(o.out_date,'%y%m%d') &lt;= date_format(#{params.endOutDate},'%y%m%d')
+			</if>
+        </where>
+    </select>
+    
+    <select id="selectWmsStockOutById" parameterType="Long" resultMap="WmsStockOutResult">
+        <include refid="selectWmsStockOutVo"/>
+        where o.out_id = #{outId}
+    </select>
+        
+    <insert id="insertWmsStockOut" parameterType="WmsStockOut" useGeneratedKeys="true" keyProperty="outId">
+        insert into wms_stock_out
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storageId != null">storage_id,</if>
+            <if test="title != null">title,</if>
+            <if test="outDate != null">out_date,</if>
+            <if test="outType != null">out_type,</if>
+            <if test="outStatus != null">out_status,</if>
+            <if test="outBy != null">out_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storageId != null">#{storageId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="outDate != null">#{outDate},</if>
+            <if test="outType != null">#{outType},</if>
+            <if test="outStatus != null">#{outStatus},</if>
+            <if test="outBy != null">#{outBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWmsStockOut" parameterType="WmsStockOut">
+        update wms_stock_out
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageId != null">storage_id = #{storageId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="outDate != null">out_date = #{outDate},</if>
+            <if test="outType != null">out_type = #{outType},</if>
+            <if test="outStatus != null">out_status = #{outStatus},</if>
+            <if test="outBy != null">out_by = #{outBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where out_id = #{outId}
+    </update>
+
+    <delete id="deleteWmsStockOutById" parameterType="Long">
+        delete from wms_stock_out where out_id = #{outId}
+    </delete>
+
+    <delete id="deleteWmsStockOutByIds" parameterType="String">
+        delete from wms_stock_out where out_id in 
+        <foreach item="outId" collection="array" open="(" separator="," close=")">
+            #{outId}
+        </foreach>
+    </delete>
+    
+</mapper>
